@@ -33,6 +33,12 @@ target/
 .vscode/
 *.eclipse
 
+# IntelliJ IDEA metadata
+.idea/
+*.iml
+*.iws
+out/
+
 .env
 .env.*
 application-local.yml

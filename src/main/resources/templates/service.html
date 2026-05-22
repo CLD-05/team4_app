@@ -1,0 +1,542 @@
+<!DOCTYPE html><html lang="ko"><head></head><body class="font-sans antialiased text-brand-dark bg-brand-bg">```html
+
+
+
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>하루결 - 오늘 하루를, 당신의 언어로 담아보세요</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&amp;family=Noto+Sans+KR:wght@300..900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: {
+                    serif: ['Literata', 'serif'],
+                    sans: ['Noto Sans KR', 'sans-serif'],
+                },
+                colors: {
+                    brand: {
+                        bg: '#f7f3ee',
+                        dark: '#333333',
+                        muted: '#666666',
+                        accent: '#d9b9a9',
+                        card: '#ffffff',
+                    },
+                    dashboard: {
+                        bg: '#3c3836',
+                        surface: '#4d4745',
+                        text: '#e0dcd9',
+                        highlight: '#d5b38e'
+                    },
+                    "on-secondary": "#ffffff",
+                    "surface-container-low": "#fcf2eb",
+                    "primary-fixed-dim": "#c9c6c1",
+                    "on-error": "#ffffff",
+                    "surface-container": "#f6ece5",
+                    "on-secondary-fixed": "#001e2f",
+                    "surface-bright": "#fff8f4",
+                    "on-primary": "#ffffff",
+                    "on-background": "#1f1b17",
+                    "outline": "#79776f",
+                    "error-container": "#ffdad6",
+                    "on-error-container": "#93000a",
+                    "tertiary-container": "#f7f2f4",
+                    "on-primary-fixed-variant": "#484743",
+                    "on-tertiary": "#ffffff",
+                    "surface-variant": "#eae1da",
+                    "surface": "#fff8f4",
+                    "on-surface-variant": "#484740",
+                    "surface-container-highest": "#eae1da",
+                    "outline-variant": "#c9c6bd",
+                    "secondary-container": "#c5e3fe",
+                    "on-primary-container": "#706f6b",
+                    "inverse-surface": "#34302b",
+                    "tertiary-fixed-dim": "#cac5c7",
+                    "inverse-on-surface": "#f9efe8",
+                    "primary": "#605e5a",
+                    "on-surface": "#1f1b17",
+                    "error": "#ba1a1a",
+                    "secondary": "#446278",
+                    "tertiary": "#605e5f",
+                    "on-primary-fixed": "#1c1c19",
+                    "on-secondary-fixed-variant": "#2c4a5f",
+                    "surface-dim": "#e2d8d2",
+                    "secondary-fixed-dim": "#accae4",
+                    "primary-fixed": "#e6e2dd",
+                    "on-secondary-container": "#48667c",
+                    "on-tertiary-fixed": "#1c1b1d",
+                    "primary-container": "#f7f3ee",
+                    "tertiary-fixed": "#e6e1e3",
+                    "secondary-fixed": "#c9e6ff",
+                    "on-tertiary-fixed-variant": "#484648",
+                    "on-tertiary-container": "#716e70",
+                    "surface-container-high": "#f0e6e0",
+                    "surface-tint": "#605e5a",
+                    "background": "#fff8f4",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-primary": "#c9c6c1"
+                }
+            }
+        }
+    }
+</script>
+    <style data-purpose="custom-utilities">
+        body {
+            background-color: theme('colors.brand.bg');
+            color: theme('colors.brand.dark');
+        }
+        .shadow-soft {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+        .text-balance {
+            text-wrap: balance;
+        }
+        .soft-shadow {
+            box-shadow: 0 4px 20px rgba(92, 86, 81, 0.05);
+        }
+        .calendar-cell {
+            padding: 2px;
+            aspect-ratio: auto;
+            height: 32px;
+        }
+        .emotion-icon {
+            font-size: 10px;
+        }
+    </style>
+<!-- BEGIN: Hero Section -->
+<section class="pt-24 pb-32 px-6 max-w-5xl mx-auto flex flex-col items-start relative overflow-hidden" data-purpose="hero-section">
+    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-accent/20 text-brand-dark text-sm font-medium mb-6">
+        <span class="text-xl">✨</span> 감정 기록의 새로운 방법
+    </div>
+    <h1 class="font-serif text-5xl md:text-6xl font-bold leading-tight mb-6 text-balance">
+        오늘 하루를,<br>
+        <span class="text-brand-accent italic font-light">당신의 언어로</span><br>
+        담아보세요
+    </h1>
+    <p class="text-brand-muted text-lg max-w-xl mb-10 leading-relaxed text-balance">
+        감정 · 수면 · 운동 · 루틴을 한 곳에서 기록하고, 흘러가는 하루하루를 소중하게 붙잡아 두세요. 하루결이 당신의 일상을 따뜻하게 기억합니다.
+    </p>
+    <div class="flex flex-wrap gap-4">
+        <a class="inline-flex items-center justify-center px-8 py-4 bg-brand-dark text-white rounded-full font-medium hover:bg-black transition-colors" href="#">
+            지금 시작하기 →
+        </a>
+        <a class="inline-flex items-center justify-center px-8 py-4 bg-white/50 text-brand-dark rounded-full font-medium hover:bg-white transition-colors border border-brand-dark/10" href="#">
+            미리보기
+        </a>
+    </div>
+</section>
+<!-- END: Hero Section -->
+<!-- BEGIN: Emotion Tracker Section -->
+<section class="py-24 bg-[#efede7]" data-purpose="emotion-tracker">
+    <div class="max-w-5xl mx-auto px-6">
+        <div class="mb-12">
+            <span class="text-brand-muted text-sm font-semibold tracking-wider uppercase block mb-2">감정 트래커</span>
+            <h2 class="font-serif text-4xl md:text-5xl font-bold mb-4">
+                오늘의 감정은<br>
+                <span class="text-brand-accent italic font-light">어떤가요?</span>
+            </h2>
+            <p class="text-brand-muted max-w-lg">
+                5단계 감정 스케일로 지금 이 순간의 마음을 기록해 보세요. 쌓인 감정 데이터가 나를 더 잘 이해하도록 도와줍니다.
+            </p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-6">
+            <!-- Very Good -->
+            <div class="bg-brand-card rounded-2xl p-6 flex flex-col items-center justify-center shadow-soft border-2 border-transparent hover:border-brand-accent/50 transition-colors cursor-pointer group">
+                <div class="text-5xl mb-4 group-hover:scale-110 transition-transform">^‿^</div>
+                <div class="font-medium text-brand-dark mb-1">매우 좋음</div>
+                <div class="text-xs text-brand-muted uppercase tracking-wider">Very Good</div>
+            </div>
+            <!-- Good -->
+            <div class="bg-brand-card rounded-2xl p-6 flex flex-col items-center justify-center shadow-soft border-2 border-transparent hover:border-brand-accent/50 transition-colors cursor-pointer group">
+                <div class="text-5xl mb-4 group-hover:scale-110 transition-transform">◡̈</div>
+                <div class="font-medium text-brand-dark mb-1">좋음</div>
+                <div class="text-xs text-brand-muted uppercase tracking-wider">Good</div>
+            </div>
+            <!-- Normal -->
+            <div class="bg-brand-card rounded-2xl p-6 flex flex-col items-center justify-center shadow-soft border-2 border-transparent hover:border-brand-accent/50 transition-colors cursor-pointer group">
+                <div class="text-5xl mb-4 group-hover:scale-110 transition-transform">•_•</div>
+                <div class="font-medium text-brand-dark mb-1">보통</div>
+                <div class="text-xs text-brand-muted uppercase tracking-wider">Normal</div>
+            </div>
+            <!-- Bad -->
+            <div class="bg-brand-card rounded-2xl p-6 flex flex-col items-center justify-center shadow-soft border-2 border-transparent hover:border-brand-accent/50 transition-colors cursor-pointer group">
+                <div class="text-5xl mb-4 group-hover:scale-110 transition-transform">☹</div>
+                <div class="font-medium text-brand-dark mb-1">나쁨</div>
+                <div class="text-xs text-brand-muted uppercase tracking-wider">Bad</div>
+            </div>
+            <!-- Very Bad -->
+            <div class="bg-brand-card rounded-2xl p-6 flex flex-col items-center justify-center shadow-soft border-2 border-transparent hover:border-brand-accent/50 transition-colors cursor-pointer group">
+                <div class="text-5xl mb-4 group-hover:scale-110 transition-transform">&gt;_&lt;</div>
+                <div class="font-medium text-brand-dark mb-1">매우 나쁨</div>
+                <div class="text-xs text-brand-muted uppercase tracking-wider">Very Bad</div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- END: Emotion Tracker Section -->
+<!-- BEGIN: Features Section -->
+<section class="py-24 bg-brand-bg" data-purpose="features">
+    <div class="max-w-5xl mx-auto px-6">
+        <div class="mb-16">
+            <span class="text-brand-muted text-sm font-semibold tracking-wider uppercase block mb-2">주요 기능</span>
+            <h2 class="font-serif text-4xl md:text-5xl font-bold mb-4">
+                일상을 기록하는<br>
+                <span class="text-brand-accent italic font-light">네 가지 방법</span>
+            </h2>
+            <p class="text-brand-muted max-w-lg">
+                단순한 글쓰기를 넘어, 수면·운동·루틴까지 한 앱에서 관리하세요.
+            </p>
+        </div>
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Feature 1: Diary -->
+            <div class="bg-brand-card rounded-3xl p-8 shadow-soft border border-gray-100 flex flex-col relative overflow-hidden group hover:border-brand-accent/30 transition-colors">
+                <div class="w-12 h-12 bg-orange-100 rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-sm">
+                    📔
+                </div>
+                <h3 class="text-2xl font-bold mb-3">감정 다이어리</h3>
+                <p class="text-brand-muted leading-relaxed text-sm">
+                    매일의 감정과 이야기를 자유롭게 기록하세요. 태그로 분류하고, 사진을 첨부해 더 생생한 기억으로 남깁니다. 소프트 삭제로 소중한 기록을 언제든 복구할 수 있어요.
+                </p>
+            </div>
+            <!-- Feature 2: Sleep -->
+            <div class="bg-brand-card rounded-3xl p-8 shadow-soft border border-gray-100 flex flex-col relative overflow-hidden group hover:border-brand-accent/30 transition-colors">
+                <div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-sm">
+                    🌙
+                </div>
+                <h3 class="text-2xl font-bold mb-3">수면 기록</h3>
+                <p class="text-brand-muted leading-relaxed text-sm mb-6">
+                    취침 시각과 기상 시각을 기록해 나의 수면 패턴을 파악하세요. 주간 수면 리포트로 더 건강한 루틴을 만들어 갑니다.
+                </p>
+                <div class="mt-auto flex items-end gap-2 h-16 pt-4 border-t border-gray-50">
+                    <!-- Mock Chart Bars -->
+                    <div class="w-full bg-green-200/50 rounded-t-sm h-[60%]"></div>
+                    <div class="w-full bg-green-300/60 rounded-t-sm h-[80%]"></div>
+                    <div class="w-full bg-green-200/40 rounded-t-sm h-[40%]"></div>
+                    <div class="w-full bg-green-300/70 rounded-t-sm h-[90%]"></div>
+                    <div class="w-full bg-green-200/50 rounded-t-sm h-[70%]"></div>
+                    <div class="w-full bg-green-400/80 rounded-t-sm h-[100%]"></div>
+                </div>
+            </div>
+            <!-- Feature 3: Routine -->
+            <div class="bg-brand-card rounded-3xl p-8 shadow-soft border border-gray-100 flex flex-col relative overflow-hidden group hover:border-brand-accent/30 transition-colors">
+                <div class="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-sm">📋</div>
+                <h3 class="text-2xl font-bold mb-3">• • • 오늘 할 일</h3>
+                <p class="text-brand-muted leading-relaxed text-sm mb-6">하루의 시작을 돕는 할 일들을 기록하고 관리하세요. 하나씩 지워가는 성개감이 당신의 일상에 활력을 불어 넣어줍니다.</p>
+                <div class="mt-auto space-y-2"><div class="flex items-center gap-3 text-sm text-brand-dark"><div class="w-5 h-5 rounded-full border-2 border-brand-accent flex items-center justify-center text-brand-accent text-[10px]">✓</div><span class="">물 2L 마시기</span></div><div class="flex items-center gap-3 text-sm text-brand-dark"><div class="w-5 h-5 rounded-full border-2 border-gray-300"></div><span class="">30분 돌사</span></div><div class="flex items-center gap-3 text-sm text-brand-dark"><div class="w-5 h-5 rounded-full border-2 border-gray-300"></div><span class="">명상 10분</span></div></div>
+            </div>
+            <!-- Feature 4: Exercise -->
+            <div class="bg-brand-card rounded-3xl p-8 shadow-soft border border-gray-100 flex flex-col relative overflow-hidden group hover:border-brand-accent/30 transition-colors">
+                <div class="w-12 h-12 bg-red-100 rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-sm">
+                    🏃
+                </div>
+                <h3 class="text-2xl font-bold mb-3">운동 기록</h3>
+                <p class="text-brand-muted leading-relaxed text-sm mb-6">
+                    5가지 카테고리로 운동을 분류하고, 10분 단위로 시간을 기록하세요. 꾸준한 기록이 더 건강한 나를 만들어 갑니다.
+                </p>
+                <div class="mt-auto flex flex-wrap gap-2">
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange-100/50 text-orange-800 text-xs font-medium border border-orange-200">
+              🏃 달리기
+            </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-yellow-100/50 text-yellow-800 text-xs font-medium border border-yellow-200">
+              🚲 자전거
+            </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-100/50 text-amber-800 text-xs font-medium border border-amber-200">
+              🚶 걷기
+            </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 text-xs font-medium border border-gray-200">
+              🏋️ 헬스
+            </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 text-xs font-medium border border-blue-200">
+              🧘 요가
+            </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- END: Features Section -->
+<!-- BEGIN: Dashboard Preview Section -->
+<section class="py-24 bg-dashboard-bg text-dashboard-text" data-purpose="dashboard-preview">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="mb-16">
+            <span class="text-gray-400 text-sm font-semibold tracking-wider uppercase block mb-2">대시보드 미리보기</span>
+            <h2 class="font-serif text-4xl md:text-5xl font-bold mb-4 text-white">
+                한눈에 보는<br>
+                <span class="text-dashboard-highlight italic font-light">나의 하루</span>
+            </h2>
+            <p class="text-gray-400 max-w-lg">
+                감정 · 수면 · 운동 · 루틴이 하나의 화면에서 이야기를 만들어냅니다.
+            </p>
+        </div>
+        <!-- Dashboard Mockup (main.html style) -->
+        <div class="bg-background text-on-surface font-body-md text-body-md rounded-3xl shadow-2xl overflow-hidden border border-white/10">
+            <!-- Main Content from main.html -->
+            <div class="w-full max-w-[1400px] mx-auto px-container-padding-mobile md:px-container-padding-desktop py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Left Column: Calendar & Mood -->
+                <div class="flex flex-col gap-6 lg:col-span-3">
+                    <!-- Calendar Widget -->
+                    <section class="bg-surface-container-lowest rounded-xl soft-shadow p-5" id="calendar-container">
+                        <header class="flex justify-between items-center mb-4">
+                            <h2 class="font-headline-md text-primary text-[18px]">2024년 10월</h2>
+                            <div class="flex items-center gap-1">
+                                <button class="p-1 rounded-full hover:bg-surface-variant transition-colors"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
+                                <button class="p-1 rounded-full hover:bg-surface-variant transition-colors"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
+                            </div>
+                        </header>
+                        <div class="grid grid-cols-7 gap-1 text-center font-label-sm text-on-surface-variant mb-2 text-xs">
+                            <div class="">일</div><div class="">월</div><div class="">화</div><div class="">수</div><div class="">목</div><div class="">금</div><div class="">토</div>
+                        </div>
+                        <div class="grid grid-cols-7 gap-0.5" id="calendar-grid">
+                            <div class="calendar-cell"></div>
+                            <div class="calendar-cell"></div>
+                            <div class="calendar-cell bg-secondary-container rounded-lg flex flex-col justify-between shadow-sm border border-secondary">
+                                <div class="flex justify-between items-start">
+                                    <span class="font-label-sm text-on-secondary-container text-[11px]">1</span>
+                                    <span class="emotion-icon material-symbols-outlined text-secondary text-base" style="font-variation-settings: 'FILL' 1;">sentiment_very_satisfied</span>
+                                </div>
+                            </div>
+                            <div class="calendar-cell bg-surface-container rounded-lg flex flex-col justify-between hover:bg-surface-variant transition-colors border border-transparent">
+                                <div class="flex justify-between items-start">
+                                    <span class="font-label-sm text-[11px]">2</span>
+                                    <span class="emotion-icon material-symbols-outlined text-secondary/70 text-base" style="font-variation-settings: 'FILL' 1;">sentiment_satisfied</span>
+                                </div>
+                            </div>
+                            <div class="calendar-cell bg-surface-container rounded-lg flex flex-col justify-between hover:bg-surface-variant transition-colors border border-transparent">
+                                <div class="flex justify-between items-start">
+                                    <span class="font-label-sm text-[11px]">3</span>
+                                    <span class="emotion-icon material-symbols-outlined text-secondary/70 text-base" style="font-variation-settings: 'FILL' 1;">sentiment_neutral</span>
+                                </div>
+                            </div>
+                            <div class="calendar-cell bg-surface-container rounded-lg flex flex-col justify-between hover:bg-surface-variant transition-colors border border-transparent">
+                                <div class="flex justify-between items-start">
+                                    <span class="font-label-sm text-[11px]">4</span>
+                                    <span class="emotion-icon material-symbols-outlined text-secondary/70 text-base" style="font-variation-settings: 'FILL' 1;">sentiment_satisfied</span>
+                                </div>
+                            </div>
+                            <div class="calendar-cell bg-surface-container rounded-lg flex flex-col justify-between hover:bg-surface-variant transition-colors border border-transparent">
+                                <div class="flex justify-between items-start">
+                                    <span class="font-label-sm text-[11px]">5</span>
+                                    <span class="emotion-icon material-symbols-outlined text-secondary/70 text-base" style="font-variation-settings: 'FILL' 1;">sentiment_satisfied</span>
+                                </div>
+                            </div>
+                            <div class="calendar-cell bg-surface-container rounded-lg flex flex-col justify-between hover:bg-surface-variant transition-colors border border-transparent">
+                                <div class="flex justify-between items-start">
+                                    <span class="font-label-sm text-[11px]">6</span>
+                                    <span class="emotion-icon material-symbols-outlined text-secondary/70 text-base" style="font-variation-settings: 'FILL' 1;">sentiment_neutral</span>
+                                </div>
+                            </div>
+                            <div class="calendar-cell bg-surface-container rounded-lg flex flex-col justify-between hover:bg-surface-variant transition-colors border border-transparent">
+                                <div class="flex justify-between items-start">
+                                    <span class="font-label-sm text-[11px]">7</span>
+                                    <span class="emotion-icon material-symbols-outlined text-secondary/70 text-base" style="font-variation-settings: 'FILL' 1;">mood_bad</span>
+                                </div>
+                            </div>
+                            <div class="calendar-cell bg-surface-container rounded-lg flex flex-col justify-between hover:bg-surface-variant transition-colors border border-transparent"><div class="flex justify-between items-start"><span class="font-label-sm text-[11px]">8</span><span class="emotion-icon material-symbols-outlined text-secondary/70 text-base" style="font-variation-settings: 'FILL' 1;">sentiment_satisfied</span></div></div>
+                            <div class="calendar-cell bg-surface-container rounded-lg flex flex-col justify-between hover:bg-surface-variant transition-colors border border-transparent"><div class="flex justify-between items-start"><span class="font-label-sm text-[11px]">9</span><span class="emotion-icon material-symbols-outlined text-secondary/70 text-base" style="font-variation-settings: 'FILL' 1;">sentiment_neutral</span></div></div>
+                            <div class="calendar-cell bg-surface-container rounded-lg flex flex-col justify-between hover:bg-surface-variant transition-colors border border-transparent"><div class="flex justify-between items-start"><span class="font-label-sm text-[11px]">10</span><span class="emotion-icon material-symbols-outlined text-secondary/70 text-base" style="font-variation-settings: 'FILL' 1;">sentiment_satisfied</span></div></div>
+                        </div>
+                    </section>
+                    <!-- Mood Widget -->
+                    <section class="bg-surface-container-lowest rounded-xl soft-shadow p-5 flex flex-col gap-4">
+                        <h2 class="font-headline-md text-[18px] text-primary">오늘 기분은 어떠신가요?</h2>
+                        <div class="flex justify-between px-2"><button class="flex flex-col items-center gap-1.5 text-secondary">
+                            <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">sentiment_very_satisfied</span>
+                            <span class="text-[10px] font-bold whitespace-nowrap">매우 좋음</span>
+                        </button>
+                            <button class="flex flex-col items-center gap-1.5 text-on-surface-variant hover:text-secondary transition-colors opacity-60">
+                                <span class="material-symbols-outlined text-3xl">sentiment_satisfied</span>
+                                <span class="text-[10px] whitespace-nowrap">좋음</span>
+                            </button>
+                            <button class="flex flex-col items-center gap-1.5 text-on-surface-variant hover:text-secondary transition-colors opacity-60">
+                                <span class="material-symbols-outlined text-3xl">sentiment_neutral</span>
+                                <span class="text-[10px] whitespace-nowrap">보통</span>
+                            </button>
+                        </div>
+                    </section>
+                </div>
+                <!-- Center Column: Routines -->
+                <div class="flex flex-col gap-6 lg:col-span-6">
+                    <section class="bg-surface-container-lowest rounded-xl soft-shadow p-6 lg:p-8 flex-grow">
+                        <h2 class="font-headline-md text-[24px] text-primary mb-1">오늘의 할 일</h2>
+                        <p class="font-body-md text-on-surface-variant mb-8 font-bold">10월 2일</p>
+                        <div class="mb-8 bg-surface-container-low p-5 rounded-xl border border-outline-variant/30">
+                            <div class="flex justify-between items-end mb-3">
+                                <div>
+                                    <span class="block font-bold text-secondary text-lg">오늘의 달성도</span>
+                                    <span class="text-on-surface-variant text-sm">오늘도 잘하고 계시네요!</span>
+                                </div>
+                                <span class="text-secondary font-bold text-xl">50%</span>
+                            </div>
+                            <div class="w-full h-3 bg-surface-variant rounded-full overflow-hidden">
+                                <div class="h-full bg-secondary w-1/2 rounded-full"></div>
+                            </div>
+                            <div class="flex justify-between text-xs text-on-surface-variant mt-2">
+                                <span class="">2개 완료</span>
+                                <span class="">2개 남음</span>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <!-- Right Column: Sleep & Movement -->
+                <div class="flex flex-col gap-6 lg:col-span-3">
+                    <!-- Sleep Time Widget -->
+                    <section class="bg-surface-container-lowest rounded-xl soft-shadow p-5 flex flex-col gap-5">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2 text-primary">
+                                <span class="material-symbols-outlined text-secondary">bedtime</span>
+                                <h2 class="font-headline-md text-[18px]">수면</h2>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-3">
+                            <div class="flex justify-between items-center bg-surface p-3.5 rounded-lg border border-outline-variant/30">
+                                <div class="flex flex-col">
+                                    <span class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">취침 시간</span>
+                                    <span class="font-body-lg text-on-surface">오후 11:30</span>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center bg-surface p-3.5 rounded-lg border border-outline-variant/30">
+                                <div class="flex flex-col">
+                                    <span class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">기상 시간</span>
+                                    <span class="font-body-lg text-on-surface">오전 07:00</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-2 border-t border-outline-variant/20 flex justify-between items-end">
+                            <span class="text-sm font-bold text-on-surface-variant uppercase tracking-wider">수면 시간</span>
+                            <span class="font-headline-md text-secondary">7시간 30분</span>
+                        </div>
+                    </section>
+                    <!-- Movement Widget -->
+                    <section class="bg-surface-container-lowest rounded-xl soft-shadow p-5 flex flex-col gap-5">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2 text-primary">
+                                <span class="material-symbols-outlined text-secondary">directions_run</span>
+                                <h2 class="font-headline-md text-[18px]">운동</h2>
+                            </div>
+                        </div>
+                        <div class="bg-surface rounded-lg p-4 border border-outline-variant/30 flex flex-col gap-4">
+                            <div class="flex justify-between items-start">
+                                <div class="flex flex-col">
+                                    <span class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">활동</span>
+                                    <span class="font-body-lg text-on-surface">요가 &amp; 스트레칭</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- END: Dashboard Preview Section -->
+<!-- BEGIN: Testimonials Section -->
+<section class="py-24 bg-[#efede7]" data-purpose="testimonials">
+    <div class="max-w-5xl mx-auto px-6">
+        <div class="mb-12">
+            <span class="text-brand-muted text-sm font-semibold tracking-wider uppercase block mb-2">사용자 후기</span>
+            <h2 class="font-serif text-4xl md:text-5xl font-bold mb-4">
+                하루결과 함께한<br>
+                <span class="text-brand-accent italic font-light">일상의 변화</span>
+            </h2>
+            <p class="text-brand-muted max-w-lg">
+                매일 기록하는 습관이 나를 어떻게 변화시켰는지, 직접 들어보세요.
+            </p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6">
+            <!-- Review 1 -->
+            <div class="bg-brand-card rounded-2xl p-6 shadow-soft">
+                <div class="text-brand-accent mb-4 text-sm">★★★★★</div>
+                <p class="text-sm leading-relaxed mb-6 text-brand-dark italic">
+                    "감정 기록을 시작하고 나서 내 감정 패턴을 이해하게 됐어요. 스트레스 받는 상황을 미리 알아채는 게 가능해졌고, 삶의 시질이 정말 달라졌습니다."
+                </p>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-brand-accent/20 flex items-center justify-center text-brand-dark font-medium text-sm">이</div>
+                    <div>
+                        <div class="font-medium text-sm text-brand-dark">이서연</div>
+                        <div class="text-xs text-brand-muted">직장인 · 3개월 사용</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Review 2 -->
+            <div class="bg-brand-card rounded-2xl p-6 shadow-soft">
+                <div class="text-brand-accent mb-4 text-sm">★★★★★</div>
+                <p class="text-sm leading-relaxed mb-6 text-brand-dark italic">
+                    "수면 기록을 꾸준히 남겼더니 내 수면 패턴이 보이기 시작했어요. 덕분에 취침 시간을 조정하고 아침이 훨씬 상쾌해졌습니다."
+                </p>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-800 font-medium text-sm">박</div>
+                    <div>
+                        <div class="font-medium text-sm text-brand-dark">박준호</div>
+                        <div class="text-xs text-brand-muted">대학생 · 5개월 사용</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Review 3 -->
+            <div class="bg-brand-card rounded-2xl p-6 shadow-soft">
+                <div class="text-brand-accent mb-4 text-sm">★★★★★</div>
+                <p class="text-sm leading-relaxed mb-6 text-brand-dark italic">
+                    "루틴 트래커가 정말 좋아요. 체크 하나하나가 쌓여가는 게 보람차고, 덕분에 꾸준히 운동하는 습관을 드디어 들였습니다."
+                </p>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-800 font-medium text-sm">김</div>
+                    <div>
+                        <div class="font-medium text-sm text-brand-dark">김민지</div>
+                        <div class="text-xs text-brand-muted">프리랜서 · 2개월 사용</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- END: Testimonials Section -->
+<!-- BEGIN: Bottom CTA -->
+<section class="py-24 bg-brand-bg text-center px-6" data-purpose="bottom-cta">
+    <h2 class="font-serif text-3xl md:text-4xl font-bold mb-4">
+        오늘의 내 끝부터,<br>
+        <span class="text-brand-accent italic font-light">가장 나다운 기록</span>
+    </h2>
+    <p class="text-brand-muted mb-8">가입하고 30일간 무료로 사용해 보세요. 신용카드 없이 시작할 수 있어요.</p>
+    <a class="inline-flex items-center justify-center px-8 py-4 bg-brand-dark text-white rounded-full font-medium hover:bg-black transition-colors" href="#">
+        무료로 시작하기 →
+    </a>
+</section>
+<!-- END: Bottom CTA -->
+<!-- BEGIN: Footer -->
+<footer class="bg-brand-dark text-white pt-16 pb-8 border-t border-white/10" data-purpose="site-footer">
+    <div class="max-w-5xl mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+            <div class="col-span-1 md:col-span-1">
+                <div class="font-serif text-2xl font-bold mb-4 text-white">하루<span class="text-brand-accent">결</span></div>
+                <p class="text-sm text-gray-400 leading-relaxed">
+                    감정과 하루를 기록하는 가장 따뜻한 방법. 당신의 일상이 글이 되고, 글이 나를 이해하는 힘이 됩니다.
+                </p>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-4 text-sm text-gray-200">서비스</h4>
+                <ul class="space-y-3 text-sm text-gray-400">
+                    <li class=""><a class="hover:text-brand-accent transition-colors" href="#">다이어리 기록</a></li>
+                    <li class=""><a class="hover:text-brand-accent transition-colors" href="#">감정 트래커</a></li>
+                    <li class=""><a class="hover:text-brand-accent transition-colors" href="#">수면 분석</a></li>
+                    <li class=""><a class="hover:text-brand-accent transition-colors" href="#">운동 기록</a></li>
+                    <li class=""><a class="hover:text-brand-accent transition-colors" href="#">루틴 관리</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-4 text-sm text-gray-200">회사</h4>
+                <ul class="space-y-3 text-sm text-gray-400">
+                    <li class=""><a class="hover:text-brand-accent transition-colors" href="#">소개</a></li>
+                    <li class=""><a class="hover:text-brand-accent transition-colors" href="#">블로그</a></li>
+                    <li class=""><a class="hover:text-brand-accent transition-colors" href="#">채용</a></li>
+                    <li class=""><a class="hover:text-brand-accent transition-colors" href="#">파트너십</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-4 text-sm text-gray-200">지원</h4>
+                <ul class="space-y-3 text-sm text-gray-400">
+                    <li class=""></li></ul></div></div></div></footer>
+
+</body></html>

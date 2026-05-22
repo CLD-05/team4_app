@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Dear Diary - 마이페이지</title>
+    <!-- Google Fonts: Literata & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&amp;family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;display=swap" rel="stylesheet"/>
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Tailwind Config -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#f0e6e0",
+                        "on-primary-container": "#706f6b",
+                        "outline": "#79776f",
+                        "surface": "#fff8f4",
+                        "inverse-primary": "#c9c6c1",
+                        "tertiary-fixed": "#e6e1e3",
+                        "surface-tint": "#605e5a",
+                        "outline-variant": "#c9c6bd",
+                        "on-tertiary-container": "#716e70",
+                        "tertiary": "#605e5f",
+                        "on-primary-fixed": "#1c1c19",
+                        "on-surface-variant": "#484740",
+                        "secondary-fixed": "#c9e6ff",
+                        "on-background": "#1f1b17",
+                        "on-error-container": "#93000a",
+                        "on-tertiary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#c5e3fe",
+                        "on-tertiary-fixed-variant": "#484648",
+                        "tertiary-fixed-dim": "#cac5c7",
+                        "surface-container": "#f6ece5",
+                        "on-secondary": "#ffffff",
+                        "background": "#fff8f4",
+                        "on-primary-fixed-variant": "#484743",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#1c1b1d",
+                        "surface-variant": "#eae1da",
+                        "on-secondary-fixed": "#001e2f",
+                        "inverse-on-surface": "#f9efe8",
+                        "surface-bright": "#fff8f4",
+                        "surface-dim": "#e2d8d2",
+                        "secondary": "#446278",
+                        "inverse-surface": "#34302b",
+                        "secondary-fixed-dim": "#accae4",
+                        "on-secondary-container": "#48667c",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#f7f3ee",
+                        "primary": "#605e5a",
+                        "surface-container-highest": "#eae1da",
+                        "primary-fixed": "#e6e2dd",
+                        "surface-container-low": "#fcf2eb",
+                        "on-secondary-fixed-variant": "#2c4a5f",
+                        "on-error": "#ffffff",
+                        "tertiary-container": "#f7f2f4",
+                        "primary-fixed-dim": "#c9c6c1",
+                        "on-surface": "#1f1b17"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-padding-desktop": "40px",
+                        "base": "8px",
+                        "container-padding-mobile": "20px",
+                        "section-gap": "48px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Literata"],
+                        "headline-md": ["Literata"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "display-lg": ["Literata"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "label-sm": ["13px", { "lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "display-lg": ["40px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Subtle noise texture for paper grain effect */
+        body {
+            background-color: theme('colors.background');
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+        }
+
+        /* Level 1 Card Shadow */
+        .card-shadow {
+            box-shadow: 0 4px 20px rgba(92, 86, 81, 0.05);
+        }
+    </style>
+    <script src="/js/api.js"></script>
+</head>
+<body class="text-on-background min-h-screen flex flex-col font-body-md selection:bg-primary-container selection:text-primary">
+<!-- TopAppBar -->
+<!-- The settings screen is a destination but often implies a slight departure from the main flow.
+         However, "Settings" is in the JSON trailing actions, and the user requested a TopAppBar.
+         We will use the TopAppBar as defined in the JSON. -->
+<header class="bg-surface dark:bg-inverse-surface docked full-width top-0 bg-surface dark:bg-inverse-surface flex justify-between items-center w-full px-container-padding-mobile md:px-container-padding-desktop py-4 sticky z-40 transition-all duration-300">
+    <div class="flex items-center">
+        <h1 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-primary dark:text-inverse-primary italic">Dear Diary</h1>
+    </div>
+    <div class="flex items-center gap-4 text-primary dark:text-inverse-primary">
+        <button class="hover:bg-surface-container-low transition-colors p-2 rounded-full active:scale-95 duration-200">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_circle</span>
+        </button>
+        <button class="hover:bg-surface-container-low transition-colors p-2 rounded-full active:scale-95 duration-200">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+        </button>
+    </div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow flex flex-col items-center px-container-padding-mobile md:px-container-padding-desktop py-section-gap">
+    <!-- Focused Canvas Container (Max width for book-like feel on desktop) -->
+    <div class="w-full max-w-[600px] flex flex-col gap-8">
+        <!-- Page Title -->
+        <h2 class="font-headline-md text-headline-md text-on-background">설정</h2>
+        <!-- User Profile Section (Bento style card) -->
+        <section class="bg-surface-container-lowest rounded-xl p-6 md:p-8 card-shadow border border-outline-variant/30 flex flex-col md:flex-row items-center md:items-start gap-6">
+            <!-- Avatar -->
+            <div class="w-24 h-24 rounded-full overflow-hidden shrink-0 border-2 border-surface-container-high bg-surface-container-low flex items-center justify-center">
+                <img id="user-profile-img" alt="User Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAL-kC0KuzqQYam8yrvJPzenw4gRau-kRc9dYOOAKoUmWWh61dqr7qGrZwPrfA5mes3IaoqDnXs9LqOVtjtt3U0TohctHyiAatGKZAlPlf_T0aYTNfpHbpSn5eXvR6ja2TRvYuI8r4usylxel_mpUqnuQfpEBEueZYM0hzllsJ7n-SZ6OLqZRoxz0LudKlM4Ton8_CNmHbsfrh7mRGUqMq3afZkmrdYEJW-kwi0yRPOl3_2HAyZINFE3uJYCIa1Uey6Hui-k62Yn-J3"/>
+            </div>
+            <!-- Info -->
+            <div class="flex flex-col items-center md:items-start text-center md:text-left gap-2 w-full">
+                <h3 id="user-nickname" class="font-headline-md text-headline-md text-primary">Jiwoo Park</h3>
+                <p class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px]">calendar_today</span>
+                    가입 날짜: 2024.03.20
+                </p>
+                <p class="font-body-md text-body-md text-on-surface-variant mt-2 max-w-sm">
+                    오늘의 소중한 순간들을 기록합니다.
+                </p>
+            </div>
+        </section>
+        <!-- Menu List (Glassmorphism inspired soft cells) -->
+        <section class="flex flex-col gap-4">
+            <!-- Edit Profile -->
+            <button class="w-full bg-surface-container-lowest hover:bg-surface-container-low transition-colors rounded-lg p-4 card-shadow border border-outline-variant/20 flex items-center justify-between group active:scale-[0.98] duration-200">
+                <div class="flex items-center gap-4 text-on-background group-hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">edit</span>
+                    <span class="font-body-lg text-body-lg">프로필 수정</span>
+                </div>
+                <span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">chevron_right</span>
+            </button>
+            <!-- Divider -->
+            <div class="h-px w-full bg-outline-variant/30 my-2"></div>
+            <!-- Log Out -->
+            <button onclick="handleLogout()" class="w-full bg-surface-container-lowest hover:bg-surface-container-low transition-colors rounded-lg p-4 card-shadow border border-outline-variant/20 flex items-center justify-between group active:scale-[0.98] duration-200">
+                <div class="flex items-center gap-4 text-on-background group-hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">logout</span>
+                    <span class="font-body-lg text-body-lg">로그아웃</span>
+                </div>
+                <span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">chevron_right</span>
+            </button>
+            <!-- Delete Account -->
+            <button class="w-full bg-surface-container-lowest hover:bg-error-container/30 transition-colors rounded-lg p-4 card-shadow border border-outline-variant/20 flex items-center justify-between group active:scale-[0.98] duration-200 mt-4">
+                <div class="flex items-center gap-4 text-error/80 group-hover:text-error transition-colors">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person_remove</span>
+                    <span class="font-body-lg text-body-lg">회원탈퇴</span>
+                </div>
+            </button>
+        </section>
+    </div>
+</main>
+<!-- BottomNavBar (Settings is usually a sub-page or focused journey, but if we treat this as a main tab context, we shouldn't render it here as Settings isn't in the tab_labels.
+         However, the user asked for a standard My Page. We will suppress the BottomNavBar as it's a settings/profile specific page, prioritizing the canvas.) -->
+<script>
+    // Subtle scroll effect for header
+    const header = document.querySelector('header');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 20) {
+            header.classList.add('shadow-sm');
+            header.classList.replace('py-4', 'py-2');
+        } else {
+            header.classList.remove('shadow-sm');
+            header.classList.replace('py-2', 'py-4');
+        }
+    });
+</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!auth.isLoggedIn()) {
+                window.location.href = '/login';
+                return;
+            }
+
+            try {
+                const user = await api.get('/users/me');
+                document.getElementById('user-nickname').textContent = user.nickname;
+                if (user.profileImg) {
+                    document.getElementById('user-profile-img').src = user.profileImg;
+                }
+            } catch (err) {
+                console.error('Failed to load user profile:', err);
+            }
+        });
+
+        function handleLogout() {
+            auth.logout();
+        }
+    </script>
+</body></html>

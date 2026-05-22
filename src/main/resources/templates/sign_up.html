@@ -1,0 +1,249 @@
+<!DOCTYPE html><html class="light" lang="ko"><head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>회원가입 - 디어 다이어리</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&amp;family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#605e5f",
+                        "surface-container-low": "#fcf2eb",
+                        "on-surface-variant": "#484740",
+                        "error": "#ba1a1a",
+                        "surface": "#fff8f4",
+                        "secondary-container": "#c5e3fe",
+                        "on-secondary-container": "#48667c",
+                        "surface-tint": "#605e5a",
+                        "on-secondary-fixed": "#001e2f",
+                        "inverse-primary": "#c9c6c1",
+                        "on-primary": "#ffffff",
+                        "surface-bright": "#fff8f4",
+                        "surface-container-high": "#f0e6e0",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#34302b",
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#c9c6bd",
+                        "on-surface": "#1f1b17",
+                        "outline": "#79776f",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f9efe8",
+                        "secondary": "#446278",
+                        "background": "#fff8f4",
+                        "primary-container": "#f7f3ee",
+                        "secondary-fixed": "#c9e6ff",
+                        "on-tertiary-fixed-variant": "#484648",
+                        "tertiary-fixed-dim": "#cac5c7",
+                        "primary": "#605e5a",
+                        "on-tertiary-container": "#716e70",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1f1b17",
+                        "tertiary-fixed": "#e6e1e3",
+                        "tertiary-container": "#f7f2f4",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#1c1b1d",
+                        "surface-container-highest": "#eae1da",
+                        "surface-container": "#f6ece5",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#e2d8d2",
+                        "on-primary-fixed-variant": "#484743",
+                        "primary-fixed-dim": "#c9c6c1",
+                        "surface-variant": "#eae1da",
+                        "on-secondary-fixed-variant": "#2c4a5f",
+                        "on-primary-container": "#706f6b",
+                        "primary-fixed": "#e6e2dd",
+                        "on-primary-fixed": "#1c1c19",
+                        "secondary-fixed-dim": "#accae4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-gap": "48px",
+                        "gutter": "16px",
+                        "container-padding-desktop": "40px",
+                        "base": "8px",
+                        "container-padding-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": [
+                            "Literata"
+                        ],
+                        "headline-md": [
+                            "Literata"
+                        ],
+                        "display-lg": [
+                            "Literata"
+                        ],
+                        "body-md": [
+                            "Plus Jakarta Sans"
+                        ],
+                        "body-lg": [
+                            "Plus Jakarta Sans"
+                        ],
+                        "label-sm": [
+                            "Plus Jakarta Sans"
+                        ]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": [
+                            "32px",
+                            {
+                                "lineHeight": "1.2",
+                                "fontWeight": "700"
+                            }
+                        ],
+                        "headline-md": [
+                            "24px",
+                            {
+                                "lineHeight": "1.4",
+                                "fontWeight": "600"
+                            }
+                        ],
+                        "display-lg": [
+                            "40px",
+                            {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                            }
+                        ],
+                        "body-md": [
+                            "16px",
+                            {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                            }
+                        ],
+                        "body-lg": [
+                            "18px",
+                            {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                            }
+                        ],
+                        "label-sm": [
+                            "13px",
+                            {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "600"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            /* Subtle noise texture for paper feel */
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            background-color: #fff8f4;
+        }
+    </style>
+    <script src="/js/api.js"></script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col antialiased selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- TopAppBar (Transactional - Suppressed active nav, simplified) -->
+<header class="w-full top-0 bg-background flex justify-between items-center px-gutter py-4 max-w-7xl mx-auto z-50">
+    <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary font-display-lg text-headline-md" style="font-variation-settings: 'FILL' 1;">book</span>
+        <span class="font-display-lg text-headline-md text-primary tracking-tight">디어 다이어리</span>
+    </div>
+    <div>
+        <a class="font-label-sm text-label-sm text-on-surface-variant hover:text-secondary transition-colors px-4 py-2" href="/login">로그인</a>
+    </div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex items-center justify-center p-gutter relative overflow-hidden">
+    <!-- Abstract Decorative Elements -->
+    <div class="absolute top-[-10%] left-[-5%] w-96 h-96 bg-primary-container rounded-full mix-blend-multiply filter blur-[80px] opacity-70 z-0 pointer-events-none"></div>
+    <div class="absolute bottom-[-10%] right-[-5%] w-96 h-96 bg-surface-container-high rounded-full mix-blend-multiply filter blur-[80px] opacity-70 z-0 pointer-events-none"></div>
+    <!-- Glassmorphism Card -->
+    <div class="relative z-10 w-full max-w-md bg-surface-container-lowest/80 backdrop-blur-md rounded-xl p-container-padding-mobile md:p-container-padding-desktop shadow-[0_8px_32px_0_rgba(92,86,81,0.08)] border border-outline-variant/30">
+        <div class="text-center mb-8">
+            <h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-primary mb-2">회원가입</h1>
+
+        </div>
+        <form class="space-y-6" id="signUpForm">
+            <!-- Profile Image Upload Area -->
+            <div class="flex flex-col items-center mb-8 gap-4">
+                <div class="relative w-24 h-24 rounded-full bg-surface-container border-2 border-dashed border-outline-variant flex items-center justify-center overflow-hidden group cursor-pointer hover:border-secondary transition-colors duration-300">
+                    <span class="material-symbols-outlined text-outline group-hover:text-secondary text-3xl transition-colors">add_a_photo</span>
+                    <input accept="image/*" aria-label="Upload Profile Image" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" type="file">
+                </div>
+                <span class="font-label-sm text-label-sm text-on-surface-variant">프로필 사진 (선택 사항)</span>
+            </div>
+            <!-- Input Fields -->
+            <div class="space-y-5"><div class="relative mb-8">
+                <input class="peer w-full bg-transparent border-0 border-b-2 border-outline-variant/50 focus:border-secondary focus:ring-0 px-0 py-2 font-display-lg-mobile text-body-lg text-on-surface transition-colors placeholder-transparent" id="email" name="email" placeholder="이메일" required="" type="email">
+                <label class="absolute left-0 top-2 font-body-md text-body-md text-on-surface-variant transition-all peer-placeholder-shown:text-body-md peer-placeholder-shown:top-2 peer-focus:-top-4 peer-focus:text-label-sm peer-focus:font-label-sm peer-focus:text-secondary peer-valid:-top-4 peer-valid:text-label-sm peer-valid:font-label-sm" for="email">이메일</label>
+            </div>
+                <div class="relative mt-8">
+                    <input class="peer w-full bg-transparent border-0 border-b-2 border-outline-variant/50 focus:border-secondary focus:ring-0 px-0 py-2 font-display-lg-mobile text-body-lg text-on-surface transition-colors placeholder-transparent" id="login_id" name="login_id" placeholder="로그인 아이디" required="" type="text">
+                    <label class="absolute left-0 top-2 font-body-md text-body-md text-on-surface-variant transition-all peer-placeholder-shown:text-body-md peer-placeholder-shown:top-2 peer-focus:-top-4 peer-focus:text-label-sm peer-focus:font-label-sm peer-focus:text-secondary peer-valid:-top-4 peer-valid:text-label-sm peer-valid:font-label-sm" for="login_id">로그인 아이디</label>
+                </div>
+                <div class="relative mt-8">
+                    <input class="peer w-full bg-transparent border-0 border-b-2 border-outline-variant/50 focus:border-secondary focus:ring-0 px-0 py-2 font-display-lg-mobile text-body-lg text-on-surface transition-colors placeholder-transparent" id="nickname" name="nickname" placeholder="닉네임" required="" type="text">
+                    <label class="absolute left-0 top-2 font-body-md text-body-md text-on-surface-variant transition-all peer-placeholder-shown:text-body-md peer-placeholder-shown:top-2 peer-focus:-top-4 peer-focus:text-label-sm peer-focus:font-label-sm peer-focus:text-secondary peer-valid:-top-4 peer-valid:text-label-sm peer-valid:font-label-sm" for="nickname">닉네임</label>
+                </div>
+                <div class="relative mt-8">
+                    <input class="peer w-full bg-transparent border-0 border-b-2 border-outline-variant/50 focus:border-secondary focus:ring-0 px-0 py-2 font-display-lg-mobile text-body-lg text-on-surface transition-colors placeholder-transparent" id="password" name="password" placeholder="비밀번호" required="" type="password">
+                    <label class="absolute left-0 top-2 font-body-md text-body-md text-on-surface-variant transition-all peer-placeholder-shown:text-body-md peer-placeholder-shown:top-2 peer-focus:-top-4 peer-focus:text-label-sm peer-focus:font-label-sm peer-focus:text-secondary peer-valid:-top-4 peer-valid:text-label-sm peer-valid:font-label-sm" for="password">비밀번호</label>
+                </div>
+                <div class="relative mt-8">
+                    <input class="peer w-full bg-transparent border-0 border-b-2 border-outline-variant/50 focus:border-secondary focus:ring-0 px-0 py-2 font-display-lg-mobile text-body-lg text-on-surface transition-colors placeholder-transparent" id="confirm_password" name="confirm_password" placeholder="비밀번호 확인" required="" type="password">
+                    <label class="absolute left-0 top-2 font-body-md text-body-md text-on-surface-variant transition-all peer-placeholder-shown:text-body-md peer-placeholder-shown:top-2 peer-focus:-top-4 peer-focus:text-label-sm peer-focus:font-label-sm peer-focus:text-secondary peer-valid:-top-4 peer-valid:text-label-sm peer-valid:font-label-sm" for="confirm_password">비밀번호 확인</label>
+                </div>
+            </div>
+            <!-- Submit Button -->
+            <div class="pt-6">
+                <button class="w-full bg-secondary text-on-secondary font-label-sm text-label-sm py-4 rounded-full shadow-sm hover:shadow-md hover:bg-on-secondary-fixed-variant transition-all duration-300 transform active:scale-[0.98] flex items-center justify-center gap-2" type="submit">
+                  회원가입 하기
+                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </button>
+            </div>
+            <div class="text-center mt-6">
+                <p class="font-body-md text-body-md text-on-surface-variant">
+                    가입된 계정이 있으십니까?
+                    <a class="text-secondary font-semibold hover:underline underline-offset-4 decoration-2 decoration-secondary/30 transition-all" href="/login">로그인 하기</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</main>
+<!-- Suppress Navigation Shells for Transactional Journey (Sign-up) -->
+
+
+    <script>
+        document.getElementById('signUpForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const nickname = document.getElementById('nickname').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+
+            if (password !== confirmPassword) {
+                alert('비밀번호가 일치하지 않습니다.');
+                return;
+            }
+
+            try {
+                await auth.signUp(email, password, nickname);
+                alert('회원가입이 완료되었습니다. 로그인해주세요.');
+                window.location.href = '/login';
+            } catch (err) {
+                alert('회원가입 실패: ' + err.message);
+            }
+        });
+    </script>
+</body></html>

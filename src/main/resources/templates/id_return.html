@@ -1,0 +1,156 @@
+<!DOCTYPE html><html class="light" lang="ko"><head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>아이디 찾기 - 디어 다이어리</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&amp;family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary": "#605e5f",
+                        "surface-container-low": "#fcf2eb",
+                        "on-surface-variant": "#484740",
+                        "error": "#ba1a1a",
+                        "surface": "#fff8f4",
+                        "secondary-container": "#c5e3fe",
+                        "on-secondary-container": "#48667c",
+                        "surface-tint": "#605e5a",
+                        "on-secondary-fixed": "#001e2f",
+                        "inverse-primary": "#c9c6c1",
+                        "on-primary": "#ffffff",
+                        "surface-bright": "#fff8f4",
+                        "surface-container-high": "#f0e6e0",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#34302b",
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#c9c6bd",
+                        "on-surface": "#1f1b17",
+                        "outline": "#79776f",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f9efe8",
+                        "secondary": "#446278",
+                        "background": "#fff8f4",
+                        "primary-container": "#f7f3ee",
+                        "secondary-fixed": "#c9e6ff",
+                        "on-tertiary-fixed-variant": "#484648",
+                        "tertiary-fixed-dim": "#cac5c7",
+                        "primary": "#605e5a",
+                        "on-tertiary-container": "#716e70",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1f1b17",
+                        "tertiary-fixed": "#e6e1e3",
+                        "tertiary-container": "#f7f2f4",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#1c1b1d",
+                        "surface-container-highest": "#eae1da",
+                        "surface-container": "#f6ece5",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#e2d8d2",
+                        "on-primary-fixed-variant": "#484743",
+                        "primary-fixed-dim": "#c9c6c1",
+                        "surface-variant": "#eae1da",
+                        "on-secondary-fixed-variant": "#2c4a5f",
+                        "on-primary-container": "#706f6b",
+                        "primary-fixed": "#e6e2dd",
+                        "on-primary-fixed": "#1c1c19",
+                        "secondary-fixed-dim": "#accae4"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "section-gap": "48px",
+                        "gutter": "16px",
+                        "container-padding-desktop": "40px",
+                        "base": "8px",
+                        "container-padding-mobile": "20px"
+                    },
+                    fontFamily: {
+                        "display-lg-mobile": ["Literata"],
+                        "headline-md": ["Literata"],
+                        "display-lg": ["Literata"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"]
+                    },
+                    fontSize: {
+                        "display-lg-mobile": ["32px", { lineHeight: "1.2", fontWeight: "700" }],
+                        "headline-md": ["24px", { lineHeight: "1.4", fontWeight: "600" }],
+                        "display-lg": ["40px", { lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+                        "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+                        "label-sm": ["13px", { lineHeight: "1.2", letterSpacing: "0.05em", fontWeight: "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .noise-bg {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.02'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen relative overflow-x-hidden selection:bg-secondary-container selection:text-on-secondary-container flex flex-col noise-bg">
+<div class="fixed top-0 inset-x-0 h-96 bg-gradient-to-b from-surface-container-low to-transparent -z-10 pointer-events-none"></div>
+<header class="w-full flex justify-between items-center px-6 py-6 md:px-container-padding-desktop absolute top-0 left-0 z-10">
+    <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors text-on-surface-variant group focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 focus:ring-offset-background">
+        <span class="material-symbols-outlined text-[20px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
+    </button>
+</header>
+<main class="flex-grow flex items-center justify-center p-6 md:p-container-padding-desktop z-0">
+    <div class="w-full max-w-[420px] bg-surface-container-lowest rounded-2xl p-8 md:p-10 shadow-[0_4px_24px_rgba(92,86,81,0.04)] border border-outline-variant/20 relative overflow-hidden">
+        <div class="absolute -top-12 -right-12 w-32 h-32 bg-secondary/5 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="flex flex-col items-center text-center mb-8">
+            <div class="w-12 h-12 bg-primary-container rounded-full flex items-center justify-center text-primary mb-6 shadow-sm">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">search</span>
+            </div>
+            <h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-3">아이디 찾기</h1>
+            <p class="font-body-md text-body-md text-on-surface-variant">가입할 때 사용한 이메일을 입력하시면 아이디를 알려드립니다.</p>
+        </div>
+        <form class="flex flex-col gap-8">
+            <div class="flex flex-col gap-2 relative group">
+                <label class="font-label-sm text-label-sm text-outline group-focus-within:text-secondary transition-colors" for="recovery-input">등록된 이메일</label>
+                <div class="relative">
+                    <input autocomplete="off" class="w-full bg-transparent border-0 border-b-2 border-outline-variant/50 focus:border-secondary focus:ring-0 px-0 py-2 font-headline-md text-headline-md text-on-surface placeholder:text-outline-variant/50 placeholder:font-body-md transition-colors" id="recovery-input" placeholder="이메일을 입력하세요" type="text">
+                </div>
+            </div>
+            <div class="pt-4 flex flex-col gap-4">
+                <button class="w-full bg-secondary hover:bg-on-secondary-fixed-variant text-on-secondary font-label-sm text-label-sm py-4 rounded-full transition-all active:scale-[0.98] shadow-sm hover:shadow-md flex items-center justify-center gap-2" type="button">
+                    아이디 찾기
+                </button>
+                <a class="w-full py-3 text-center font-body-md text-body-md text-outline hover:text-on-surface transition-colors flex items-center justify-center gap-2 group" href="/login">
+                    <span class="material-symbols-outlined text-[18px] opacity-70 group-hover:-translate-x-1 transition-transform">keyboard_return</span>
+                    로그인 페이지로 돌아가기
+                </a>
+            </div>
+        </form>
+    </div>
+</main>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const input = document.getElementById('recovery-input');
+        const label = input.previousElementSibling;
+
+        input.addEventListener('focus', () => {
+            input.parentElement.classList.add('scale-[1.01]');
+        });
+
+        input.addEventListener('blur', () => {
+            input.parentElement.classList.remove('scale-[1.01]');
+        });
+    });
+</script>
+
+
+</body></html>

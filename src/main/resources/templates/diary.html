@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Dear Diary - 일기 쓰기</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400..700&amp;family=Plus+Jakarta+Sans:wght@400..700&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#34302b",
+                        "outline-variant": "#c9c6bd",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#484740",
+                        "secondary": "#446278",
+                        "secondary-container": "#c5e3fe",
+                        "secondary-fixed-dim": "#accae4",
+                        "surface-container": "#f6ece5",
+                        "on-primary-container": "#706f6b",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#605e5f",
+                        "on-secondary-container": "#48667c",
+                        "on-tertiary-fixed-variant": "#484648",
+                        "on-background": "#1f1b17",
+                        "secondary-fixed": "#c9e6ff",
+                        "tertiary-fixed": "#e6e1e3",
+                        "inverse-on-surface": "#f9efe8",
+                        "surface": "#fff8f4",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#fcf2eb",
+                        "surface-tint": "#605e5a",
+                        "background": "#fff8f4",
+                        "on-primary-fixed-variant": "#484743",
+                        "primary-container": "#f7f3ee",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed": "#1c1c19",
+                        "on-secondary-fixed-variant": "#2c4a5f",
+                        "primary": "#605e5a",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#e2d8d2",
+                        "tertiary-container": "#f7f2f4",
+                        "on-surface": "#1f1b17",
+                        "tertiary-fixed-dim": "#cac5c7",
+                        "surface-variant": "#eae1da",
+                        "surface-container-high": "#f0e6e0",
+                        "primary-fixed-dim": "#c9c6c1",
+                        "on-primary": "#ffffff",
+                        "inverse-primary": "#c9c6c1",
+                        "on-tertiary": "#ffffff",
+                        "surface-bright": "#fff8f4",
+                        "primary-fixed": "#e6e2dd",
+                        "on-tertiary-fixed": "#1c1b1d",
+                        "outline": "#79776f",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed": "#001e2f",
+                        "surface-container-highest": "#eae1da",
+                        "on-tertiary-container": "#716e70"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-padding-desktop": "40px",
+                        "section-gap": "48px",
+                        "container-padding-mobile": "20px",
+                        "gutter": "16px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "serif": [
+                            "Literata",
+                            "serif"
+                        ],
+                        "display-lg-mobile": [
+                            "Literata"
+                        ],
+                        "display-lg": [
+                            "Literata"
+                        ],
+                        "body-lg": [
+                            "Plus Jakarta Sans"
+                        ],
+                        "label-sm": [
+                            "Plus Jakarta Sans"
+                        ],
+                        "headline-md": [
+                            "Literata"
+                        ],
+                        "body-md": [
+                            "Plus Jakarta Sans"
+                        ]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": [
+                            "32px",
+                            {
+                                "lineHeight": "1.2",
+                                "fontWeight": "700"
+                            }
+                        ],
+                        "display-lg": [
+                            "40px",
+                            {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                            }
+                        ],
+                        "body-lg": [
+                            "18px",
+                            {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                            }
+                        ],
+                        "label-sm": [
+                            "13px",
+                            {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "600"
+                            }
+                        ],
+                        "headline-md": [
+                            "24px",
+                            {
+                                "lineHeight": "1.4",
+                                "fontWeight": "600"
+                            }
+                        ],
+                        "body-md": [
+                            "16px",
+                            {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                            }
+                        ]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            background-color: #fff8f4;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+        }
+
+        .glass-card {
+            background: theme('colors.surface-container-lowest');
+            box-shadow: 0 4px 20px rgba(92, 86, 81, 0.05);
+            border: 1px solid theme('colors.surface-variant');
+        }
+
+        .editor-content:empty:before {
+            content: attr(data-placeholder);
+            color: theme('colors.outline-variant');
+            pointer-events: none;
+            display: block; /* For Firefox */
+        }
+    </style>
+    <script src="/js/api.js"></script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-lg">
+<header class="w-full top-0 sticky z-40 bg-background/80 backdrop-blur-md">
+    <div class="flex justify-between items-center px-6 md:px-10 py-2 max-w-7xl mx-auto">
+        <div class="font-serif text-3xl md:text-4xl text-primary italic font-bold">
+            Dear Diary
+        </div>
+        <div class="flex items-center gap-4">
+            <button class="text-on-surface-variant hover:text-secondary transition-colors">
+                <span class="material-symbols-outlined">account_circle</span>
+            </button>
+        </div>
+    </div>
+</header>
+<div class="flex flex-1 max-w-7xl mx-auto w-full relative">
+    <nav class="hidden md:flex flex-col w-64 fixed h-full pl-10 pt-4 gap-2 top-16">
+        <a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-container-low px-5 py-3 rounded-full transition-all" href="/main">
+            <span class="material-symbols-outlined">home</span> 홈
+        </a>
+        <a class="flex items-center gap-4 bg-secondary-container text-on-secondary-container px-5 py-3 rounded-full font-bold shadow-sm" href="/diary">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_stories</span> 일기
+        </a>
+        <a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-container-low px-5 py-3 rounded-full transition-all" href="/todolist">
+            <span class="material-symbols-outlined">task_alt</span> 오늘의 할 일
+        </a>
+        <a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-container-low px-5 py-3 rounded-full transition-all" href="/report">
+            <span class="material-symbols-outlined">equalizer</span> 통계
+        </a>
+    </nav>
+    <main class="flex-1 w-full md:ml-64 px-6 md:px-10 pb-32 pt-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-section-gap">
+        <!-- Left Column: Diary Entry -->
+        <div class="lg:col-span-8 flex flex-col gap-gutter">
+            <!-- Date & Title Header -->
+            <div class="bg-white rounded-xl p-6 md:p-8 flex flex-col gap-4 shadow-sm border border-surface-variant">
+                <div class="text-outline-variant font-label-sm text-label-sm uppercase tracking-wider flex items-center justify-between">
+                    <span id="current-date-display">2023년 10월 24일 • 화요일</span>
+                    <span class="material-symbols-outlined text-outline-variant cursor-pointer hover:text-primary transition-colors">more_horiz</span>
+                </div>
+                <input id="diary-title" class="w-full bg-white border-none p-0 focus:ring-0 font-headline-md text-headline-md text-on-surface placeholder-outline-variant" placeholder="오늘의 제목을 입력하세요..." type="text"/>
+            </div>
+            <!-- Emotion Selector -->
+            <div class="bg-white rounded-xl p-6 md:p-8 shadow-sm border border-surface-variant">
+                <h3 class="font-label-sm text-label-sm text-on-surface-variant mb-4">오늘 기분은 어떠신가요?</h3>
+                <div class="flex justify-between md:justify-start md:gap-8 items-center" id="emotion-selector">
+                    <button class="flex flex-col items-center gap-2 group" data-emotion="VERY_BAD">
+                        <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <span class="material-symbols-outlined text-outline-variant text-2xl group-hover:text-primary transition-colors">sentiment_very_dissatisfied</span>
+                        </div>
+                    </button>
+                    <button class="flex flex-col items-center gap-2 group" data-emotion="BAD">
+                        <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <span class="material-symbols-outlined text-outline-variant text-2xl group-hover:text-primary transition-colors">sentiment_dissatisfied</span>
+                        </div>
+                    </button>
+                    <button class="flex flex-col items-center gap-2 group" data-emotion="NORMAL">
+                        <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <span class="material-symbols-outlined text-outline-variant text-2xl group-hover:text-primary transition-colors">sentiment_neutral</span>
+                        </div>
+                    </button>
+                    <button class="flex flex-col items-center gap-2 group" data-emotion="GOOD">
+                        <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <span class="material-symbols-outlined text-outline-variant text-2xl group-hover:text-primary transition-colors">sentiment_satisfied</span>
+                        </div>
+                    </button>
+                    <button class="flex flex-col items-center gap-2 group" data-emotion="VERY_GOOD">
+                        <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <span class="material-symbols-outlined text-outline-variant text-2xl group-hover:text-primary transition-colors">sentiment_very_satisfied</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+            <!-- Text Editor -->
+            <div class="bg-white rounded-xl p-6 md:p-8 flex flex-col flex-grow min-h-[400px] shadow-sm border border-surface-variant">
+                <!-- Formatting Toolbar (Simplified) -->
+                <div class="flex gap-2 mb-4 pb-4 border-b border-surface-variant text-outline-variant">
+                    <button class="p-1 hover:text-primary hover:bg-surface-container rounded transition-colors"><span class="material-symbols-outlined text-sm">format_bold</span></button>
+                    <button class="p-1 hover:text-primary hover:bg-surface-container rounded transition-colors"><span class="material-symbols-outlined text-sm">format_italic</span></button>
+                    <button class="p-1 hover:text-primary hover:bg-surface-container rounded transition-colors"><span class="material-symbols-outlined text-sm">format_list_bulleted</span></button>
+                    <div class="w-[1px] h-6 bg-surface-variant mx-2"></div>
+                    <button class="p-1 hover:text-primary hover:bg-surface-container rounded transition-colors"><span class="material-symbols-outlined text-sm">image</span></button>
+                </div>
+                <div class="editor-content flex-grow font-body-lg text-body-lg text-on-surface focus:outline-none whitespace-pre-wrap bg-white" contenteditable="true" data-placeholder="마음을 담아 기록해 보세요. 이곳은 당신의 공간입니다."></div>
+            </div>
+            <!-- Image Upload (Empty State) -->
+            <div class="bg-white rounded-xl p-6 md:p-8 border-dashed border-2 border-surface-variant hover:bg-surface-container transition-colors cursor-pointer flex flex-col items-center justify-center gap-2 min-h-[120px] shadow-sm">
+                <span class="material-symbols-outlined text-outline-variant text-3xl">add_photo_alternate</span>
+                <span class="font-label-sm text-label-sm text-on-surface-variant">추억 추가하기</span>
+            </div>
+            <!-- Tags -->
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-surface-variant">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-outline-variant">sell</span>
+                    <input class="flex-grow bg-white border-none p-0 focus:ring-0 font-body-md text-body-md text-on-surface placeholder-outline-variant" placeholder="태그 추가 (예: 가족, 업무, 피곤)..." type="text"/>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1"># 평온 <button><span class="material-symbols-outlined text-[14px] hover:text-error transition-colors">close</span></button></span>
+                    <span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1"># 독서 <button><span class="material-symbols-outlined text-[14px] hover:text-error transition-colors">close</span></button></span>
+                </div>
+            </div>
+            <!-- Save Actions -->
+            <div class="flex justify-end gap-4 mt-4">
+                <button class="px-6 py-2 rounded-lg font-label-sm text-label-sm text-on-surface-variant border border-outline-variant hover:bg-surface-container transition-colors">임시 저장</button>
+                <button id="save-diary-btn" class="px-6 py-2 rounded-lg font-label-sm text-label-sm bg-secondary text-on-secondary hover:bg-on-secondary-container transition-colors shadow-sm">작성 완료</button>
+            </div>
+        </div>
+        <!-- Right Column: Widgets -->
+        <div class="lg:col-span-4 flex flex-col gap-gutter">
+            <!-- Sleep Tracker Widget -->
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-surface-variant">
+                <div class="flex items-center gap-2 mb-4 text-secondary">
+                    <span class="material-symbols-outlined">bedtime</span>
+                    <h3 class="font-headline-md text-[18px]">수면</h3>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center border-b border-surface-variant pb-2">
+                        <span class="font-label-sm text-label-sm text-on-surface-variant">취침 시간</span>
+                        <input class="bg-white border-none p-0 focus:ring-0 font-body-lg text-body-lg text-on-surface w-auto text-right cursor-pointer" type="time" value="23:30"/>
+                    </div>
+                    <div class="flex justify-between items-center border-b border-surface-variant pb-2">
+                        <span class="font-label-sm text-label-sm text-on-surface-variant">기상 시간</span>
+                        <input class="bg-white border-none p-0 focus:ring-0 font-body-lg text-body-lg text-on-surface w-auto text-right cursor-pointer" type="time" value="07:00"/>
+                    </div>
+                    <div class="pt-2 flex justify-between items-end">
+                        <span class="font-label-sm text-label-sm text-outline-variant">총 수면 시간</span>
+                        <span class="font-headline-md text-headline-md text-primary">7시간 30분</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Exercise Tracker Widget -->
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-surface-variant">
+                <div class="flex items-center gap-2 mb-4 text-secondary">
+                    <span class="material-symbols-outlined">fitness_center</span>
+                    <h3 class="font-headline-md text-[18px]">운동</h3>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="font-label-sm text-label-sm text-on-surface-variant block mb-2">활동 종류</label>
+                        <input list="activity-options" class="w-full bg-white border-none rounded-lg p-3 font-body-md text-body-md text-on-surface focus:ring-1 focus:ring-secondary shadow-sm" placeholder="운동을 입력하거나 선택하세요...">
+                        <datalist id="activity-options">
+                            <option value="걷기">
+                            <option value="달리기">
+                            <option value="요가">
+                            <option value="근력 운동">
+                            <option value="사이클">
+                            <option value="휴식">
+                        </datalist>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex-1">
+                            <label class="font-label-sm text-label-sm text-on-surface-variant block mb-2">시간 (분)</label>
+                            <input class="w-full bg-white border-none rounded-lg p-3 font-body-md text-body-md text-on-surface focus:ring-1 focus:ring-secondary shadow-sm" placeholder="0" type="number" value="45"/>
+                        </div>
+                        <div class="flex-1">
+                            <label class="font-label-sm text-label-sm text-on-surface-variant block mb-2">강도</label>
+                            <select class="w-full bg-white border-none rounded-lg p-3 font-body-md text-body-md text-on-surface focus:ring-1 focus:ring-secondary cursor-pointer shadow-sm">
+                                <option>가벼움</option>
+                                <option selected="">보통</option>
+                                <option>격렬함</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Daily Quote / Prompt (Bonus Widget) -->
+            <div class="glass-card rounded-xl p-6 bg-secondary-container/20 border-none mt-4">
+                <p class="font-body-md text-body-md text-on-secondary-container italic mb-2">"오늘 하루 중 가장 평온했던 순간은 언제였나요?"</p>
+                <p class="font-label-sm text-label-sm text-outline-variant">— 오늘의 질문</p>
+            </div>
+        </div>
+    </div>
+</main>
+</div>
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-surface-container-low/95 backdrop-blur-lg rounded-t-2xl shadow-lg border-t border-outline-variant/20">
+    <a class="flex flex-col items-center text-on-surface-variant px-5 py-2" href="/main">
+        <span class="material-symbols-outlined">home</span>
+        <span class="text-[10px] mt-1 font-bold">홈</span>
+    </a>
+    <a class="flex flex-col items-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-2 shadow-sm" href="/diary">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_stories</span>
+        <span class="text-[10px] font-bold mt-1">일기</span>
+    </a>
+    <a class="flex flex-col items-center text-on-surface-variant px-5 py-2" href="/todolist">
+        <span class="material-symbols-outlined">task_alt</span>
+        <span class="text-[10px] mt-1 font-bold">할 일</span>
+    </a>
+    <a class="flex flex-col items-center text-on-surface-variant px-5 py-2" href="/report">
+        <span class="material-symbols-outlined">equalizer</span>
+        <span class="text-[10px] mt-1 font-bold">통계</span>
+    </a>
+</nav>
+<script>
+    // Simple editor focus behavior
+    const editor = document.querySelector('.editor-content');
+    editor.addEventListener('focus', function() {
+        this.parentElement.classList.add('ring-1', 'ring-secondary');
+    });
+    editor.addEventListener('blur', function() {
+        this.parentElement.classList.remove('ring-1', 'ring-secondary');
+    });
+</script>
+    <script>
+        let selectedEmotion = 'NORMAL';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!auth.isLoggedIn()) {
+                window.location.href = '/login';
+                return;
+            }
+
+            // 날짜 표시
+            const now = new Date();
+            const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+            document.getElementById('current-date-display').textContent = 
+                `${now.getFullYear()}년 ${now.getMonth() + 1}월 ${now.getDate()}일 • ${days[now.getDay()]}`;
+
+            // 감정 선택 로직
+            const emotionButtons = document.querySelectorAll('#emotion-selector button');
+            emotionButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    emotionButtons.forEach(b => {
+                        const div = b.querySelector('div');
+                        div.className = "w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:scale-110 transition-transform duration-300";
+                        const span = b.querySelector('span');
+                        span.className = "material-symbols-outlined text-outline-variant text-2xl group-hover:text-primary transition-colors";
+                    });
+                    
+                    const div = btn.querySelector('div');
+                    div.className = "w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:scale-110 transition-transform duration-300 border-2 border-secondary bg-secondary-container/30";
+                    const span = btn.querySelector('span');
+                    span.className = "material-symbols-outlined text-secondary text-2xl";
+                    
+                    selectedEmotion = btn.getAttribute('data-emotion');
+                });
+            });
+
+            // 작성 완료 버튼
+            document.getElementById('save-diary-btn').addEventListener('click', async () => {
+                const title = document.getElementById('diary-title').value;
+                const content = document.querySelector('.editor-content').innerText;
+                
+                if (!title || !content) {
+                    alert('제목과 내용을 입력해주세요.');
+                    return;
+                }
+
+                try {
+                    await api.post('/diaries', {
+                        emotion: selectedEmotion,
+                        content: `[${title}]\n${content}`,
+                        tags: [] // 태그 로직은 추후 보완
+                    });
+                    alert('일기가 저장되었습니다.');
+                    window.location.href = '/';
+                } catch (err) {
+                    alert('저장 실패: ' + err.message);
+                }
+            });
+        });
+    </script>
+</body></html>

@@ -404,11 +404,15 @@
                 });
             });
 
-            // 작성 완료 버튼
+// 작성 완료 버튼
             document.getElementById('save-diary-btn').addEventListener('click', async () => {
                 const title = document.getElementById('diary-title').value;
                 const content = document.querySelector('.editor-content').innerText;
-                
+
+                // ✅ 주소창에서 날짜 파라미터 가져오기 (예: /diary?date=2026-05-22)
+                const urlParams = new URLSearchParams(window.location.search);
+                const targetDate = urlParams.get('date') || new Date().toISOString().split('T')[0];
+
                 if (!title || !content) {
                     alert('제목과 내용을 입력해주세요.');
                     return;
@@ -416,12 +420,13 @@
 
                 try {
                     await api.post('/diaries', {
+                        targetDate: targetDate, // ✅ 백엔드로 날짜 전달
                         emotion: selectedEmotion,
                         content: `[${title}]\n${content}`,
-                        tags: [] // 태그 로직은 추후 보완
+                        tags: []
                     });
                     alert('일기가 저장되었습니다.');
-                    window.location.href = '/';
+                    window.location.href = '/main';
                 } catch (err) {
                     alert('저장 실패: ' + err.message);
                 }

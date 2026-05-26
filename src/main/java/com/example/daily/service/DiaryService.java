@@ -4,6 +4,7 @@ import com.example.daily.domain.entity.Diary;
 import com.example.daily.domain.entity.DiaryTag;
 import com.example.daily.domain.entity.User;
 import com.example.daily.domain.repository.DiaryRepository;
+import com.example.daily.domain.repository.DiaryTagRepository;
 import com.example.daily.domain.repository.UserRepository;
 import com.example.daily.dto.DiaryDto;
 import lombok.RequiredArgsConstructor;
@@ -25,30 +26,35 @@ public class DiaryService {
 
     private final DiaryRepository diaryRepository;
     private final UserRepository userRepository;
-
+    private final DiaryTagRepository diaryTagRepository;
     @Transactional
     public void createDiary(String email, DiaryDto.CreateRequest request) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        LocalDateTime diaryDateTime = (request.getTargetDate() != null)
+                ? request.getTargetDate().atStartOfDay()
+                : LocalDateTime.now();
 
         Diary diary = Diary.builder()
                 .user(user)
                 .emotion(request.getEmotion())
                 .content(request.getContent())
                 .imageUrl(request.getImageUrl())
+                .createdAt(diaryDateTime)
                 .build();
+        diaryRepository.save(diary);
 
-        if (request.getTags() != null) {
+
+        if (request.getTags() != null && !request.getTags().isEmpty()) {
             for (String tagName : request.getTags()) {
                 DiaryTag tag = DiaryTag.builder()
                         .diary(diary)
                         .tagName(tagName)
                         .build();
-                diary.getTags().add(tag);
+                diaryTagRepository.save(tag); // DiaryTagRepository 필요
             }
         }
-
-        diaryRepository.save(diary);
     }
 
     @Transactional(readOnly = true)

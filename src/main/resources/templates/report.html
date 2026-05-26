@@ -309,15 +309,18 @@
                 const now = new Date();
                 const year = now.getFullYear();
                 const month = now.getMonth() + 1;
-                
+
                 const report = await api.get(`/reports/monthly?year=${year}&month=${month}`);
-                
-                // 데이터 바인딩 예시 (백엔드 구조에 맞춰 조정 필요)
-                // document.getElementById('total-records').textContent = report.totalCount || 0;
-                // ... 기타 UI 업데이트 로직
-                
+
+                // ✅ 백엔드에서 주는 이름(totalRecords)과 똑같이 맞춰줌
+                document.getElementById('total-records').textContent = report.totalRecords || 0;
+
+                // 감정 카운트 바인딩 예시
+                // const emotionCounts = report.emotionCounts || {};
+                // document.getElementById('good-emotion-count').textContent = emotionCounts['GOOD'] || 0;
+
             } catch (err) {
-                console.error('Report loading failed:', err);
+                console.error('보고서 로딩 실패:', err);
             }
         });
     </script>

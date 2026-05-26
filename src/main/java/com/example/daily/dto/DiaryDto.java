@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class DiaryDto {
     private String imageUrl;
     private LocalDateTime createdAt;
     private List<String> tags;
+    private LocalDate targetDate;
 
     @Getter
     @NoArgsConstructor
@@ -30,5 +32,9 @@ public class DiaryDto {
         private String content;
         private String imageUrl;
         private List<String> tags;
+
+        public LocalDate getTargetDate() {
+            return null;
+        }
     }
 }

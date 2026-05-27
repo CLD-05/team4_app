@@ -62,4 +62,25 @@ public class DiaryController {
                                                    @RequestParam LocalDate date) {
         return ResponseEntity.ok(diaryService.getDiaryByDate(userDetails.getUsername(), date));
     }
+    @GetMapping("/trash")
+    public ResponseEntity<List<DiaryDto>> getTrash(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(diaryService.getDeletedDiaries(userDetails.getUsername()));
+    }
+
+    // 완전 삭제
+    @DeleteMapping("/{diaryId}/hard")
+    public ResponseEntity<String> hardDelete(@AuthenticationPrincipal UserDetails userDetails,
+                                             @PathVariable Long diaryId) {
+        diaryService.hardDeleteDiary(diaryId, userDetails.getUsername());
+        return ResponseEntity.ok("Diary permanently deleted");
+    }
+
+    @PatchMapping("/{diaryId}/restore")
+    public ResponseEntity<String> restore(@AuthenticationPrincipal UserDetails userDetails,
+                                          @PathVariable Long diaryId) {
+        diaryService.restoreDiary(diaryId, userDetails.getUsername());
+        return ResponseEntity.ok("Diary restored successfully");
+    }
+
+
 }

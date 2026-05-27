@@ -124,10 +124,10 @@
         <li class=""><a class="text-on-surface-variant hover:text-primary transition-colors duration-300" href="/report">통계</a></li>
     </ul>
     <div>
-        <button class="text-primary hover:text-secondary transition-colors duration-300">
+        <!-- 수정 -->
+        <a href="/settings" class="text-primary hover:text-secondary transition-colors duration-300">
             <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_circle</span>
-        </button>
-    </div>
+        </a>
 </nav>
 <!-- TopAppBar (Mobile) -->
 <nav class="md:hidden flex justify-between items-center w-full px-container-padding-mobile py-2 bg-surface/80 backdrop-blur-md sticky top-0 z-40">
@@ -321,10 +321,27 @@
         let currentDate = new Date();
         const urlParams = new URLSearchParams(window.location.search);
         const dateParam = urlParams.get('date');
+        let formattedDate;
+
         if (dateParam) {
-            currentDate = new Date(dateParam);
+            formattedDate = dateParam; // URL 파라미터 그대로 사용
+            const parts = dateParam.split('-');
+            currentDate = new Date(parts[0], parts[1] - 1, parts[2]); // 로컬 시간으로 생성
+        } else {
+            const y = currentDate.getFullYear();
+            const m = String(currentDate.getMonth() + 1).padStart(2, '0');
+            const d = String(currentDate.getDate()).padStart(2, '0');
+            formattedDate = `${y}-${m}-${d}`;
         }
-        const formattedDate = currentDate.toISOString().split('T')[0];
+
+        document.querySelectorAll('a[href="/diary"]').forEach(a => {
+            a.href = `/diary?date=${formattedDate}`;
+        });
+
+        // ↓ 추가
+        document.querySelectorAll('a[href="/todolist"]').forEach(a => {
+            a.href = `/todolist?date=${formattedDate}`;
+        });
 
         document.addEventListener('DOMContentLoaded', async () => {
             if (!auth.isLoggedIn()) {
@@ -404,17 +421,26 @@
             wakeRange.addEventListener('input', updateSleepDisplay);
 
             document.getElementById('save-sleep-btn').addEventListener('click', async () => {
-                const bedTime = `${formattedDate}T${bedDisplay.textContent}:00`;
+                const bedMin = parseInt(bedRange.value);
+                const wakeMin = parseInt(wakeRange.value);
+
+                // 취침이 기상보다 늦으면(자정 넘김) → 취침은 전날, 기상은 오늘
+                let bedDate = formattedDate;
                 let wakeDate = formattedDate;
-                if (parseInt(wakeRange.value) < parseInt(bedRange.value)) {
-                    const d = new Date(currentDate);
-                    d.setDate(d.getDate() + 1);
-                    wakeDate = d.toISOString().split('T')[0];
+
+                if (bedMin > wakeMin) {
+                    // 예: 취침 23:00, 기상 06:00 → 취침은 전날
+                    const prev = new Date(currentDate);
+                    prev.setDate(prev.getDate() - 1);
+                    bedDate = prev.toISOString().split('T')[0];
                 }
+
+                const bedTime = `${bedDate}T${bedDisplay.textContent}:00`;
                 const wakeTime = `${wakeDate}T${wakeDisplay.textContent}:00`;
 
+                // date는 기상일(wakeDate) 기준으로 저장 → 5월29일 홈에서 조회 가능
                 try {
-                    await sleepApi.recordSleep(formattedDate, bedTime, wakeTime);
+                    await sleepApi.recordSleep(wakeDate, bedTime, wakeTime);
                     alert('수면 기록 저장됨');
                 } catch (err) {
                     alert('저장 실패: ' + err.message);
@@ -465,29 +491,45 @@
                 }
             });
         }
-
         async function loadSleepAndExercise(date) {
-            const sleep = await sleepApi.getSleep(date);
-            if (sleep) {
-                const bed = new Date(sleep.bedTime);
-                const wake = new Date(sleep.wakeTime);
-                const bedMin = bed.getHours() * 60 + bed.getMinutes();
-                const wakeMin = wake.getHours() * 60 + wake.getMinutes();
-                document.getElementById('bed-time-range').value = bedMin;
-                document.getElementById('wake-time-range').value = wakeMin;
-                document.getElementById('bed-time-display').textContent = bed.toTimeString().slice(0, 5);
-                document.getElementById('wake-time-display').textContent = wake.toTimeString().slice(0, 5);
-                const dh = Math.floor(sleep.totalMinutes / 60);
-                const dm = sleep.totalMinutes % 60;
-                document.getElementById('sleep-duration').textContent = `${dh}h ${dm}m`;
+            // 전날 날짜 계산 (수면은 전날 diary.html에서 저장한 것)
+            const parts = date.split('-');
+            const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+            const prevDate = new Date(dateObj);
+            prevDate.setDate(prevDate.getDate() - 1);
+            const prevFormatted = `${prevDate.getFullYear()}-${String(prevDate.getMonth()+1).padStart(2,'0')}-${String(prevDate.getDate()).padStart(2,'0')}`;
+
+            // 수면은 전날 기준으로 조회
+            try {
+                const sleep = await sleepApi.getSleep(prevFormatted);
+                if (sleep) {
+                    const bed = new Date(sleep.bedTime);
+                    const wake = new Date(sleep.wakeTime);
+                    const bedMin = bed.getHours() * 60 + bed.getMinutes();
+                    const wakeMin = wake.getHours() * 60 + wake.getMinutes();
+                    document.getElementById('bed-time-range').value = bedMin;
+                    document.getElementById('wake-time-range').value = wakeMin;
+                    document.getElementById('bed-time-display').textContent = bed.toTimeString().slice(0, 5);
+                    document.getElementById('wake-time-display').textContent = wake.toTimeString().slice(0, 5);
+                    const dh = Math.floor(sleep.totalMinutes / 60);
+                    const dm = sleep.totalMinutes % 60;
+                    document.getElementById('sleep-duration').textContent = `${dh}h ${dm}m`;
+                }
+            } catch (err) {
+                console.error('수면 불러오기 실패:', err);
             }
 
-            const exercises = await exerciseApi.getExercises(date);
-            if (exercises && exercises.length > 0) {
-                const last = exercises[exercises.length - 1];
-                document.getElementById('exercise-type').value = last.category;
-                document.getElementById('exercise-duration-range').value = last.durationMinutes;
-                document.getElementById('exercise-duration-display').textContent = `${last.durationMinutes}분`;
+            // 운동은 해당일 기준으로 조회
+            try {
+                const exercises = await exerciseApi.getExercises(date);
+                if (exercises && exercises.length > 0) {
+                    const last = exercises[exercises.length - 1];
+                    document.getElementById('exercise-type').value = last.category;
+                    document.getElementById('exercise-duration-range').value = last.durationMinutes;
+                    document.getElementById('exercise-duration-display').textContent = `${last.durationMinutes}분`;
+                }
+            } catch (err) {
+                console.error('운동 불러오기 실패:', err);
             }
         }
 
@@ -496,12 +538,18 @@
             const calendarTitle = document.querySelector('#calendar-container h2');
             calendarTitle.textContent = `${year}년 ${month}월`;
 
-            const emotions = await api.get(`/diaries/emotions?year=${year}&month=${month}`);
-            const emotionMap = {};
-            emotions.forEach(d => {
-                const date = new Date(d.createdAt).getDate();
-                emotionMap[date] = d.emotion;
-            });
+            let emotionMap = {};
+            try {
+                const emotions = await api.get(`/diaries/emotions?year=${year}&month=${month}`);
+                if (emotions && Array.isArray(emotions)) {
+                    emotions.forEach(d => {
+                        const date = parseInt(d.createdAt.substring(8, 10));
+                        emotionMap[date] = d.emotion;
+                    });
+                }
+            } catch (err) {
+                console.error('감정 데이터 로드 실패:', err);
+            }
 
             calendarGrid.innerHTML = '';
             const firstDay = new Date(year, month - 1, 1).getDay();
@@ -525,20 +573,20 @@
                 const cell = document.createElement('div');
                 const hasEmotion = emotionMap[d];
                 const isSelected = currentDate.getDate() === d && currentDate.getMonth() + 1 === month;
-                
+
                 cell.className = `calendar-cell ${hasEmotion ? 'bg-secondary-container' : 'bg-surface-container'} rounded-lg flex flex-col justify-between hover:bg-surface-variant transition-colors border cursor-pointer ${isSelected ? 'ring-2 ring-secondary' : 'border-transparent'}`;
-                
+
                 cell.onclick = () => {
                     const selectedDate = `${year}-${String(month).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
                     window.location.href = `/main?date=${selectedDate}`;
                 };
 
                 cell.innerHTML = `
-                    <div class="flex justify-between items-start">
-                        <span class="font-label-sm ${hasEmotion ? 'text-on-secondary-container' : ''} text-[11px]">${d}</span>
-                        ${hasEmotion ? `<span class="emotion-icon material-symbols-outlined text-secondary text-base" style="font-variation-settings: 'FILL' 1;">${emotionIcons[hasEmotion]}</span>` : ''}
-                    </div>
-                `;
+            <div class="flex justify-between items-start">
+                <span class="font-label-sm ${hasEmotion ? 'text-on-secondary-container' : ''} text-[11px]">${d}</span>
+                ${hasEmotion ? `<span class="emotion-icon material-symbols-outlined text-secondary text-base" style="font-variation-settings: 'FILL' 1;">${emotionIcons[hasEmotion]}</span>` : ''}
+            </div>
+        `;
                 calendarGrid.appendChild(cell);
             }
         }

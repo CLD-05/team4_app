@@ -11,7 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.time.LocalDateTime; // 추가
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -31,6 +31,7 @@ public class UserService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .nickname(request.getNickname())
+
                 .build();
 
         userRepository.save(user);
@@ -45,6 +46,7 @@ public class UserService {
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .profileImg(user.getProfileImg())
+                .createdAt(user.getCreatedAt()) // ← 추가
                 .build();
     }
 

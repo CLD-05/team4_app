@@ -79,7 +79,7 @@ const diaryApi = {
 
 const sleepApi = {
     recordSleep(date, bedTime, wakeTime) {
-        return api.requestWithParams('/sleeps', 'POST', { date, bedTime, wakeTime });
+        return api.post('/sleeps', { date, bedTime, wakeTime });
     },
     getSleep(date) {
         return api.requestWithParams('/sleeps', 'GET', { date });
@@ -88,7 +88,7 @@ const sleepApi = {
 
 const exerciseApi = {
     recordExercise(date, category, minutes) {
-        return api.requestWithParams('/exercises', 'POST', { date, category, minutes });
+        return api.post('/exercises', { date, category, minutes });
     },
     getExercises(date) {
         return api.requestWithParams('/exercises', 'GET', { date });

@@ -34,6 +34,17 @@ public class TodoService {
         todoRepository.save(todo);
     }
 
+    @Transactional
+    public void deleteTodo(Long todoId, String email) {
+        Todo todo = todoRepository.findById(todoId)
+                .orElseThrow(() -> new RuntimeException("Todo not found"));
+        if (!todo.getUser().getEmail().equals(email)) {
+            throw new RuntimeException("Unauthorized");
+        }
+        todoRepository.delete(todo);
+    }
+
+
     @Transactional(readOnly = true)
     public List<TodoDto> getTodosByDate(String email, LocalDate date) {
         User user = userRepository.findByEmail(email)

@@ -3,32 +3,37 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>하루결 - 오늘의 할 일</title>
-    <link href="https://fonts.googleapis.com" rel="preconnect">
-    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
-    <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&family=Noto+Sans+KR:wght@300..900&family=Plus+Jakarta+Sans:wght@200..800&display=swap" rel="stylesheet">
+    <title>Dear Diary - 오늘의 할 일</title>
+
+
+    <link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400..700&family=Plus+Jakarta+Sans:wght@400..700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-
+    <script src="/js/api.js"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        serif: ['Literata', 'serif'],
-                        sans: ['Noto Sans KR', 'sans-serif'],
-                        body: ['Plus Jakarta Sans', 'sans-serif'],
+                    "fontFamily": {
+                        "serif": ["Literata", "serif"],
+                        "display-lg-mobile": ["Literata"],
+                        "display-lg": ["Literata"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "headline-md": ["Literata"],
+                        "body-md": ["Plus Jakarta Sans"]
                     },
                     colors: {
                         primary: "#605e5a",
                         secondary: "#446278",
                         "secondary-container": "#c5e3fe",
                         "on-secondary-container": "#48667c",
+                        "on-secondary": "#ffffff",
                         background: "#fff8f4",
                         "on-background": "#1f1b17",
                         "surface-container-low": "#fcf2eb",
                         "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#eae1da",
                         "on-surface-variant": "#484740",
                         "outline": "#79776f",
                         "outline-variant": "#c9c6bd",
@@ -38,14 +43,13 @@
             }
         }
     </script>
-
     <style>
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 
-<body class="bg-background text-on-background min-h-screen flex flex-col font-sans antialiased">
+<body class="bg-background text-on-surface font-body-md text-body-md min-h-screen flex flex-col">
 
 <header class="w-full top-0 sticky z-40 bg-background/80 backdrop-blur-md">
     <div class="flex justify-between items-center px-6 md:px-10 py-2 max-w-7xl mx-auto">
@@ -53,9 +57,6 @@
             Dear Diary
         </div>
         <div class="flex items-center gap-4">
-            <button class="text-on-surface-variant hover:text-secondary transition-colors">
-                <span class="material-symbols-outlined">search</span>
-            </button>
             <button class="text-on-surface-variant hover:text-secondary transition-colors">
                 <span class="material-symbols-outlined">account_circle</span>
             </button>
@@ -82,32 +83,15 @@
     <main class="flex-1 w-full md:ml-64 px-6 md:px-10 pb-32 pt-8">
         <div class="max-w-3xl mx-auto flex flex-col gap-10">
 
+            <!-- 날짜 선택 -->
             <section class="flex flex-col gap-4">
-                <h1 class="text-2xl font-bold text-on-background">오늘의 할 일</h1>
-                <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x">
-                    <button class="snap-start flex flex-col items-center justify-center min-w-[64px] py-3 rounded-xl bg-surface-container-lowest text-on-surface-variant shadow-sm hover:bg-white transition-all">
-                        <span class="text-xs uppercase opacity-60 font-body">Mon</span>
-                        <span class="text-xl font-bold mt-1">12</span>
-                    </button>
-                    <button class="snap-start flex flex-col items-center justify-center min-w-[64px] py-3 rounded-xl bg-surface-container-lowest text-on-surface-variant shadow-sm hover:bg-white transition-all">
-                        <span class="text-xs uppercase opacity-60 font-body">Tue</span>
-                        <span class="text-xl font-bold mt-1">13</span>
-                    </button>
-                    <button class="snap-start flex flex-col items-center justify-center min-w-[64px] py-3 rounded-xl bg-secondary-container text-on-secondary-container shadow-md ring-1 ring-secondary/20 transition-all font-bold">
-                        <span class="text-xs uppercase opacity-90 font-body">Wed</span>
-                        <span class="text-xl mt-1">14</span>
-                    </button>
-                    <button class="snap-start flex flex-col items-center justify-center min-w-[64px] py-3 rounded-xl bg-surface-container-lowest text-on-surface-variant shadow-sm hover:bg-white transition-all">
-                        <span class="text-xs uppercase opacity-60 font-body">Thu</span>
-                        <span class="text-xl font-bold mt-1">15</span>
-                    </button>
-                    <button class="snap-start flex flex-col items-center justify-center min-w-[64px] py-3 rounded-xl bg-surface-container-lowest text-on-surface-variant shadow-sm hover:bg-white transition-all">
-                        <span class="text-xs uppercase opacity-60 font-body">Fri</span>
-                        <span class="text-xl font-bold mt-1">16</span>
-                    </button>
+                <h1 class="text-2xl font-bold text-on-background" id="page-title">오늘의 할 일</h1>
+                <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x" id="date-selector">
+                    <!-- JS로 동적 생성 -->
                 </div>
             </section>
 
+            <!-- 명언 -->
             <section class="bg-surface-container-low rounded-2xl p-6 relative overflow-hidden flex flex-col gap-2">
                 <div class="absolute -right-4 -top-4 opacity-5 pointer-events-none">
                     <span class="material-symbols-outlined text-[120px]">psychiatry</span>
@@ -118,48 +102,23 @@
                 </p>
             </section>
 
+            <!-- 할 일 추가 -->
             <section class="flex flex-col gap-4">
                 <div class="flex items-center gap-4 bg-white rounded-xl p-2 pl-6 shadow-sm focus-within:ring-2 focus-within:ring-secondary/20 transition-all border border-surface-variant/50">
                     <span class="material-symbols-outlined text-outline">add_circle</span>
-                    <input class="flex-1 bg-transparent border-none focus:ring-0 text-lg text-on-background placeholder:text-outline-variant py-4"
+                    <input id="new-todo-input"
+                           class="flex-1 bg-transparent border-none focus:ring-0 text-lg text-on-background placeholder:text-outline-variant py-4"
                            placeholder="오늘의 할 일을 추가해보세요..."
                            type="text">
-                    <button class="bg-secondary text-on-secondary px-6 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors">
+                    <button id="add-todo-btn" class="bg-secondary text-on-secondary px-6 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors">
                         추가
                     </button>
                 </div>
             </section>
 
+            <!-- 할 일 목록 -->
             <section class="flex flex-col gap-4" id="todo-list">
-                <div class="todo-item group flex items-center justify-between p-5 bg-surface-container-lowest rounded-xl shadow-sm transition-all hover:shadow-md border border-surface-variant/50">
-                    <div class="flex items-center gap-4 flex-1">
-                        <label class="relative flex items-center justify-center cursor-pointer">
-                            <input class="peer sr-only todo-checkbox" type="checkbox">
-                            <div class="w-6 h-6 rounded-full border-2 border-outline-variant peer-checked:bg-secondary peer-checked:border-secondary transition-all flex items-center justify-center">
-                                <span class="material-symbols-outlined text-on-secondary text-[16px] opacity-0 peer-checked:opacity-100 transition-opacity" style="font-variation-settings: 'FILL' 1;">check</span>
-                            </div>
-                        </label>
-                        <span class="todo-text text-lg text-on-background transition-all">아침 명상하기</span>
-                    </div>
-                    <button class="text-outline-variant hover:text-error transition-colors opacity-0 group-hover:opacity-100 p-2">
-                        <span class="material-symbols-outlined">delete</span>
-                    </button>
-                </div>
-
-                <div class="todo-item group flex items-center justify-between p-5 bg-surface-container-lowest rounded-xl shadow-sm transition-all hover:shadow-md border border-surface-variant/50">
-                    <div class="flex items-center gap-4 flex-1">
-                        <label class="relative flex items-center justify-center cursor-pointer">
-                            <input class="peer sr-only todo-checkbox" type="checkbox">
-                            <div class="w-6 h-6 rounded-full border-2 border-outline-variant peer-checked:bg-secondary peer-checked:border-secondary transition-all flex items-center justify-center">
-                                <span class="material-symbols-outlined text-on-secondary text-[16px] opacity-0 peer-checked:opacity-100 transition-opacity" style="font-variation-settings: 'FILL' 1;">check</span>
-                            </div>
-                        </label>
-                        <span class="todo-text text-lg text-on-background transition-all">물 2L 마시기</span>
-                    </div>
-                    <button class="text-outline-variant hover:text-error transition-colors opacity-0 group-hover:opacity-100 p-2">
-                        <span class="material-symbols-outlined">delete</span>
-                    </button>
-                </div>
+                <!-- JS로 동적 생성 -->
             </section>
         </div>
     </main>
@@ -185,21 +144,160 @@
 </nav>
 
 <script>
-    document.querySelectorAll('.todo-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', (e) => {
-            const item = e.target.closest('.todo-item');
-            const text = item.querySelector('.todo-text');
-            if(e.target.checked) {
-                item.classList.add('opacity-60', 'bg-surface-container-low');
-                item.classList.remove('bg-surface-container-lowest');
-                text.classList.add('line-through');
-            } else {
-                item.classList.remove('opacity-60', 'bg-surface-container-low');
-                item.classList.add('bg-surface-container-lowest');
-                text.classList.remove('line-through');
-            }
+    if (!auth.isLoggedIn()) {
+        window.location.href = '/login';
+    }
+
+    // 날짜 관련
+    const urlParams = new URLSearchParams(window.location.search);
+    const dateParam = urlParams.get('date');
+    let selectedDate;
+    if (dateParam) {
+        const parts = dateParam.split('-');
+        selectedDate = new Date(parts[0], parts[1] - 1, parts[2]);
+    } else {
+        selectedDate = new Date();
+    }
+
+    function formatDate(date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+
+    const DAYS_KO = ['일', '월', '화', '수', '목', '금', '토'];
+    const DAYS_EN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    // 날짜 선택 UI 생성 (선택일 기준 ±3일)
+    function renderDateSelector() {
+        const selector = document.getElementById('date-selector');
+        selector.innerHTML = '';
+        for (let i = -3; i <= 3; i++) {
+            const d = new Date(selectedDate);
+            d.setDate(d.getDate() + i);
+            const isSelected = i === 0;
+            const btn = document.createElement('button');
+            btn.className = `snap-start flex flex-col items-center justify-center min-w-[64px] py-3 rounded-xl shadow-sm transition-all ${
+                isSelected
+                    ? 'bg-secondary-container text-on-secondary-container shadow-md ring-1 ring-secondary/20 font-bold'
+                    : 'bg-surface-container-lowest text-on-surface-variant hover:bg-white'
+            }`;
+            btn.innerHTML = `
+                <span class="text-xs uppercase opacity-${isSelected ? '90' : '60'} font-body">${DAYS_EN[d.getDay()]}</span>
+                <span class="text-xl ${isSelected ? '' : 'font-bold'} mt-1">${d.getDate()}</span>
+            `;
+            btn.addEventListener('click', () => {
+                selectedDate = d;
+                renderDateSelector();
+                loadTodos();
+                updateTitle();
+            });
+            selector.appendChild(btn);
+        }
+    }
+
+    function updateTitle() {
+        const title = document.getElementById('page-title');
+        const today = new Date();
+        const todayStr = formatDate(today);
+        const selectedStr = formatDate(selectedDate);
+        if (todayStr === selectedStr) {
+            title.textContent = '오늘의 할 일';
+        } else {
+            title.textContent = `${selectedDate.getMonth() + 1}월 ${selectedDate.getDate()}일 (${DAYS_KO[selectedDate.getDay()]}) 할 일`;
+        }
+    }
+
+    // 할 일 목록 로드
+    async function loadTodos() {
+        const dateStr = formatDate(selectedDate);
+        try {
+            const todos = await api.get(`/todos?date=${dateStr}`);
+            renderTodos(todos);
+        } catch (err) {
+            console.error('할 일 로드 실패:', err);
+        }
+    }
+
+    function renderTodos(todos) {
+        const list = document.getElementById('todo-list');
+        list.innerHTML = '';
+
+        if (todos.length === 0) {
+            list.innerHTML = `<p class="text-center text-on-surface-variant py-8">할 일이 없습니다. 추가해보세요!</p>`;
+            return;
+        }
+
+        todos.forEach(todo => {
+            const item = document.createElement('div');
+            item.className = `todo-item group flex items-center justify-between p-5 rounded-xl shadow-sm transition-all hover:shadow-md border border-surface-variant/50 ${
+                todo.isCompleted ? 'opacity-60 bg-surface-container-low' : 'bg-surface-container-lowest'
+            }`;
+            item.innerHTML = `
+                <div class="flex items-center gap-4 flex-1">
+                    <label class="relative flex items-center justify-center cursor-pointer">
+                        <input type="checkbox" class="peer sr-only" ${todo.isCompleted ? 'checked' : ''} data-id="${todo.id}">
+                        <div class="w-6 h-6 rounded-full border-2 ${todo.isCompleted ? 'bg-secondary border-secondary' : 'border-outline-variant'} transition-all flex items-center justify-center">
+                            <span class="material-symbols-outlined text-on-secondary text-[16px] ${todo.isCompleted ? 'opacity-100' : 'opacity-0'} transition-opacity" style="font-variation-settings: 'FILL' 1;">check</span>
+                        </div>
+                    </label>
+                    <span class="todo-text text-lg text-on-background transition-all ${todo.isCompleted ? 'line-through text-on-surface-variant' : ''}">${todo.content}</span>
+                </div>
+                <button class="delete-btn text-outline-variant hover:text-error transition-colors opacity-0 group-hover:opacity-100 p-2" data-id="${todo.id}">
+                    <span class="material-symbols-outlined">delete</span>
+                </button>
+            `;
+
+            // 체크박스 토글
+            item.querySelector('input[type="checkbox"]').addEventListener('change', async (e) => {
+                const id = e.target.dataset.id;
+                try {
+                    await api.patch(`/todos/${id}/toggle`);
+                    await loadTodos();
+                } catch (err) {
+                    alert('변경 실패: ' + err.message);
+                }
+            });
+
+            // 삭제 버튼
+            item.querySelector('.delete-btn').addEventListener('click', async (e) => {
+                const id = e.currentTarget.dataset.id;
+                try {
+                    await api.delete(`/todos/${id}`);
+                    await loadTodos();
+                } catch (err) {
+                    alert('삭제 실패: ' + err.message);
+                }
+            });
+
+            list.appendChild(item);
         });
+    }
+
+    // 할 일 추가
+    document.getElementById('add-todo-btn').addEventListener('click', async () => {
+        const input = document.getElementById('new-todo-input');
+        const content = input.value.trim();
+        if (!content) return;
+        try {
+            await api.post('/todos', { content, todoDate: formatDate(selectedDate) });
+            input.value = '';
+            await loadTodos();
+        } catch (err) {
+            alert('추가 실패: ' + err.message);
+        }
     });
+
+    // Enter 키로 추가
+    document.getElementById('new-todo-input').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') document.getElementById('add-todo-btn').click();
+    });
+
+    // 초기화
+    renderDateSelector();
+    updateTitle();
+    loadTodos();
 </script>
 
 </body>

@@ -5,13 +5,29 @@ import com.example.daily.domain.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
     Page<Diary> findAllByUserOrderByCreatedAtDesc(User user, Pageable pageable);
     List<Diary> findAllByUserAndCreatedAtBetween(User user, LocalDateTime start, LocalDateTime end);
-    Optional<Diary> findByUserAndCreatedAtBetween(User user, LocalDateTime start, LocalDateTime end);
+    List<Diary> findByUserAndCreatedAtBetween(User user, LocalDateTime start, LocalDateTime end); // Optional → List
+    // 삭제된 일기 조회 (SQLRestriction 우회 - 네이티브 쿼리 사용)
+    @Query(value = "SELECT * FROM diaries WHERE user_id = :userId AND deleted_at IS NOT NULL ORDER BY deleted_at DESC", nativeQuery = true)
+    List<Diary> findDeletedByUserId(@Param("userId") Long userId);
+
+    // 완전 삭제
+    @Modifying
+    @Query(value = "DELETE FROM diaries WHERE id = :id AND deleted_at IS NOT NULL", nativeQuery = true)
+    void hardDeleteById(@Param("id") Long id);
+
+
+    @Modifying
+    @Query(value = "UPDATE diaries SET deleted_at = NULL WHERE id = :id", nativeQuery = true)
+    void restoreById(@Param("id") Long id);
+
 }

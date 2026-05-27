@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
+import java.time.LocalDateTime; // import 추가
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,6 +14,9 @@ public class UserDto {
     private String email;
     private String nickname;
     private String profileImg;
+    private LocalDateTime createdAt; // ← 추가
+
+
 
     @Getter
     @NoArgsConstructor

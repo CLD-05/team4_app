@@ -31,11 +31,17 @@ public class DiaryService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // ↓ 추가 - targetDate 있으면 해당 날짜, 없으면 현재 시각
+        LocalDateTime diaryDateTime = (request.getTargetDate() != null)
+                ? request.getTargetDate().atStartOfDay()
+                : LocalDateTime.now();
+
         Diary diary = Diary.builder()
                 .user(user)
                 .emotion(request.getEmotion())
                 .content(request.getContent())
                 .imageUrl(request.getImageUrl())
+                .createdAt(diaryDateTime)
                 .build();
 
         if (request.getTags() != null) {
@@ -94,15 +100,20 @@ public class DiaryService {
         LocalDateTime end = date.atTime(23, 59, 59, 999999999);
 
         Diary diary = diaryRepository.findByUserAndCreatedAtBetween(user, start, end)
+                .stream()
+                .findFirst()
                 .orElse(Diary.builder()
                         .user(user)
-                        .content("") // 초기값
+                        .content("")
                         .createdAt(start)
                         .build());
 
         diary.setEmotion(emotion);
         diaryRepository.save(diary);
+
+
     }
+
 
     @Transactional(readOnly = true)
     public DiaryDto getDiaryByDate(String email, LocalDate date) {
@@ -113,6 +124,8 @@ public class DiaryService {
         LocalDateTime end = date.atTime(23, 59, 59, 999999999);
 
         return diaryRepository.findByUserAndCreatedAtBetween(user, start, end)
+                .stream()
+                .findFirst()
                 .map(this::convertToDto)
                 .orElse(null);
     }
@@ -127,4 +140,29 @@ public class DiaryService {
                 .tags(diary.getTags().stream().map(DiaryTag::getTagName).collect(Collectors.toList()))
                 .build();
     }
+    // 휴지통 조회
+    @Transactional(readOnly = true)
+    public List<DiaryDto> getDeletedDiaries(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return diaryRepository.findDeletedByUserId(user.getId())
+                .stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    // 완전 삭제
+    @Transactional
+    public void hardDeleteDiary(Long diaryId, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        diaryRepository.hardDeleteById(diaryId);
+    }
+
+    @Transactional
+    public void restoreDiary(Long diaryId, String email) {
+        diaryRepository.restoreById(diaryId);
+    }
+
+
 }

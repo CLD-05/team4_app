@@ -115,14 +115,16 @@
     </style>
     <script src="/js/api.js"></script>
 </head>
-<body class="text-on-background min-h-screen flex flex-col font-body-md selection:bg-primary-container selection:text-primary">
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md ...">
 <!-- TopAppBar -->
 <!-- The settings screen is a destination but often implies a slight departure from the main flow.
          However, "Settings" is in the JSON trailing actions, and the user requested a TopAppBar.
          We will use the TopAppBar as defined in the JSON. -->
 <header class="bg-surface dark:bg-inverse-surface docked full-width top-0 bg-surface dark:bg-inverse-surface flex justify-between items-center w-full px-container-padding-mobile md:px-container-padding-desktop py-4 sticky z-40 transition-all duration-300">
     <div class="flex items-center">
-        <h1 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-primary dark:text-inverse-primary italic">Dear Diary</h1>
+        <div class="font-serif text-3xl md:text-4xl text-primary italic font-bold">
+            Dear Diary
+        </div>
     </div>
     <div class="flex items-center gap-4 text-primary dark:text-inverse-primary">
         <button class="hover:bg-surface-container-low transition-colors p-2 rounded-full active:scale-95 duration-200">
@@ -148,10 +150,12 @@
             <!-- Info -->
             <div class="flex flex-col items-center md:items-start text-center md:text-left gap-2 w-full">
                 <h3 id="user-nickname" class="font-headline-md text-headline-md text-primary">Jiwoo Park</h3>
+                <!-- 수정 -->
                 <p class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
                     <span class="material-symbols-outlined text-[16px]">calendar_today</span>
-                    가입 날짜: 2024.03.20
+                    가입 날짜: <span id="user-created-at"></span>
                 </p>
+
                 <p class="font-body-md text-body-md text-on-surface-variant mt-2 max-w-sm">
                     오늘의 소중한 순간들을 기록합니다.
                 </p>
@@ -212,6 +216,11 @@
             try {
                 const user = await api.get('/users/me');
                 document.getElementById('user-nickname').textContent = user.nickname;
+
+                const joinDate = new Date(user.createdAt);
+                const formatted = `${joinDate.getFullYear()}.${String(joinDate.getMonth()+1).padStart(2,'0')}.${String(joinDate.getDate()).padStart(2,'0')}`;
+                document.getElementById('user-created-at').textContent = formatted;
+
                 if (user.profileImg) {
                     document.getElementById('user-profile-img').src = user.profileImg;
                 }

@@ -1,12 +1,12 @@
 package com.example.daily.controller.api;
 
-import com.example.daily.domain.entity.Sleep;
-import com.example.daily.domain.repository.SleepRepository;
 import com.example.daily.domain.entity.User;
+import com.example.daily.domain.repository.SleepRepository;
 import com.example.daily.domain.repository.UserRepository;
 import com.example.daily.service.SleepService;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,20 +24,42 @@ public class SleepController {
     private final SleepRepository sleepRepository;
     private final UserRepository userRepository;
 
+    @Getter
+    public static class SleepRequest {
+        private LocalDate date;
+        private LocalDateTime bedTime;
+        private LocalDateTime wakeTime;
+    }
+
+    @Getter
+    @Builder
+    public static class SleepResponse {
+        private LocalDate date;
+        private String bedTime;
+        private String wakeTime;
+        private Integer totalMinutes;
+    }
+
     @PostMapping
     public ResponseEntity<String> recordSleep(@AuthenticationPrincipal UserDetails userDetails,
-                                              @RequestParam LocalDate date,
-                                              @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime bedTime,
-                                              @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime wakeTime) {
-        sleepService.recordSleep(userDetails.getUsername(), date, bedTime, wakeTime);
+                                              @RequestBody SleepRequest request) {
+        sleepService.recordSleep(userDetails.getUsername(), request.getDate(), request.getBedTime(), request.getWakeTime());
         return ResponseEntity.ok("Sleep recorded successfully");
     }
 
     @GetMapping
-    public ResponseEntity<Sleep> getSleep(@AuthenticationPrincipal UserDetails userDetails,
-                                          @RequestParam LocalDate date) {
+    public ResponseEntity<SleepResponse> getSleep(@AuthenticationPrincipal UserDetails userDetails,
+                                                  @RequestParam LocalDate date) {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        return ResponseEntity.ok(sleepRepository.findByUserAndDiaryDate(user, date).orElse(null));
+
+        return sleepRepository.findByUserAndDiaryDate(user, date)
+                .map(sleep -> ResponseEntity.ok(SleepResponse.builder()
+                        .date(sleep.getDiaryDate())
+                        .bedTime(sleep.getBedTime().toString())
+                        .wakeTime(sleep.getWakeTime().toString())
+                        .totalMinutes(sleep.getTotalMinutes())
+                        .build()))
+                .orElse(ResponseEntity.ok(null));
     }
 }

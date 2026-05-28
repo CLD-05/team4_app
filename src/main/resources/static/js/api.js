@@ -12,6 +12,7 @@ const api = {
             headers['Authorization'] = `Bearer ${token}`;
         }
 
+
         const config = {
             ...options,
             headers,
@@ -49,6 +50,7 @@ const api = {
             body: JSON.stringify(body),
         });
     },
+
 
     patch(endpoint, body) {
         return this.request(endpoint, {
@@ -109,16 +111,18 @@ const auth = {
         return data;
     },
 
+
     async signUp(email, password, nickname) {
         return await api.post('/auth/sign-up', { email, password, nickname });
     },
 
+
     logout() {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
+        document.cookie = 'accessToken=; path=/; max-age=0'; // 쿠키 삭제
         window.location.href = '/login';
     },
-
     isLoggedIn() {
         return !!localStorage.getItem('accessToken');
     }

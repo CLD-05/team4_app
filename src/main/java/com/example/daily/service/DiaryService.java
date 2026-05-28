@@ -5,6 +5,7 @@ import com.example.daily.domain.entity.DiaryTag;
 import com.example.daily.domain.entity.User;
 import com.example.daily.domain.repository.DiaryRepository;
 import com.example.daily.domain.repository.UserRepository;
+import com.example.daily.domain.repository.DiaryTagRepository;
 import com.example.daily.dto.DiaryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,36 +26,42 @@ public class DiaryService {
 
     private final DiaryRepository diaryRepository;
     private final UserRepository userRepository;
+    private final DiaryTagRepository diaryTagRepository;  // ← 이 줄 추가
 
     @Transactional
     public void createDiary(String email, DiaryDto.CreateRequest request) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // ↓ 추가 - targetDate 있으면 해당 날짜, 없으면 현재 시각
         LocalDateTime diaryDateTime = (request.getTargetDate() != null)
                 ? request.getTargetDate().atStartOfDay()
                 : LocalDateTime.now();
 
-        Diary diary = Diary.builder()
-                .user(user)
-                .emotion(request.getEmotion())
-                .content(request.getContent())
-                .imageUrl(request.getImageUrl())
-                .createdAt(diaryDateTime)
-                .build();
+        LocalDateTime start = diaryDateTime.toLocalDate().atStartOfDay();
+        LocalDateTime end   = diaryDateTime.toLocalDate().atTime(23, 59, 59, 999999999);
 
+        Diary diary = diaryRepository.findByUserAndCreatedAtBetween(user, start, end)
+                .stream().findFirst()
+                .orElseGet(() -> Diary.builder()
+                        .user(user)
+                        .createdAt(diaryDateTime)
+                        .build());
+
+        diary.setEmotion(request.getEmotion());
+        diary.setContent(request.getContent());
+        diary.setImageUrl(request.getImageUrl());
+        diaryRepository.saveAndFlush(diary);  // tags 컬렉션 절대 건드리지 않음
+
+        // 태그: DiaryTagRepository로만 직접 관리
+        diaryTagRepository.deleteByDiaryId(diary.getId());
         if (request.getTags() != null) {
             for (String tagName : request.getTags()) {
-                DiaryTag tag = DiaryTag.builder()
+                diaryTagRepository.save(DiaryTag.builder()
                         .diary(diary)
                         .tagName(tagName)
-                        .build();
-                diary.getTags().add(tag);
+                        .build());
             }
         }
-
-        diaryRepository.save(diary);
     }
 
     @Transactional(readOnly = true)

@@ -143,10 +143,10 @@
 
             <div class="lg:col-span-8 flex flex-col gap-gutter">
                 <div class="bg-white rounded-xl p-6 md:p-8 flex flex-col gap-4 shadow-sm border border-surface-variant">
-                    <div class="text-outline-variant font-label-sm text-label-sm uppercase tracking-wider flex items-center justify-between">
+                    <div class="text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
                         <span id="current-date-display"></span>
-                        <span class="material-symbols-outlined text-outline-variant cursor-pointer hover:text-primary transition-colors">more_horiz</span>
                     </div>
+
                     <input id="diary-title" class="w-full bg-white border-none p-0 focus:ring-0 font-headline-md text-headline-md text-on-surface placeholder-outline-variant" placeholder="오늘의 제목을 입력하세요..." type="text"/>
                 </div>
 
@@ -182,13 +182,6 @@
                 </div>
 
                 <div class="bg-white rounded-xl p-6 md:p-8 flex flex-col flex-grow min-h-[400px] shadow-sm border border-surface-variant">
-                    <div class="flex gap-2 mb-4 pb-4 border-b border-surface-variant text-outline-variant">
-                        <button class="p-1 hover:text-primary hover:bg-surface-container rounded transition-colors"><span class="material-symbols-outlined text-sm">format_bold</span></button>
-                        <button class="p-1 hover:text-primary hover:bg-surface-container rounded transition-colors"><span class="material-symbols-outlined text-sm">format_italic</span></button>
-                        <button class="p-1 hover:text-primary hover:bg-surface-container rounded transition-colors"><span class="material-symbols-outlined text-sm">format_list_bulleted</span></button>
-                        <div class="w-[1px] h-6 bg-surface-variant mx-2"></div>
-                        <button class="p-1 hover:text-primary hover:bg-surface-container rounded transition-colors"><span class="material-symbols-outlined text-sm">image</span></button>
-                    </div>
                     <div class="editor-content flex-grow font-body-lg text-body-lg text-on-surface focus:outline-none whitespace-pre-wrap bg-white" contenteditable="true" data-placeholder="마음을 담아 기록해 보세요. 이곳은 당신의 공간입니다."></div>
                 </div>
 
@@ -392,6 +385,10 @@
 
         document.querySelectorAll('a[href="/main"]').forEach(a => {
             a.href = `/main?date=${targetDate}`;
+        });
+
+        document.querySelectorAll('a[href="/todolist"]').forEach(a => {
+            a.href = `/todolist?date=${targetDate}`;
         });
 
         const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];

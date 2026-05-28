@@ -192,10 +192,11 @@
                 renderDateSelector();
                 loadTodos();
                 updateTitle();
+                document.querySelectorAll('a[href^="/diary"]').forEach(a => {
+                    a.href = `/diary?date=${formatDate(selectedDate)}`;
+                });
             });
-            selector.appendChild(btn);
-        }
-    }
+
 
     function updateTitle() {
         const title = document.getElementById('page-title');

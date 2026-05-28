@@ -149,7 +149,7 @@
             </div>
             <!-- Info -->
             <div class="flex flex-col items-center md:items-start text-center md:text-left gap-2 w-full">
-                <h3 id="user-nickname" class="font-headline-md text-headline-md text-primary">Jiwoo Park</h3>
+                <h3 id="user-nickname" class="font-headline-md text-headline-md text-primary">  </h3>
                 <!-- 수정 -->
                 <p class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
                     <span class="material-symbols-outlined text-[16px]">calendar_today</span>
@@ -164,7 +164,7 @@
         <!-- Menu List (Glassmorphism inspired soft cells) -->
         <section class="flex flex-col gap-4">
             <!-- Edit Profile -->
-            <button class="w-full bg-surface-container-lowest hover:bg-surface-container-low transition-colors rounded-lg p-4 card-shadow border border-outline-variant/20 flex items-center justify-between group active:scale-[0.98] duration-200">
+            <button onclick="openProfileModal()" class="w-full bg-surface-container-lowest hover:bg-surface-container-low transition-colors rounded-lg p-4 card-shadow border border-outline-variant/20 flex items-center justify-between group active:scale-[0.98] duration-200">
                 <div class="flex items-center gap-4 text-on-background group-hover:text-primary transition-colors">
                     <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">edit</span>
                     <span class="font-body-lg text-body-lg">프로필 수정</span>
@@ -182,7 +182,7 @@
                 <span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">chevron_right</span>
             </button>
             <!-- Delete Account -->
-            <button class="w-full bg-surface-container-lowest hover:bg-error-container/30 transition-colors rounded-lg p-4 card-shadow border border-outline-variant/20 flex items-center justify-between group active:scale-[0.98] duration-200 mt-4">
+            <button onclick="openDeleteModal()" class="w-full bg-surface-container-lowest hover:bg-error-container/30 transition-colors rounded-lg p-4 card-shadow border border-outline-variant/20 flex items-center justify-between group active:scale-[0.98] duration-200 mt-4">
                 <div class="flex items-center gap-4 text-error/80 group-hover:text-error transition-colors">
                     <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person_remove</span>
                     <span class="font-body-lg text-body-lg">회원탈퇴</span>
@@ -206,31 +206,252 @@
         }
     });
 </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            if (!auth.isLoggedIn()) {
-                window.location.href = '/login';
-                return;
-            }
-
-            try {
-                const user = await api.get('/users/me');
-                document.getElementById('user-nickname').textContent = user.nickname;
-
-                const joinDate = new Date(user.createdAt);
-                const formatted = `${joinDate.getFullYear()}.${String(joinDate.getMonth()+1).padStart(2,'0')}.${String(joinDate.getDate()).padStart(2,'0')}`;
-                document.getElementById('user-created-at').textContent = formatted;
-
-                if (user.profileImg) {
-                    document.getElementById('user-profile-img').src = user.profileImg;
-                }
-            } catch (err) {
-                console.error('Failed to load user profile:', err);
-            }
-        });
-
-        function handleLogout() {
-            auth.logout();
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        if (!auth.isLoggedIn()) {
+            window.location.href = '/login';
+            return;
         }
-    </script>
+
+        try {
+            const user = await api.get('/users/me');
+            document.getElementById('user-nickname').textContent = user.nickname;
+
+            const joinDate = new Date(user.createdAt);
+            const formatted = `${joinDate.getFullYear()}.${String(joinDate.getMonth()+1).padStart(2,'0')}.${String(joinDate.getDate()).padStart(2,'0')}`;
+            document.getElementById('user-created-at').textContent = formatted;
+
+            if (user.profileImg) {
+                document.getElementById('user-profile-img').src = user.profileImg;
+            }
+        } catch (err) {
+            console.error('Failed to load user profile:', err);
+        }
+    });
+
+    function handleLogout() {
+        auth.logout();
+    }
+</script>
+<!-- ===== 프로필 수정 모달 ===== -->
+<div id="profile-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+    <!-- 배경 오버레이 -->
+    <div onclick="closeProfileModal()" class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+    <!-- 모달 카드 -->
+    <div class="relative w-full max-w-[440px] bg-surface-container-lowest rounded-2xl card-shadow border border-outline-variant/30 overflow-hidden">
+        <!-- 헤더 -->
+        <div class="flex items-center justify-between px-6 py-5 border-b border-outline-variant/20">
+            <h3 class="font-headline-md text-headline-md text-on-background">프로필 수정</h3>
+            <button onclick="closeProfileModal()" class="p-1 rounded-full hover:bg-surface-container-low transition-colors text-outline">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <!-- 탭 -->
+        <div class="flex border-b border-outline-variant/20">
+            <button id="tab-pw" onclick="switchTab('pw')"
+                    class="flex-1 py-3 text-body-md font-semibold text-primary border-b-2 border-primary transition-colors">
+                비밀번호 변경
+            </button>
+            <button id="tab-img" onclick="switchTab('img')"
+                    class="flex-1 py-3 text-body-md font-semibold text-on-surface-variant border-b-2 border-transparent transition-colors">
+                프로필 사진
+            </button>
+        </div>
+        <!-- 탭 콘텐츠 -->
+        <div class="p-6 flex flex-col gap-4">
+            <!-- 비밀번호 변경 탭 -->
+            <div id="panel-pw">
+                <div class="flex flex-col gap-3">
+                    <div class="flex flex-col gap-1">
+                        <label class="font-label-sm text-label-sm text-on-surface-variant">현재 비밀번호</label>
+                        <input id="current-pw" type="password" placeholder="현재 비밀번호 입력"
+                               class="w-full rounded-lg border border-outline-variant bg-surface-container-low px-4 py-3 text-body-md text-on-background outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-colors placeholder:text-outline-variant"/>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="font-label-sm text-label-sm text-on-surface-variant">새 비밀번호</label>
+                        <input id="new-pw" type="password" placeholder="새 비밀번호 (8자 이상)"
+                               class="w-full rounded-lg border border-outline-variant bg-surface-container-low px-4 py-3 text-body-md text-on-background outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-colors placeholder:text-outline-variant"/>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="font-label-sm text-label-sm text-on-surface-variant">새 비밀번호 확인</label>
+                        <input id="confirm-pw" type="password" placeholder="새 비밀번호 재입력"
+                               class="w-full rounded-lg border border-outline-variant bg-surface-container-low px-4 py-3 text-body-md text-on-background outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-colors placeholder:text-outline-variant"/>
+                    </div>
+                    <p id="pw-error" class="text-error text-sm hidden"></p>
+                </div>
+                <button onclick="submitPasswordChange()"
+                        class="mt-5 w-full bg-primary text-on-primary rounded-lg py-3 font-semibold text-body-md hover:opacity-90 active:scale-[0.98] transition-all duration-200">
+                    변경하기
+                </button>
+            </div>
+            <!-- 프로필 사진 탭 -->
+            <div id="panel-img" class="hidden">
+                <div class="flex flex-col items-center gap-4">
+                    <!-- 미리보기 -->
+                    <div class="w-24 h-24 rounded-full overflow-hidden border-2 border-surface-container-high bg-surface-container-low flex items-center justify-center">
+                        <img id="preview-img" alt="미리보기" class="w-full h-full object-cover"
+                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuAL-kC0KuzqQYam8yrvJPzenw4gRau-kRc9dYOOAKoUmWWh61dqr7qGrZwPrfA5mes3IaoqDnXs9LqOVtjtt3U0TohctHyiAatGKZAlPlf_T0aYTNfpHbpSn5eXvR6ja2TRvYuI8r4usylxel_mpUqnuQfpEBEueZYM0hzllsJ7n-SZ6OLqZRoxz0LudKlM4Ton8_CNmHbsfrh7mRGUqMq3afZkmrdYEJW-kwi0yRPOl3_2HAyZINFE3uJYCIa1Uey6Hui-k62Yn-J3"/>
+                    </div>
+                    <div class="w-full flex flex-col gap-1">
+                        <label class="font-label-sm text-label-sm text-on-surface-variant">이미지 URL</label>
+                        <input id="img-url" type="url" placeholder="https://example.com/image.jpg"
+                               oninput="previewImage(this.value)"
+                               class="w-full rounded-lg border border-outline-variant bg-surface-container-low px-4 py-3 text-body-md text-on-background outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-colors placeholder:text-outline-variant"/>
+                    </div>
+                    <p id="img-error" class="text-error text-sm hidden self-start"></p>
+                </div>
+                <button onclick="submitProfileImg()"
+                        class="mt-5 w-full bg-primary text-on-primary rounded-lg py-3 font-semibold text-body-md hover:opacity-90 active:scale-[0.98] transition-all duration-200">
+                    저장하기
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== 회원탈퇴 확인 모달 ===== -->
+<div id="delete-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+    <div onclick="closeDeleteModal()" class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+    <div class="relative w-full max-w-[360px] bg-surface-container-lowest rounded-2xl card-shadow border border-outline-variant/30 overflow-hidden">
+        <div class="p-6 flex flex-col items-center gap-4 text-center">
+            <div class="w-12 h-12 rounded-full bg-error-container flex items-center justify-center">
+                <span class="material-symbols-outlined text-error" style="font-size:24px;">person_remove</span>
+            </div>
+            <div>
+                <h3 class="font-headline-md text-headline-md text-on-background mb-1">정말로 탈퇴하시겠습니까?</h3>
+                <p class="text-body-md text-on-surface-variant">탈퇴하면 모든 일기, 할일, 운동 기록이 <span class="text-error font-semibold">영구적으로 삭제</span>되며 복구할 수 없습니다.</p>
+            </div>
+            <p id="delete-error" class="text-error text-sm hidden self-start w-full text-left"></p>
+            <div class="flex gap-3 w-full mt-2">
+                <button onclick="closeDeleteModal()"
+                        class="flex-1 rounded-lg border border-outline-variant py-3 text-body-md font-semibold text-on-surface-variant hover:bg-surface-container-low active:scale-[0.98] transition-all duration-200">
+                    아니요
+                </button>
+                <button onclick="submitDeleteAccount()"
+                        class="flex-1 rounded-lg bg-error py-3 text-body-md font-semibold text-on-error hover:opacity-90 active:scale-[0.98] transition-all duration-200">
+                    예, 탈퇴합니다
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* ── 모달 열기/닫기 ── */
+    function openProfileModal() {
+        document.getElementById('profile-modal').classList.remove('hidden');
+        switchTab('pw');
+        clearProfileForm();
+    }
+    function closeProfileModal() {
+        document.getElementById('profile-modal').classList.add('hidden');
+    }
+    function openDeleteModal() {
+        document.getElementById('delete-modal').classList.remove('hidden');
+        document.getElementById('delete-error').classList.add('hidden');
+    }
+    function closeDeleteModal() {
+        document.getElementById('delete-modal').classList.add('hidden');
+    }
+
+    /* ── 탭 전환 ── */
+    function switchTab(tab) {
+        const isPw = tab === 'pw';
+        document.getElementById('panel-pw').classList.toggle('hidden', !isPw);
+        document.getElementById('panel-img').classList.toggle('hidden', isPw);
+        document.getElementById('tab-pw').className = `flex-1 py-3 text-body-md font-semibold transition-colors ${isPw ? 'text-primary border-b-2 border-primary' : 'text-on-surface-variant border-b-2 border-transparent'}`;
+        document.getElementById('tab-img').className = `flex-1 py-3 text-body-md font-semibold transition-colors ${!isPw ? 'text-primary border-b-2 border-primary' : 'text-on-surface-variant border-b-2 border-transparent'}`;
+    }
+
+    /* ── 폼 초기화 ── */
+    function clearProfileForm() {
+        ['current-pw', 'new-pw', 'confirm-pw'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('pw-error').classList.add('hidden');
+        document.getElementById('img-url').value = '';
+        document.getElementById('img-error').classList.add('hidden');
+        const currentSrc = document.getElementById('user-profile-img').src;
+        document.getElementById('preview-img').src = currentSrc;
+    }
+
+    /* ── 이미지 미리보기 ── */
+    function previewImage(url) {
+        const preview = document.getElementById('preview-img');
+        if (url) {
+            preview.src = url;
+            preview.onerror = () => { preview.src = document.getElementById('user-profile-img').src; };
+        }
+    }
+
+    /* ── 비밀번호 변경 제출 ── */
+    async function submitPasswordChange() {
+        const currentPw = document.getElementById('current-pw').value.trim();
+        const newPw     = document.getElementById('new-pw').value.trim();
+        const confirmPw = document.getElementById('confirm-pw').value.trim();
+        const errEl     = document.getElementById('pw-error');
+
+        errEl.classList.add('hidden');
+
+        if (!currentPw || !newPw || !confirmPw) {
+            errEl.textContent = '모든 항목을 입력해주세요.'; errEl.classList.remove('hidden'); return;
+        }
+        if (newPw.length < 8) {
+            errEl.textContent = '새 비밀번호는 8자 이상이어야 합니다.'; errEl.classList.remove('hidden'); return;
+        }
+        if (newPw !== confirmPw) {
+            errEl.textContent = '새 비밀번호가 일치하지 않습니다.'; errEl.classList.remove('hidden'); return;
+        }
+
+        try {
+            await api.patch('/users/password', { currentPassword: currentPw, newPassword: newPw });
+            closeProfileModal();
+            showToast('비밀번호가 변경되었습니다.');
+        } catch (e) {
+            errEl.textContent = e.message || '비밀번호 변경에 실패했습니다.';
+            errEl.classList.remove('hidden');
+        }
+    }
+
+    /* ── 프로필 이미지 변경 제출 ── */
+    async function submitProfileImg() {
+        const url   = document.getElementById('img-url').value.trim();
+        const errEl = document.getElementById('img-error');
+        errEl.classList.add('hidden');
+
+        if (!url) {
+            errEl.textContent = 'URL을 입력해주세요.'; errEl.classList.remove('hidden'); return;
+        }
+
+        try {
+            await api.patch('/users/profile-img', { profileImg: url });
+            document.getElementById('user-profile-img').src = url;
+            closeProfileModal();
+            showToast('프로필 사진이 변경되었습니다.');
+        } catch (e) {
+            errEl.textContent = e.message || '사진 변경에 실패했습니다.';
+            errEl.classList.remove('hidden');
+        }
+    }
+
+    /* ── 회원탈퇴 제출 ── */
+    async function submitDeleteAccount() {
+        const errEl = document.getElementById('delete-error');
+        errEl.classList.add('hidden');
+        try {
+            await api.delete('/users/me');
+            auth.logout();          // 로컬 토큰 제거 후 로그인 페이지로
+        } catch (e) {
+            errEl.textContent = e.message || '탈퇴 처리 중 오류가 발생했습니다.';
+            errEl.classList.remove('hidden');
+        }
+    }
+
+    /* ── 토스트 메시지 ── */
+    function showToast(msg) {
+        const toast = document.createElement('div');
+        toast.textContent = msg;
+        toast.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-5 py-3 rounded-full text-body-md shadow-lg z-[100] transition-opacity duration-300';
+        document.body.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 2500);
+    }
+</script>
 </body></html>

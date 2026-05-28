@@ -7,9 +7,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "sleeps", indexes = {
-    @Index(name = "idx_sleeps_user_date", columnList = "user_id, diary_date")
-})
+@Table(name = "sleeps",
+        indexes = {
+                @Index(name = "idx_sleeps_user_date", columnList = "user_id, diary_date")
+        },
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_sleeps_user_date", columnNames = {"user_id", "diary_date"})
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor

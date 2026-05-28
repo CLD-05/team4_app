@@ -196,15 +196,13 @@
                     <span class="material-symbols-outlined text-outline-variant text-3xl">add_photo_alternate</span>
                     <span class="font-label-sm text-label-sm text-on-surface-variant">추억 추가하기</span>
                 </div>
+                <!-- 변경 후 -->
                 <div class="bg-white rounded-xl p-6 shadow-sm border border-surface-variant">
                     <div class="flex items-center gap-2">
                         <span class="material-symbols-outlined text-outline-variant">sell</span>
-                        <input class="flex-grow bg-white border-none p-0 focus:ring-0 font-body-md text-body-md text-on-surface placeholder-outline-variant" placeholder="태그 추가 (예: 가족, 업무, 피곤)..." type="text"/>
+                        <input id="tag-input" class="flex-grow bg-white border-none p-0 focus:ring-0 font-body-md text-body-md text-on-surface placeholder-outline-variant" placeholder="태그 추가 후 Enter (예: 가족, 업무)..." type="text"/>
                     </div>
-                    <div class="flex flex-wrap gap-2 mt-3">
-                        <span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1"># 평온 <button><span class="material-symbols-outlined text-[14px] hover:text-error transition-colors">close</span></button></span>
-                        <span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1"># 독서 <button><span class="material-symbols-outlined text-[14px] hover:text-error transition-colors">close</span></button></span>
-                    </div>
+                    <div id="tag-list" class="flex flex-wrap gap-2 mt-3"></div>
                 </div>
 
                 <div class="flex justify-end gap-4 mt-4">
@@ -215,76 +213,61 @@
 
             <div class="lg:col-span-4 flex flex-col gap-gutter">
 
-                <div class="bg-white rounded-xl p-6 shadow-sm border border-surface-variant">
-                    <div class="flex items-center gap-2 mb-4 text-secondary">
-                        <span class="material-symbols-outlined">bedtime</span>
+                <div class="bg-surface-container-lowest rounded-xl soft-shadow p-5 flex flex-col gap-5">
+                    <div class="flex items-center gap-2 text-primary">
+                        <span class="material-symbols-outlined text-secondary">bedtime</span>
                         <h3 class="font-headline-md text-[18px]">수면</h3>
                     </div>
-
-                    <div class="space-y-4">
-                        <div class="border-b border-surface-variant pb-2">
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="font-label-sm text-label-sm text-on-surface-variant">취침 시간</span>
-                                <span id="bed-time-display" class="font-body-lg text-body-lg text-on-surface text-right font-semibold">23:00</span>
+                    <div class="flex flex-col gap-3">
+                        <div class="flex flex-col gap-1">
+                            <div class="flex justify-between items-center bg-white p-2 rounded-lg border border-outline-variant/30">
+                                <span class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">취침</span>
+                                <input type="range" id="bed-time-range" min="0" max="1435" step="5" value="0" class="w-2/3 h-2 bg-secondary-container rounded-lg appearance-none cursor-pointer">
+                                <span class="font-body-lg text-on-surface text-sm" id="bed-time-display">--:--</span>
                             </div>
-                            <input id="bed-time-range" type="range" min="0" max="1439" value="1380"
-                                   class="w-full h-1.5 mt-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-secondary outline-none"/>
                         </div>
-
-                        <div class="border-b border-surface-variant pb-2">
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="font-label-sm text-label-sm text-on-surface-variant">기상 시간</span>
-                                <span id="wake-time-display" class="font-body-lg text-body-lg text-on-surface text-right font-semibold">07:00</span>
+                        <div class="flex flex-col gap-1">
+                            <div class="flex justify-between items-center bg-white p-2 rounded-lg border border-outline-variant/30">
+                                <span class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">기상</span>
+                                <input type="range" id="wake-time-range" min="0" max="1435" step="5" value="0" class="w-2/3 h-2 bg-secondary-container rounded-lg appearance-none cursor-pointer">
+                                <span class="font-body-lg text-on-surface text-sm" id="wake-time-display">--:--</span>
                             </div>
-                            <input id="wake-time-range" type="range" min="0" max="1439" value="420"
-                                   class="w-full h-1.5 mt-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-secondary outline-none"/>
-                        </div>
-
-                        <div class="pt-2 flex justify-between items-end">
-                            <span class="font-label-sm text-label-sm text-outline-variant">총 수면 시간</span>
-                            <span id="sleep-duration" class="font-headline-md text-headline-md text-primary">8시간 0분</span>
                         </div>
                     </div>
-
-                    <button id="save-sleep-btn" class="w-full mt-4 bg-secondary text-on-secondary py-2 rounded-lg text-sm">
-                        수면 기록 저장
-                    </button>
+                    <div class="pt-2 border-t border-outline-variant/20 flex justify-between items-end">
+                        <span class="text-sm font-bold text-on-surface-variant uppercase tracking-wider">수면 시간</span>
+                        <span class="font-headline-md text-secondary" id="sleep-duration">--</span>
+                    </div>
+                    <button id="save-sleep-btn" class="bg-secondary text-on-secondary py-2 rounded-lg text-sm">기록 저장</button>
                 </div>
 
-                <div class="bg-white rounded-xl p-6 shadow-sm border border-surface-variant">
-                    <div class="flex items-center gap-2 mb-4 text-secondary">
-                        <span class="material-symbols-outlined">fitness_center</span>
+                <div class="bg-surface-container-lowest rounded-xl soft-shadow p-5 flex flex-col gap-5">
+                    <div class="flex items-center gap-2 text-primary">
+                        <span class="material-symbols-outlined text-secondary">directions_run</span>
                         <h3 class="font-headline-md text-[18px]">운동</h3>
                     </div>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="font-label-sm text-label-sm text-on-surface-variant block mb-2">활동 종류</label>
-                            <input id="exercise-type" list="activity-options" class="w-full bg-white border-none rounded-lg p-3 font-body-md text-body-md text-on-surface focus:ring-1 focus:ring-secondary shadow-sm" placeholder="운동을 입력하거나 선택하세요...">
-                            <datalist id="activity-options">
-                                <option value="걷기"></option>
-                                <option value="달리기"></option>
-                                <option value="요가"></option>
-                                <option value="근력 운동"></option>
-                                <option value="사이클"></option>
-                                <option value="휴식"></option>
+                    <div class="bg-white rounded-lg p-4 border border-outline-variant/30 flex flex-col gap-4">
+                        <div class="flex flex-col gap-2">
+                            <span class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">활동</span>
+                            <input type="text" id="exercise-type" list="exercise-categories" class="bg-surface-container rounded-lg px-3 py-2 text-sm border-outline-variant/30" placeholder="운동 검색 (ex. 러닝)">
+                            <datalist id="exercise-categories">
+                                <option value="러닝">러닝</option>
+                                <option value="걷기">걷기</option>
+                                <option value="사이클">사이클</option>
+                                <option value="수영">수영</option>
+                                <option value="요가">요가</option>
+                                <option value="근력 운동">근력 운동</option>
                             </datalist>
                         </div>
-                        <div class="flex gap-4">
-                            <div class="flex-1">
-                                <label class="font-label-sm text-label-sm text-on-surface-variant block mb-2">시간 (분)</label>
-                                <input id="exercise-duration" class="w-full bg-white border-none rounded-lg p-3 font-body-md text-body-md text-on-surface focus:ring-1 focus:ring-secondary shadow-sm" placeholder="0" type="number" value="45"/>
+                        <div class="flex flex-col gap-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">시간 (분)</span>
+                                <span class="font-body-lg text-secondary text-sm font-bold" id="exercise-duration-display">30분</span>
                             </div>
-                            <div class="flex-1">
-                                <label class="font-label-sm text-label-sm text-on-surface-variant block mb-2">강도</label>
-                                <select class="w-full bg-white border-none rounded-lg p-3 font-body-md text-body-md text-on-surface focus:ring-1 focus:ring-secondary cursor-pointer shadow-sm">
-                                    <option>가벼움</option>
-                                    <option selected="">보통</option>
-                                    <option>격렬함</option>
-                                </select>
-                            </div>
+                            <input type="range" id="exercise-duration-range" min="0" max="300" step="5" value="30" class="w-full h-2 bg-secondary-container rounded-lg appearance-none cursor-pointer">
                         </div>
+                        <button id="save-exercise-btn" class="bg-secondary text-on-secondary py-2 rounded-lg text-sm">기록 저장</button>
                     </div>
-                    <button id="save-exercise-btn" class="w-full mt-4 bg-secondary text-on-secondary py-2 rounded-lg text-sm">운동 기록 저장</button>
                 </div>
 
                 <div class="glass-card rounded-xl p-6 bg-secondary-container/20 border-none mt-4">
@@ -389,6 +372,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
+        let tags = [];
         if (!auth.isLoggedIn()) {
             window.location.href = '/login';
             return;
@@ -405,6 +389,10 @@
         const prevDate = new Date(dateObj);
         prevDate.setDate(prevDate.getDate() - 1);
         const prevFormatted = prevDate.getFullYear() + '-' + String(prevDate.getMonth()+1).padStart(2,'0') + '-' + String(prevDate.getDate()).padStart(2,'0');
+
+        document.querySelectorAll('a[href="/main"]').forEach(a => {
+            a.href = `/main?date=${targetDate}`;
+        });
 
         const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
         document.getElementById('current-date-display').textContent =
@@ -430,7 +418,15 @@
                         }
                     });
                 }
+                // ← emotion if문 닫힘
+                if (diary.tags && diary.tags.length > 0) {   // ← 여기가 추가된 부분
+                    tags = [...diary.tags];
+                    renderTagChips();
+                }
+
+
             }
+
         } catch (err) {
             console.error('일기 불러오기 실패:', err);
         }
@@ -442,7 +438,8 @@
             if (exercises && exercises.length > 0) {
                 const last = exercises[exercises.length - 1];
                 document.getElementById('exercise-type').value = last.category;
-                document.getElementById('exercise-duration').value = last.durationMinutes;
+                document.getElementById('exercise-duration-range').value = last.durationMinutes;
+                document.getElementById('exercise-duration-display').textContent = `${last.durationMinutes}분`;
             }
         } catch (err) {
             console.error('운동 불러오기 실패:', err);
@@ -484,13 +481,11 @@
             wakeDisplay.textContent = formatTime(wakeMin);
 
             let duration = wakeMin - bedMin;
-            if (duration < 0) duration += 1440; // 자정을 넘긴 경우 (다음날 기상)
+            if (duration < 0) duration += 1440;
 
             const dh = Math.floor(duration / 60);
             const dm = duration % 60;
-
-            // 윗 코드의 친숙한 한국어 포맷으로 출력
-            durationDisplay.textContent = `${dh}시간 ${dm}분`;
+            durationDisplay.textContent = `${dh}h ${dm}m`;
         };
 
 // 3. 드래그 이벤트 리스너 등록
@@ -503,22 +498,19 @@
 // ==========================================
         const loadSleepData = async () => {
             try {
-                // 아래 코드 로직상 기준일은 기상일(wakeDate = formattedDate)입니다.
-                // 필요에 따라 인자를 prevFormatted 등으로 변경하세요.
-                const sleep = await sleepApi.getSleep(formattedDate);
+                // main.html과 동일하게 기상일(targetDate) 기준으로 조회
+                const sleep = await sleepApi.getSleep(targetDate);
 
                 if (sleep) {
                     const bed = new Date(sleep.bedTime);
                     const wake = new Date(sleep.wakeTime);
 
-                    // Date 객체에서 '분(minutes)' 단위로 변환하여 슬라이더 값에 적용
                     const bedMin = bed.getHours() * 60 + bed.getMinutes();
                     const wakeMin = wake.getHours() * 60 + wake.getMinutes();
 
                     bedRange.value = bedMin;
                     wakeRange.value = wakeMin;
 
-                    // 슬라이더 값이 변경되었으므로 화면 디스플레이도 업데이트
                     updateSleepDisplay();
                 }
             } catch (err) {
@@ -526,45 +518,58 @@
             }
         };
 
-// 페이지 로드 시 또는 모달이 열릴 때 불러오기 함수 실행
-// loadSleepData();
+        // 페이지 로드 시 수면 데이터 불러오기
+        loadSleepData();
 
 
 // ==========================================
 // 5. 수면 기록 저장 로직
 // ==========================================
         document.getElementById('save-sleep-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('save-sleep-btn');
+            btn.disabled = true;
+            btn.textContent = '저장 중...';
             const bedMin = parseInt(bedRange.value);
             const wakeMin = parseInt(wakeRange.value);
 
-            // 취침이 기상보다 늦으면(자정 넘김) → 취침은 전날, 기상은 오늘
-            let bedDate = formattedDate;
-            let wakeDate = formattedDate;
+            let bedDate = targetDate;
+            let wakeDate = targetDate;
 
             if (bedMin > wakeMin) {
-                // 예: 취침 23:00, 기상 06:00 → 취침은 전날
-                const prev = new Date(currentDate);
+                const prev = new Date(dateObj);
                 prev.setDate(prev.getDate() - 1);
-                bedDate = prev.toISOString().split('T')[0];
+                const py = prev.getFullYear();
+                const pm = String(prev.getMonth() + 1).padStart(2, '0');
+                const pd = String(prev.getDate()).padStart(2, '0');
+                bedDate = `${py}-${pm}-${pd}`;
             }
 
             const bedTime = `${bedDate}T${bedDisplay.textContent}:00`;
             const wakeTime = `${wakeDate}T${wakeDisplay.textContent}:00`;
 
-            // date는 기상일(wakeDate) 기준으로 저장 → 홈에서 조회 가능
             try {
                 await sleepApi.recordSleep(wakeDate, bedTime, wakeTime);
                 alert('수면 기록 저장됨');
             } catch (err) {
                 alert('저장 실패: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '기록 저장';
             }
         });
 
 
 
+        // 운동 슬라이더 이벤트 (main.html과 동일)
+        const exRange = document.getElementById('exercise-duration-range');
+        const exDisplay = document.getElementById('exercise-duration-display');
+        exRange.addEventListener('input', () => {
+            exDisplay.textContent = `${exRange.value}분`;
+        });
+
         document.getElementById('save-exercise-btn').addEventListener('click', async () => {
             const category = document.getElementById('exercise-type').value;
-            const minutes = document.getElementById('exercise-duration').value;
+            const minutes = exRange.value;
             if (!category) return alert('운동 종류를 입력하세요');
             try {
                 await exerciseApi.recordExercise(targetDate, category, minutes);
@@ -573,6 +578,34 @@
                 alert('저장 실패: ' + err.message);
             }
         });
+
+        // ── 태그 관리 ──                               // ← 여기서부터 추가된 부분
+        function renderTagChips() {
+            const list = document.getElementById('tag-list');
+            list.innerHTML = tags.map((tag, i) => `
+                <span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1">
+                    # ${tag}
+                    <button onclick="removeTag(${i})"><span class="material-symbols-outlined text-[14px] hover:text-error transition-colors">close</span></button>
+                </span>`).join('');
+        }
+
+        function removeTag(index) {
+            tags.splice(index, 1);
+            renderTagChips();
+        }
+
+        document.getElementById('tag-input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const val = e.target.value.trim().replace(/^#/, '');
+                if (val && !tags.includes(val)) {
+                    tags.push(val);
+                    renderTagChips();
+                }
+                e.target.value = '';
+            }
+        });
+
 
         document.getElementById('save-diary-btn').addEventListener('click', async () => {
             const title = document.getElementById('diary-title').value;
@@ -614,4 +647,3 @@
     });
 </script>
 </body></html>
- 

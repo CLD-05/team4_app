@@ -312,16 +312,18 @@
         });
     }
 
+    // 변경 후
     function renderTags(tags, elementId, isGood) {
         const el = document.getElementById(elementId);
         if (!tags || tags.length === 0) {
             el.innerHTML = '<span class="text-on-surface-variant text-sm">태그 없음</span>';
             return;
         }
-        el.innerHTML = tags.map(tag => `
-            <div class="bg-surface-container-lowest ${isGood ? 'text-secondary' : 'text-tertiary'} px-4 py-2 rounded-full border ${isGood ? 'border-secondary/20' : 'border-outline-variant/50'} shadow-sm flex items-center gap-2">
-                <span class="font-label-sm text-label-sm">${tag}</span>
-            </div>`).join('');
+        el.innerHTML = tags.map(item => `
+        <div onclick="window.location.href='/diary?date=${item.date}'"
+             class="cursor-pointer bg-surface-container-lowest ${isGood ? 'text-secondary' : 'text-tertiary'} px-4 py-2 rounded-full border ${isGood ? 'border-secondary/20' : 'border-outline-variant/50'} shadow-sm flex items-center gap-2 hover:opacity-70 transition-opacity">
+            <span class="font-label-sm text-label-sm">${item.tag}</span>
+        </div>`).join('');
     }
 
     async function loadReport() {
@@ -346,8 +348,13 @@
             renderLegend(emotionCounts, total);
 
             // 긍정 감정 비율 계산
-            const positive = (emotionCounts['VERY_GOOD'] || 0) + (emotionCounts['GOOD'] || 0);
-            const score = Math.round((positive / total) * 100);
+            // 변경 후
+            const weights = { VERY_BAD: 0, BAD: 25, NORMAL: 50, GOOD: 75, VERY_GOOD: 100 };
+            const weightedSum = Object.entries(weights).reduce((sum, [emotion, weight]) => {
+                return sum + (emotionCounts[emotion] || 0) * weight;
+            }, 0);
+            const score = Math.round(weightedSum / total);
+
             document.getElementById('balance-score').textContent = score;
             document.getElementById('balance-bar').style.width = `${score}%`;
 

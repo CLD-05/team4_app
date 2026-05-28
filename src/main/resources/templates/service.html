@@ -124,7 +124,9 @@
         <a class="inline-flex items-center justify-center px-8 py-4 bg-brand-dark text-white rounded-full font-medium hover:bg-black transition-colors" href="/login">
             지금 시작하기 →
         </a>
-        <a class="inline-flex items-center justify-center px-8 py-4 bg-white/50 text-brand-dark rounded-full font-medium hover:bg-white transition-colors border border-brand-dark/10" href="#">
+        <a class="inline-flex items-center justify-center px-8 py-4 bg-white/50 text-brand-dark rounded-full font-medium hover:bg-white transition-colors border border-brand-dark/10"
+           onclick="document.querySelector('[data-purpose=\'dashboard-preview\']')
+    .scrollIntoView({ behavior: 'smooth', block: 'start' })">
             미리보기
         </a>
     </div>

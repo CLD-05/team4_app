@@ -34,8 +34,8 @@ public class ReportService {
         Map<Emotion, Long> emotionCounts = diaries.stream()
                 .collect(Collectors.groupingBy(Diary::getEmotion, Collectors.counting()));
 
-        List<String> goodTags = getTopTags(diaries, Arrays.asList(Emotion.VERY_GOOD, Emotion.GOOD));
-        List<String> badTags = getTopTags(diaries, Arrays.asList(Emotion.VERY_BAD, Emotion.BAD));
+        List<Map<String, String>> goodTags = getTopTagsWithDate(diaries, Arrays.asList(Emotion.VERY_GOOD, Emotion.GOOD));
+        List<Map<String, String>> badTags  = getTopTagsWithDate(diaries, Arrays.asList(Emotion.VERY_BAD, Emotion.BAD));
 
         Map<String, Object> report = new HashMap<>();
         report.put("emotionCounts", emotionCounts);
@@ -46,16 +46,31 @@ public class ReportService {
         return report;
     }
 
-    private List<String> getTopTags(List<Diary> diaries, List<Emotion> targetEmotions) {
-        Map<String, Long> tagCounts = diaries.stream()
+    private List<Map<String, String>> getTopTagsWithDate(List<Diary> diaries, List<Emotion> targetEmotions) {
+        Map<String, Long>   tagCounts = new LinkedHashMap<>();
+        Map<String, String> tagDates  = new LinkedHashMap<>();
+
+        diaries.stream()
                 .filter(d -> targetEmotions.contains(d.getEmotion()))
-                .flatMap(d -> d.getTags().stream())
-                .collect(Collectors.groupingBy(DiaryTag::getTagName, Collectors.counting()));
+                .sorted(Comparator.comparing(Diary::getCreatedAt).reversed()) // 최신순
+                .forEach(d -> {
+                    String dateStr = d.getCreatedAt().toLocalDate().toString();
+                    d.getTags().forEach(tag -> {
+                        String name = tag.getTagName();
+                        tagCounts.merge(name, 1L, Long::sum);
+                        tagDates.put(name, dateStr); // 최신 날짜로 덮어쓰기
+                    });
+                });
 
         return tagCounts.entrySet().stream()
                 .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
                 .limit(3)
-                .map(Map.Entry::getKey)
+                .map(e -> {
+                    Map<String, String> m = new HashMap<>();
+                    m.put("tag",  e.getKey());
+                    m.put("date", tagDates.get(e.getKey()));
+                    return m;
+                })
                 .collect(Collectors.toList());
     }
 }

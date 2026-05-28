@@ -8,5 +8,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
+
     List<Exercise> findAllByUserAndDiaryDate(User user, LocalDate diaryDate);
+    void deleteByUser(User user);
+    ;
 }

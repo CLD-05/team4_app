@@ -9,4 +9,6 @@ import java.util.Optional;
 
 public interface SleepRepository extends JpaRepository<Sleep, Long> {
     Optional<Sleep> findByUserAndDiaryDate(User user, LocalDate diaryDate);
+    void deleteByUser(User user);
+
 }

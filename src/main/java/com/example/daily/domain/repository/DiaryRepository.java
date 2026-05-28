@@ -2,6 +2,7 @@ package com.example.daily.domain.repository;
 
 import com.example.daily.domain.entity.Diary;
 import com.example.daily.domain.entity.User;
+import com.example.daily.domain.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,6 +14,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
+    void deleteByUser(User user);
+    List<Diary> findAllByUser(User user);
     Page<Diary> findAllByUserOrderByCreatedAtDesc(User user, Pageable pageable);
     List<Diary> findAllByUserAndCreatedAtBetween(User user, LocalDateTime start, LocalDateTime end);
     List<Diary> findByUserAndCreatedAtBetween(User user, LocalDateTime start, LocalDateTime end); // Optional → List
@@ -29,5 +32,13 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     @Modifying
     @Query(value = "UPDATE diaries SET deleted_at = NULL WHERE id = :id", nativeQuery = true)
     void restoreById(@Param("id") Long id);
+
+    @Modifying
+    @Query(value = "DELETE FROM diary_tags WHERE diary_id IN (SELECT id FROM diaries WHERE user_id = :userId)", nativeQuery = true)
+    void deleteAllTagsByUserId(@Param("userId") Long userId);
+
+    @Modifying
+    @Query(value = "DELETE FROM diaries WHERE user_id = :userId", nativeQuery = true)
+    void deleteAllByUserId(@Param("userId") Long userId);
 
 }

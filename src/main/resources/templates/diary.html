@@ -391,6 +391,12 @@
             a.href = `/todolist?date=${targetDate}`;
         });
 
+        // 변경 후
+        document.querySelectorAll('a[href^="/report"]').forEach(a => {
+            a.href = `/report?date=${targetDate}&year=${dateObj.getFullYear()}&month=${dateObj.getMonth() + 1}`;
+        });
+
+
         const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
         document.getElementById('current-date-display').textContent =
             dateObj.getFullYear() + '년 ' + (dateObj.getMonth() + 1) + '월 ' + dateObj.getDate() + '일 • ' + days[dateObj.getDay()];
@@ -590,6 +596,7 @@
             tags.splice(index, 1);
             renderTagChips();
         }
+        window.removeTag = removeTag;
 
         document.getElementById('tag-input').addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
@@ -616,7 +623,7 @@
                     targetDate: targetDate,
                     emotion: selectedEmotion,
                     content: '[' + title + ']\n' + content,
-                    tags: []
+                    tags: tags
                 });
                 alert('일기가 저장되었습니다.');
                 window.location.href = '/main?date=' + targetDate;

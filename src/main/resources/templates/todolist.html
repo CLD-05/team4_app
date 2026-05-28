@@ -184,19 +184,24 @@
                     : 'bg-surface-container-lowest text-on-surface-variant hover:bg-white'
             }`;
             btn.innerHTML = `
-                <span class="text-xs uppercase opacity-${isSelected ? '90' : '60'} font-body">${DAYS_EN[d.getDay()]}</span>
-                <span class="text-xl ${isSelected ? '' : 'font-bold'} mt-1">${d.getDate()}</span>
-            `;
+            <span class="text-xs uppercase opacity-${isSelected ? '90' : '60'} font-body">${DAYS_EN[d.getDay()]}</span>
+            <span class="text-xl ${isSelected ? '' : 'font-bold'} mt-1">${d.getDate()}</span>
+        `;
             btn.addEventListener('click', () => {
                 selectedDate = d;
                 renderDateSelector();
                 loadTodos();
                 updateTitle();
-                document.querySelectorAll('a[href^="/diary"]').forEach(a => {
-                    a.href = `/diary?date=${formatDate(selectedDate)}`;
-                });
             });
-
+            selector.appendChild(btn);
+        }
+        const dateStr = formatDate(selectedDate);
+        document.querySelectorAll('a[href^="/diary"]').forEach(a => { a.href = `/diary?date=${dateStr}`; });
+        document.querySelectorAll('a[href^="/main"]').forEach(a => { a.href = `/main?date=${dateStr}`; });
+        document.querySelectorAll('a[href^="/report"]').forEach(a => {
+            a.href = `/report?date=${dateStr}&year=${selectedDate.getFullYear()}&month=${selectedDate.getMonth() + 1}`;
+        });
+    }
 
     function updateTitle() {
         const title = document.getElementById('page-title');
@@ -243,7 +248,8 @@
                             <span class="material-symbols-outlined text-on-secondary text-[16px] ${todo.isCompleted ? 'opacity-100' : 'opacity-0'} transition-opacity" style="font-variation-settings: 'FILL' 1;">check</span>
                         </div>
                     </label>
-                    <span class="todo-text text-lg text-on-background transition-all ${todo.isCompleted ? 'line-through text-on-surface-variant' : ''}">${todo.content}</span>
+
+                <span class="${todo.isCompleted ? 'text-secondary font-semibold' : 'text-on-surface'}">${todo.content}</span>
                 </div>
                 <button class="delete-btn text-outline-variant hover:text-error transition-colors opacity-0 group-hover:opacity-100 p-2" data-id="${todo.id}">
                     <span class="material-symbols-outlined">delete</span>

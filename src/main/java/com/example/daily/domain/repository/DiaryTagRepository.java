@@ -1,6 +1,5 @@
 package com.example.daily.domain.repository;
 
-import com.example.daily.domain.entity.Diary;
 import com.example.daily.domain.entity.DiaryTag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

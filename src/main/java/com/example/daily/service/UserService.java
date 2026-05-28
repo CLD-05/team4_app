@@ -1,7 +1,14 @@
 package com.example.daily.service;
 
 import com.example.daily.domain.entity.User;
+import com.example.daily.domain.entity.Diary;
 import com.example.daily.domain.repository.UserRepository;
+import com.example.daily.domain.repository.DiaryRepository;
+import com.example.daily.domain.repository.DiaryTagRepository;
+import com.example.daily.domain.repository.SleepRepository;
+import com.example.daily.domain.repository.ExerciseRepository;
+import com.example.daily.domain.repository.TodoRepository;
+import java.util.List;
 import com.example.daily.dto.UserDto;
 import com.example.daily.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +27,11 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
+    private final DiaryRepository diaryRepository;
+    private final DiaryTagRepository diaryTagRepository;
+    private final SleepRepository sleepRepository;
+    private final ExerciseRepository exerciseRepository;
+    private final TodoRepository todoRepository;
 
     @Transactional
     public void signUp(UserDto.SignUpRequest request) {
@@ -100,9 +112,14 @@ public class UserService {
     public void deleteAccount(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        todoRepository.deleteByUser(user);
+        sleepRepository.deleteByUser(user);
+        exerciseRepository.deleteByUser(user);
+        diaryRepository.deleteAllTagsByUserId(user.getId());  // tags 먼저
+        diaryRepository.deleteAllByUserId(user.getId());       // diaries
         userRepository.delete(user);
     }
-
     @Transactional
     public UserDto.TokenResponse refresh(String refreshToken) {
         if (!jwtTokenProvider.validateToken(refreshToken)) {

@@ -12,7 +12,6 @@ const api = {
             headers['Authorization'] = `Bearer ${token}`;
         }
 
-
         const config = {
             ...options,
             headers,
@@ -51,7 +50,6 @@ const api = {
         });
     },
 
-
     patch(endpoint, body) {
         return this.request(endpoint, {
             method: 'PATCH',
@@ -59,8 +57,11 @@ const api = {
         });
     },
 
-    delete(endpoint) {
-        return this.request(endpoint, { method: 'DELETE' });
+    delete(endpoint, body) {
+        return this.request(endpoint, {
+            method: 'DELETE',
+            ...(body ? { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {})
+        });
     },
 
     requestWithParams(endpoint, method, params = {}) {
@@ -111,18 +112,17 @@ const auth = {
         return data;
     },
 
-
-    async signUp(email, loginId, password, nickname) {
+    async signUp(email, password, nickname, loginId) {
         return await api.post('/auth/sign-up', { email, loginId, password, nickname });
     },
-
 
     logout() {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
-        document.cookie = 'accessToken=; path=/; max-age=0'; // 쿠키 삭제
+        document.cookie = 'accessToken=; path=/; max-age=0';
         window.location.href = '/login';
     },
+
     isLoggedIn() {
         return !!localStorage.getItem('accessToken');
     }

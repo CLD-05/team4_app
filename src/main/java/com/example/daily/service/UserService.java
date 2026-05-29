@@ -23,11 +23,27 @@ public class UserService {
 
     @Transactional
     public void signUp(UserDto.SignUpRequest request) {
+        if (request.getEmail() == null || !request.getEmail().matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
+            throw new RuntimeException("올바른 이메일 형식이 아닙니다.");
+        }
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("이미 사용 중인 이메일입니다.");
         }
+        if (request.getLoginId() == null || request.getLoginId().length() < 3 || request.getLoginId().length() > 20) {
+            throw new RuntimeException("아이디는 3자 이상 20자 이하여야 합니다.");
+        }
         if (request.getLoginId() != null && userRepository.existsByLoginId(request.getLoginId())) {
             throw new RuntimeException("이미 사용 중인 아이디입니다.");
+        }
+        if (request.getNickname() == null || request.getNickname().isBlank()) {
+            throw new RuntimeException("닉네임을 입력해주세요.");
+        }
+        if (request.getNickname().length() > 20) {
+            throw new RuntimeException("닉네임은 20자 이하여야 합니다.");
+        }
+        String password = request.getPassword();
+        if (password == null || password.length() < 8) {
+            throw new RuntimeException("비밀번호는 8자 이상이어야 합니다.");
         }
         User user = User.builder()
                 .email(request.getEmail())
@@ -96,13 +112,8 @@ public class UserService {
     }
 
     public String uploadProfileImg(String email, org.springframework.web.multipart.MultipartFile file) throws java.io.IOException {
-        String ext = "";
-        String original = file.getOriginalFilename();
-        if (original != null && original.contains(".")) {
-            ext = original.substring(original.lastIndexOf("."));
-        }
-        String filename = java.util.UUID.randomUUID().toString() + ext;
-        java.nio.file.Path uploadDir = java.nio.file.Paths.get(System.getProperty("user.dir") + "/uploads");
+        String filename = java.util.UUID.randomUUID() + "_" + file.getOriginalFilename();
+        java.nio.file.Path uploadDir = java.nio.file.Paths.get("target/classes/static/uploads");
         java.nio.file.Files.createDirectories(uploadDir);
         java.nio.file.Files.copy(file.getInputStream(), uploadDir.resolve(filename), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
         String url = "/uploads/" + filename;
@@ -140,13 +151,19 @@ public class UserService {
         if (!user.getEmail().equals(email)) {
             throw new RuntimeException("아이디와 이메일이 일치하지 않습니다.");
         }
+        if (newPassword == null || newPassword.length() < 8) {
+            throw new RuntimeException("비밀번호는 8자 이상이어야 합니다.");
+        }
         user.setPassword(passwordEncoder.encode(newPassword));
     }
 
     @Transactional
-    public void deleteAccount(String email) {
+    public void deleteAccount(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new RuntimeException("비밀번호가 올바르지 않습니다.");
+        }
         todoRepository.deleteByUser(user);
         sleepRepository.deleteByUser(user);
         exerciseRepository.deleteByUser(user);

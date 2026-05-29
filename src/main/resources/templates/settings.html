@@ -314,6 +314,11 @@
                 <h3 class="font-headline-md text-headline-md text-on-background mb-1">정말로 탈퇴하시겠습니까?</h3>
                 <p class="text-body-md text-on-surface-variant">탈퇴하면 모든 일기, 할일, 운동 기록이 <span class="text-error font-semibold">영구적으로 삭제</span>되며 복구할 수 없습니다.</p>
             </div>
+            <div class="w-full flex flex-col gap-1 text-left">
+                <label class="font-label-sm text-label-sm text-on-surface-variant">비밀번호 확인</label>
+                <input id="delete-password" type="password" placeholder="현재 비밀번호를 입력하세요"
+                       class="w-full rounded-lg border border-outline-variant bg-surface-container-low px-4 py-3 text-body-md text-on-background outline-none focus:border-error focus:ring-1 focus:ring-error/30 transition-colors placeholder:text-outline-variant"/>
+            </div>
             <p id="delete-error" class="text-error text-sm hidden self-start w-full text-left"></p>
             <div class="flex gap-3 w-full mt-2">
                 <button onclick="closeDeleteModal()"
@@ -345,6 +350,7 @@
     }
     function closeDeleteModal() {
         document.getElementById('delete-modal').classList.add('hidden');
+        document.getElementById('delete-password').value = '';
     }
 
     /* ── 탭 전환 ── */
@@ -441,10 +447,14 @@
     /* ── 회원탈퇴 제출 ── */
     async function submitDeleteAccount() {
         const errEl = document.getElementById('delete-error');
+        const password = document.getElementById('delete-password').value;
         errEl.classList.add('hidden');
+        if (!password) {
+            errEl.textContent = '비밀번호를 입력해주세요.'; errEl.classList.remove('hidden'); return;
+        }
         try {
-            await api.delete('/users/me');
-            auth.logout();          // 로컬 토큰 제거 후 로그인 페이지로
+            await api.delete('/users/me', { password });
+            auth.logout();
         } catch (e) {
             errEl.textContent = e.message || '탈퇴 처리 중 오류가 발생했습니다.';
             errEl.classList.remove('hidden');

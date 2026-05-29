@@ -25,6 +25,13 @@ public class TodoService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        if (request.getContent() == null || request.getContent().isBlank()) {
+            throw new RuntimeException("할일 내용을 입력해주세요.");
+        }
+        if (request.getContent().length() > 100) {
+            throw new RuntimeException("할일 내용은 100자 이하여야 합니다.");
+        }
+
         Todo todo = Todo.builder()
                 .user(user)
                 .todoDate(request.getTodoDate())

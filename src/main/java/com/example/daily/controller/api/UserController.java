@@ -50,10 +50,18 @@ public class UserController {
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<String> deleteAccount(@AuthenticationPrincipal UserDetails userDetails) {
-        userService.deleteAccount(userDetails.getUsername());
+    public ResponseEntity<String> deleteAccount(@AuthenticationPrincipal UserDetails userDetails,
+                                                @RequestBody DeleteAccountRequest request) {
+        userService.deleteAccount(userDetails.getUsername(), request.getPassword());
         return ResponseEntity.ok("Account deleted successfully");
     }
+
+    @Getter
+    @NoArgsConstructor
+    static class DeleteAccountRequest {
+        private String password;
+    }
+
 
     @GetMapping("/find-id")
     public ResponseEntity<String> findId(@RequestParam String email) {

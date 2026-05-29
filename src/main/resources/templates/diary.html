@@ -114,9 +114,9 @@
 <body class="bg-background text-on-surface font-body-md text-body-md min-h-screen flex flex-col">
 <header class="w-full top-0 sticky z-40 bg-background/80 backdrop-blur-md">
     <div class="flex justify-between items-center px-6 md:px-10 py-2 max-w-7xl mx-auto">
-        <div class="font-serif text-3xl md:text-4xl text-primary italic font-bold">
+        <a href="/main" class="font-serif text-3xl md:text-4xl text-primary italic font-bold hover:opacity-80 transition-opacity">
             Dear Diary
-        </div>
+        </a>
         <div class="flex items-center gap-4">
             <a href="/settings" class="text-on-surface-variant hover:text-secondary transition-colors">
                 <span class="material-symbols-outlined">account_circle</span>
@@ -140,6 +140,12 @@
         </a>
     </nav>
     <main class="flex-1 w-full md:ml-64 px-6 md:px-10 pb-32 pt-8">
+        <!-- 날짜 선택 -->
+        <section class="mb-6 flex flex-col gap-3">
+            <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x" id="diary-date-selector">
+                <!-- JS로 동적 생성 -->
+            </div>
+        </section>
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-section-gap">
 
             <div class="lg:col-span-8 flex flex-col gap-gutter">
@@ -181,8 +187,8 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl p-6 md:p-8 flex flex-col flex-grow min-h-[400px] shadow-sm border border-surface-variant">
-                    <div class="editor-content flex-grow font-body-lg text-body-lg text-on-surface focus:outline-none whitespace-pre-wrap bg-white" contenteditable="true" data-placeholder="마음을 담아 기록해 보세요. 이곳은 당신의 공간입니다."></div>
+                <div class="bg-white rounded-xl p-6 md:p-8 shadow-sm border border-surface-variant">
+                    <div class="editor-content h-[400px] overflow-y-auto font-body-lg text-body-lg text-on-surface focus:outline-none whitespace-pre-wrap bg-white" contenteditable="true" data-placeholder="마음을 담아 기록해 보세요. 이곳은 당신의 공간입니다."></div>
                 </div>
 
                 <div class="bg-white rounded-xl shadow-sm border border-surface-variant overflow-hidden">
@@ -211,23 +217,19 @@
 
                 <div class="bg-surface-container-lowest rounded-xl soft-shadow p-5 flex flex-col gap-5">
                     <div class="flex items-center gap-2 text-primary">
-                        <span class="material-symbols-outlined text-secondary">bedtime</span>
+                        <span class="material-symbols-outlined text-secondary">alarm</span>
                         <h3 class="font-headline-md text-[18px]">수면</h3>
                     </div>
                     <div class="flex flex-col gap-3">
-                        <div class="flex flex-col gap-1">
-                            <div class="flex justify-between items-center bg-white p-2 rounded-lg border border-outline-variant/30">
-                                <span class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">취침</span>
-                                <input type="range" id="bed-time-range" min="0" max="1435" step="5" value="0" class="w-2/3 h-2 bg-secondary-container rounded-lg appearance-none cursor-pointer">
-                                <span class="font-body-lg text-on-surface text-sm" id="bed-time-display">--:--</span>
-                            </div>
+                        <div class="flex justify-between items-center bg-white p-3 rounded-lg border border-outline-variant/30">
+                            <span class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">취침</span>
+                            <input type="time" id="bed-time-range" class="border-none bg-transparent text-on-surface text-sm font-bold focus:ring-0 outline-none cursor-pointer" value="00:00">
+                            <span class="material-symbols-outlined text-outline-variant text-sm">bedtime</span>
                         </div>
-                        <div class="flex flex-col gap-1">
-                            <div class="flex justify-between items-center bg-white p-2 rounded-lg border border-outline-variant/30">
-                                <span class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">기상</span>
-                                <input type="range" id="wake-time-range" min="0" max="1435" step="5" value="0" class="w-2/3 h-2 bg-secondary-container rounded-lg appearance-none cursor-pointer">
-                                <span class="font-body-lg text-on-surface text-sm" id="wake-time-display">--:--</span>
-                            </div>
+                        <div class="flex justify-between items-center bg-white p-3 rounded-lg border border-outline-variant/30">
+                            <span class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">기상</span>
+                            <input type="time" id="wake-time-range" class="border-none bg-transparent text-on-surface text-sm font-bold focus:ring-0 outline-none cursor-pointer" value="00:00">
+                            <span class="material-symbols-outlined text-outline-variant text-sm">wb_sunny</span>
                         </div>
                     </div>
                     <div class="pt-2 border-t border-outline-variant/20 flex justify-between items-end">
@@ -400,6 +402,37 @@
         });
 
         const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+        const DAYS_EN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+        // 날짜 선택 UI 렌더링
+        (function renderDiaryDateSelector() {
+            const selector = document.getElementById('diary-date-selector');
+            if (!selector) return;
+            selector.innerHTML = '';
+            for (let i = -3; i <= 3; i++) {
+                const d = new Date(dateObj);
+                d.setDate(d.getDate() + i);
+                const isSelected = i === 0;
+                const btn = document.createElement('button');
+                btn.className = `snap-start flex flex-col items-center justify-center min-w-[64px] py-3 rounded-xl shadow-sm transition-all ${
+                    isSelected
+                        ? 'bg-secondary-container text-on-secondary-container shadow-md ring-1 ring-secondary/20 font-bold'
+                        : 'bg-surface-container-lowest text-on-surface-variant hover:bg-white'
+                }`;
+                btn.innerHTML = `
+                    <span class="text-xs uppercase opacity-${isSelected ? '90' : '60'}">${DAYS_EN[d.getDay()]}</span>
+                    <span class="text-xl ${isSelected ? '' : 'font-bold'} mt-1">${d.getDate()}</span>
+                `;
+                btn.addEventListener('click', () => {
+                    const y = d.getFullYear();
+                    const m = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+                    window.location.href = `/diary?date=${y}-${m}-${day}`;
+                });
+                selector.appendChild(btn);
+            }
+        })();
+
         document.getElementById('current-date-display').textContent =
             dateObj.getFullYear() + '년 ' + (dateObj.getMonth() + 1) + '월 ' + dateObj.getDate() + '일 • ' + days[dateObj.getDay()];
 
@@ -469,56 +502,35 @@
         // 1. DOM 요소 선택
         const bedRange = document.getElementById('bed-time-range');
         const wakeRange = document.getElementById('wake-time-range');
-        const bedDisplay = document.getElementById('bed-time-display');
-        const wakeDisplay = document.getElementById('wake-time-display');
         const durationDisplay = document.getElementById('sleep-duration');
-// (기존 윗 코드의 sleep-duration-display와 아이디가 다르다면 HTML에 맞게 수정하세요)
 
-// 2. 수면 시간 디스플레이 업데이트 함수 (드래그 시 작동)
+// 2. 수면 시간 디스플레이 업데이트
         const updateSleepDisplay = () => {
-            const bedMin = parseInt(bedRange.value);
-            const wakeMin = parseInt(wakeRange.value);
-
-            const formatTime = (min) => {
-                const h = Math.floor(min / 60).toString().padStart(2, '0');
-                const m = (min % 60).toString().padStart(2, '0');
-                return `${h}:${m}`;
-            };
-
-            bedDisplay.textContent = formatTime(bedMin);
-            wakeDisplay.textContent = formatTime(wakeMin);
-
-            let duration = wakeMin - bedMin;
+            const bedVal = bedRange.value;
+            const wakeVal = wakeRange.value;
+            if (!bedVal || !wakeVal) return;
+            const [bh, bm] = bedVal.split(':').map(Number);
+            const [wh, wm] = wakeVal.split(':').map(Number);
+            let duration = (wh * 60 + wm) - (bh * 60 + bm);
             if (duration < 0) duration += 1440;
-
             const dh = Math.floor(duration / 60);
             const dm = duration % 60;
             durationDisplay.textContent = `${dh}h ${dm}m`;
         };
 
-// 3. 드래그 이벤트 리스너 등록
-        bedRange.addEventListener('input', updateSleepDisplay);
-        wakeRange.addEventListener('input', updateSleepDisplay);
+// 3. 이벤트 리스너
+        bedRange.addEventListener('change', updateSleepDisplay);
+        wakeRange.addEventListener('change', updateSleepDisplay);
 
-
-// ==========================================
-// 4. 수면 기록 불러오기 로직 (윗 코드 기능 병합)
-// ==========================================
+// 4. 수면 기록 불러오기
         const loadSleepData = async () => {
             try {
-                // main.html과 동일하게 기상일(targetDate) 기준으로 조회
                 const sleep = await sleepApi.getSleep(targetDate);
-
                 if (sleep) {
                     const bed = new Date(sleep.bedTime);
                     const wake = new Date(sleep.wakeTime);
-
-                    const bedMin = bed.getHours() * 60 + bed.getMinutes();
-                    const wakeMin = wake.getHours() * 60 + wake.getMinutes();
-
-                    bedRange.value = bedMin;
-                    wakeRange.value = wakeMin;
-
+                    bedRange.value = bed.toTimeString().slice(0, 5);
+                    wakeRange.value = wake.toTimeString().slice(0, 5);
                     updateSleepDisplay();
                 }
             } catch (err) {
@@ -526,7 +538,6 @@
             }
         };
 
-        // 페이지 로드 시 수면 데이터 불러오기
         loadSleepData();
 
 
@@ -537,8 +548,12 @@
             const btn = document.getElementById('save-sleep-btn');
             btn.disabled = true;
             btn.textContent = '저장 중...';
-            const bedMin = parseInt(bedRange.value);
-            const wakeMin = parseInt(wakeRange.value);
+            const bedVal = bedRange.value;
+            const wakeVal = wakeRange.value;
+            const [bh, bm] = bedVal.split(':').map(Number);
+            const [wh, wm] = wakeVal.split(':').map(Number);
+            const bedMin = bh * 60 + bm;
+            const wakeMin = wh * 60 + wm;
 
             let bedDate = targetDate;
             let wakeDate = targetDate;
@@ -552,8 +567,8 @@
                 bedDate = `${py}-${pm}-${pd}`;
             }
 
-            const bedTime = `${bedDate}T${bedDisplay.textContent}:00`;
-            const wakeTime = `${wakeDate}T${wakeDisplay.textContent}:00`;
+            const bedTime = `${bedDate}T${bedVal}:00`;
+            const wakeTime = `${wakeDate}T${wakeVal}:00`;
 
             try {
                 await sleepApi.recordSleep(wakeDate, bedTime, wakeTime);
@@ -614,6 +629,21 @@
             }
         });
 
+        // ── 일기 이미지 ──
+        let diaryImageBase64 = null;
+
+        window.previewDiaryImage = function(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                diaryImageBase64 = e.target.result;
+                const preview = document.getElementById('diary-img-preview');
+                preview.src = diaryImageBase64;
+                preview.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        };
 
         // ── 일기 이미지 ──
         let diaryImageFile = null;

@@ -49,7 +49,6 @@ public class UserService {
         if (file != null && !file.isEmpty()) {
             profileImgUrl = s3Service.upload(file);
         }
-
         User user = User.builder()
                 .email(request.getEmail())
                 .loginId(request.getLoginId())

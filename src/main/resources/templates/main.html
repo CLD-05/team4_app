@@ -383,6 +383,23 @@
     });
 
     function setupEventListeners() {
+        // 달력 이전/다음 버튼
+        const calendarBtns = document.querySelectorAll('#calendar-container button');
+        let calendarYear = currentDate.getFullYear();
+        let calendarMonth = currentDate.getMonth() + 1;
+
+        calendarBtns[0].addEventListener('click', async () => {
+            calendarMonth--;
+            if (calendarMonth < 1) { calendarMonth = 12; calendarYear--; }
+            await renderCalendar(calendarYear, calendarMonth);
+        });
+
+        calendarBtns[1].addEventListener('click', async () => {
+            calendarMonth++;
+            if (calendarMonth > 12) { calendarMonth = 1; calendarYear++; }
+            await renderCalendar(calendarYear, calendarMonth);
+        });
+
         // 기분 선택
         document.querySelectorAll('.mood-btn').forEach(btn => {
             btn.addEventListener('click', async () => {
@@ -648,4 +665,4 @@
         if (e.key === 'Enter') document.getElementById('add-todo-btn').click();
     });
 </script>
-</body></html>
+</body></html>g

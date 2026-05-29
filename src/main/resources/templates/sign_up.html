@@ -162,8 +162,7 @@
 <!-- TopAppBar (Transactional - Suppressed active nav, simplified) -->
 <header class="w-full top-0 bg-background flex justify-between items-center px-gutter py-4 max-w-7xl mx-auto z-50">
     <div class="flex items-center gap-2">
-        <span class="material-symbols-outlined text-primary font-display-lg text-headline-md" style="font-variation-settings: 'FILL' 1;">book</span>
-        <span class="font-display-lg text-headline-md text-primary tracking-tight">디어 다이어리</span>
+        <a href="/main" class="font-serif text-3xl md:text-4xl text-primary italic font-bold hover:opacity-80 transition-opacity">Dear Diary</a>
     </div>
     <div>
         <a class="font-label-sm text-label-sm text-on-surface-variant hover:text-secondary transition-colors px-4 py-2" href="/login">로그인</a>
@@ -190,25 +189,26 @@
                 <span class="font-label-sm text-label-sm text-on-surface-variant">프로필 사진 (선택 사항)</span>
             </div>
             <!-- Input Fields -->
-            <div class="space-y-5"><div class="relative mb-8">
-                <input class="peer w-full bg-transparent border-0 border-b-2 border-outline-variant/50 focus:border-secondary focus:ring-0 outline-none px-0 py-2 font-display-lg-mobile text-body-lg text-on-surface transition-colors placeholder-transparent" id="email" name="email" placeholder="이메일" required="" type="email">
-                <label class="absolute left-0 top-2 font-body-md text-body-md text-on-surface-variant transition-all peer-placeholder-shown:text-body-md peer-placeholder-shown:top-2 peer-focus:-top-4 peer-focus:text-label-sm peer-focus:font-label-sm peer-focus:text-secondary peer-valid:-top-4 peer-valid:text-label-sm peer-valid:font-label-sm" for="email">이메일</label>
-            </div>
-                <div class="relative mt-8">
-                    <input class="peer w-full bg-transparent border-0 border-b-2 border-outline-variant/50 focus:border-secondary focus:ring-0 outline-none px-0 py-2 font-display-lg-mobile text-body-lg text-on-surface transition-colors placeholder-transparent" id="login_id" name="login_id" placeholder="로그인 아이디" required="" type="text">
-                    <label class="absolute left-0 top-2 font-body-md text-body-md text-on-surface-variant transition-all peer-placeholder-shown:text-body-md peer-placeholder-shown:top-2 peer-focus:-top-4 peer-focus:text-label-sm peer-focus:font-label-sm peer-focus:text-secondary peer-valid:-top-4 peer-valid:text-label-sm peer-valid:font-label-sm" for="login_id">로그인 아이디</label>
+            <div class="space-y-5">
+                <div class="flex flex-col gap-1">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant" for="email">이메일</label>
+                    <input class="w-full bg-transparent border-0 border-b-2 border-outline-variant/50 focus:border-secondary focus:ring-0 outline-none px-0 py-2 text-body-lg text-on-surface transition-colors placeholder:text-outline-variant" id="email" name="email" placeholder="이메일을 입력하세요" required="" type="email">
                 </div>
-                <div class="relative mt-8">
-                    <input class="peer w-full bg-transparent border-0 border-b-2 border-outline-variant/50 focus:border-secondary focus:ring-0 outline-none px-0 py-2 font-display-lg-mobile text-body-lg text-on-surface transition-colors placeholder-transparent" id="nickname" name="nickname" placeholder="닉네임" required="" type="text">
-                    <label class="absolute left-0 top-2 font-body-md text-body-md text-on-surface-variant transition-all peer-placeholder-shown:text-body-md peer-placeholder-shown:top-2 peer-focus:-top-4 peer-focus:text-label-sm peer-focus:font-label-sm peer-focus:text-secondary peer-valid:-top-4 peer-valid:text-label-sm peer-valid:font-label-sm" for="nickname">닉네임</label>
+                <div class="flex flex-col gap-1">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant" for="login_id">로그인 아이디</label>
+                    <input class="w-full bg-transparent border-0 border-b-2 border-outline-variant/50 focus:border-secondary focus:ring-0 outline-none px-0 py-2 text-body-lg text-on-surface transition-colors placeholder:text-outline-variant" id="login_id" name="login_id" placeholder="아이디를 입력하세요" required="" type="text">
                 </div>
-                <div class="relative mt-8">
-                    <input class="peer w-full bg-transparent border-0 border-b-2 border-outline-variant/50 focus:border-secondary focus:ring-0 outline-none px-0 py-2 font-display-lg-mobile text-body-lg text-on-surface transition-colors placeholder-transparent" id="password" name="password" placeholder="비밀번호" required="" type="password">
-                    <label class="absolute left-0 top-2 font-body-md text-body-md text-on-surface-variant transition-all peer-placeholder-shown:text-body-md peer-placeholder-shown:top-2 peer-focus:-top-4 peer-focus:text-label-sm peer-focus:font-label-sm peer-focus:text-secondary peer-valid:-top-4 peer-valid:text-label-sm peer-valid:font-label-sm" for="password">비밀번호</label>
+                <div class="flex flex-col gap-1">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant" for="nickname">닉네임</label>
+                    <input class="w-full bg-transparent border-0 border-b-2 border-outline-variant/50 focus:border-secondary focus:ring-0 outline-none px-0 py-2 text-body-lg text-on-surface transition-colors placeholder:text-outline-variant" id="nickname" name="nickname" placeholder="닉네임을 입력하세요" required="" type="text">
                 </div>
-                <div class="relative mt-8">
-                    <input class="peer w-full bg-transparent border-0 border-b-2 border-outline-variant/50 focus:border-secondary focus:ring-0 outline-none px-0 py-2 font-display-lg-mobile text-body-lg text-on-surface transition-colors placeholder-transparent" id="confirm_password" name="confirm_password" placeholder="비밀번호 확인" required="" type="password">
-                    <label class="absolute left-0 top-2 font-body-md text-body-md text-on-surface-variant transition-all peer-placeholder-shown:text-body-md peer-placeholder-shown:top-2 peer-focus:-top-4 peer-focus:text-label-sm peer-focus:font-label-sm peer-focus:text-secondary peer-valid:-top-4 peer-valid:text-label-sm peer-valid:font-label-sm" for="confirm_password">비밀번호 확인</label>
+                <div class="flex flex-col gap-1">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant" for="password">비밀번호</label>
+                    <input class="w-full bg-transparent border-0 border-b-2 border-outline-variant/50 focus:border-secondary focus:ring-0 outline-none px-0 py-2 text-body-lg text-on-surface transition-colors placeholder:text-outline-variant" id="password" name="password" placeholder="비밀번호 (8자 이상)" required="" type="password">
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant" for="confirm_password">비밀번호 확인</label>
+                    <input class="w-full bg-transparent border-0 border-b-2 border-outline-variant/50 focus:border-secondary focus:ring-0 outline-none px-0 py-2 text-body-lg text-on-surface transition-colors placeholder:text-outline-variant" id="confirm_password" name="confirm_password" placeholder="비밀번호를 다시 입력하세요" required="" type="password">
                 </div>
             </div>
             <!-- Submit Button -->

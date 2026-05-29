@@ -114,9 +114,9 @@
 <body class="bg-background text-on-surface font-body-md text-body-md min-h-screen flex flex-col">
 <header class="w-full top-0 sticky z-40 bg-background/80 backdrop-blur-md">
     <div class="flex justify-between items-center px-6 md:px-10 py-2 max-w-7xl mx-auto">
-        <div class="font-serif text-3xl md:text-4xl text-primary italic font-bold">
+        <a href="/main" class="font-serif text-3xl md:text-4xl text-primary italic font-bold hover:opacity-80 transition-opacity">
             Dear Diary
-        </div>
+        </a>
         <div class="flex items-center gap-4">
             <a href="/settings" class="text-on-surface-variant hover:text-secondary transition-colors">
                 <span class="material-symbols-outlined">account_circle</span>
@@ -423,16 +423,14 @@
                         }
                     });
                 }
-
+                if (diary.tags && diary.tags.length > 0) {
+                    tags = [...diary.tags];
+                    renderTagChips();
+                }
                 if (diary.imageUrl) {
                     const preview = document.getElementById('diary-img-preview');
                     preview.src = diary.imageUrl;
                     preview.classList.remove('hidden');
-                }
-
-                if (diary.tags && diary.tags.length > 0) {
-                    tags = [...diary.tags];
-                    renderTagChips();
                 }
             }
         } catch (err) {
@@ -614,22 +612,21 @@
             }
         });
 
-
         // ── 일기 이미지 ──
-        let diaryImageFile = null;
+        let diaryImageBase64 = null;
+
         window.previewDiaryImage = function(input) {
             const file = input.files[0];
             if (!file) return;
-            diaryImageFile = file;
             const reader = new FileReader();
             reader.onload = (e) => {
+                diaryImageBase64 = e.target.result;
                 const preview = document.getElementById('diary-img-preview');
-                preview.src = e.target.result;
+                preview.src = diaryImageBase64;
                 preview.classList.remove('hidden');
             };
             reader.readAsDataURL(file);
         };
-
 
         document.getElementById('save-diary-btn').addEventListener('click', async () => {
             const title = document.getElementById('diary-title').value;
@@ -639,27 +636,13 @@
                 return;
             }
             try {
-                let imageUrl = null;
-                if (diaryImageFile) {
-                    const formData = new FormData();
-                    formData.append('file', diaryImageFile);
-                    const token = localStorage.getItem('accessToken');
-                    const res = await fetch('/api/diaries/upload-image', {
-                        method: 'POST',
-                        headers: { 'Authorization': `Bearer ${token}` },
-                        body: formData
-                    });
-                    if (res.ok) imageUrl = await res.text();
-                }
-
                 await api.post('/diaries', {
                     targetDate: targetDate,
                     emotion: selectedEmotion,
                     content: '[' + title + ']\n' + content,
                     tags: tags,
-                    imageUrl: imageUrl
+                    imageUrl: diaryImageBase64 || null
                 });
-
                 alert('일기가 저장되었습니다.');
                 window.location.href = '/main?date=' + targetDate;
             } catch (err) {

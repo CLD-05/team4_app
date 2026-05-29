@@ -4,13 +4,12 @@ import com.example.daily.dto.UserDto;
 import com.example.daily.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -19,9 +18,11 @@ public class AuthController {
 
     private final UserService userService;
 
-    @PostMapping("/sign-up")
-    public ResponseEntity<String> signUp(@Valid @RequestBody UserDto.SignUpRequest request) {
-        userService.signUp(request);
+    @PostMapping(value = "/sign-up", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> signUp(
+            @RequestPart("request") UserDto.SignUpRequest request,
+            @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
+        userService.signUp(request, file);
         return ResponseEntity.ok("Sign up successful");
     }
 
@@ -31,9 +32,9 @@ public class AuthController {
         UserDto.TokenResponse tokens = userService.login(request);
 
         Cookie cookie = new Cookie("accessToken", tokens.getAccessToken());
-        cookie.setHttpOnly(false); // JS에서 읽지 않으므로 true도 가능
+        cookie.setHttpOnly(false);
         cookie.setPath("/");
-        cookie.setMaxAge(60 * 60 * 24); // 24시간
+        cookie.setMaxAge(60 * 60 * 24);
         response.addCookie(cookie);
 
         return ResponseEntity.ok(tokens);

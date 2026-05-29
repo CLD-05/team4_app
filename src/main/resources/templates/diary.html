@@ -458,14 +458,16 @@
                         }
                     });
                 }
-                if (diary.tags && diary.tags.length > 0) {
-                    tags = [...diary.tags];
-                    renderTagChips();
-                }
+
                 if (diary.imageUrl) {
                     const preview = document.getElementById('diary-img-preview');
                     preview.src = diary.imageUrl;
                     preview.classList.remove('hidden');
+                }
+
+                if (diary.tags && diary.tags.length > 0) {
+                    tags = [...diary.tags];
+                    renderTagChips();
                 }
             }
         } catch (err) {
@@ -652,6 +654,22 @@
             reader.readAsDataURL(file);
         };
 
+        // ── 일기 이미지 ──
+        let diaryImageFile = null;
+        window.previewDiaryImage = function(input) {
+            const file = input.files[0];
+            if (!file) return;
+            diaryImageFile = file;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const preview = document.getElementById('diary-img-preview');
+                preview.src = e.target.result;
+                preview.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        };
+
+
         document.getElementById('save-diary-btn').addEventListener('click', async () => {
             const title = document.getElementById('diary-title').value;
             const content = document.querySelector('.editor-content').innerText;
@@ -660,13 +678,27 @@
                 return;
             }
             try {
+                let imageUrl = null;
+                if (diaryImageFile) {
+                    const formData = new FormData();
+                    formData.append('file', diaryImageFile);
+                    const token = localStorage.getItem('accessToken');
+                    const res = await fetch('/api/diaries/upload-image', {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${token}` },
+                        body: formData
+                    });
+                    if (res.ok) imageUrl = await res.text();
+                }
+
                 await api.post('/diaries', {
                     targetDate: targetDate,
                     emotion: selectedEmotion,
                     content: '[' + title + ']\n' + content,
                     tags: tags,
-                    imageUrl: diaryImageBase64 || null
+                    imageUrl: imageUrl
                 });
+
                 alert('일기가 저장되었습니다.');
                 window.location.href = '/main?date=' + targetDate;
             } catch (err) {

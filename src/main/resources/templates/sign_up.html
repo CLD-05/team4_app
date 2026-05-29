@@ -237,6 +237,8 @@
         const nickname = document.getElementById('nickname').value;
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirm_password').value;
+        const loginId = document.getElementById('login_id').value;
+        const fileInput = document.querySelector('input[type="file"]');
 
         if (password !== confirmPassword) {
             alert('비밀번호가 일치하지 않습니다.');
@@ -244,7 +246,18 @@
         }
 
         try {
-            await auth.signUp(email, password, nickname, document.getElementById('login_id').value);
+            const formData = new FormData();
+            formData.append('request', new Blob([JSON.stringify({ email, loginId, password, nickname })], { type: 'application/json' }));
+            if (fileInput && fileInput.files[0]) {
+                formData.append('file', fileInput.files[0]);
+            }
+            const token = localStorage.getItem('accessToken');
+            const res = await fetch('/api/auth/sign-up', {
+                method: 'POST',
+                headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+                body: formData
+            });
+            if (!res.ok) throw new Error(await res.text());
             alert('회원가입이 완료되었습니다. 로그인해주세요.');
             window.location.href = '/login';
         } catch (err) {

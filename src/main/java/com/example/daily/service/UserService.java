@@ -1,5 +1,6 @@
 package com.example.daily.service;
-
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 import com.example.daily.domain.entity.User;
 import com.example.daily.domain.repository.*;
 import com.example.daily.dto.UserDto;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -20,9 +22,20 @@ public class UserService {
     private final SleepRepository sleepRepository;
     private final ExerciseRepository exerciseRepository;
     private final TodoRepository todoRepository;
+    private final S3Service s3Service;
+
 
     @Transactional
     public void signUp(UserDto.SignUpRequest request) {
+        try {
+            signUp(request, null);
+        } catch (IOException e) {
+            throw new RuntimeException("회원가입 중 파일 업로드 실패", e);
+        }
+    }
+
+    @Transactional
+    public void signUp(UserDto.SignUpRequest request, MultipartFile file) throws IOException {
         if (request.getEmail() == null || !request.getEmail().matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
             throw new RuntimeException("올바른 이메일 형식이 아닙니다.");
         }
@@ -45,11 +58,18 @@ public class UserService {
         if (password == null || password.length() < 8) {
             throw new RuntimeException("비밀번호는 8자 이상이어야 합니다.");
         }
+
+        String profileImgUrl = null;
+        if (file != null && !file.isEmpty()) {
+            profileImgUrl = s3Service.upload(file);
+        }
+
         User user = User.builder()
                 .email(request.getEmail())
                 .loginId(request.getLoginId())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .nickname(request.getNickname())
+                .profileImg(profileImgUrl)
                 .build();
         userRepository.save(user);
     }

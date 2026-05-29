@@ -145,11 +145,10 @@
             const email = document.getElementById('recovery-input').value.trim();
             if (!email) return alert('이메일을 입력해주세요.');
             try {
-                await api.get(`/users/find-id?email=${encodeURIComponent(email)}`);
-                alert(`해당 이메일로 가입된 계정이 확인되었습니다.\n\n로그인 시 이메일을 아이디로 사용하세요.\n아이디: ${email}`);
-                window.location.href = '/login';
+                const result = await api.get(`/users/find-id?email=${encodeURIComponent(email)}`);
+                alert(`가입된 이메일: ${result}`);
             } catch (err) {
-                alert('해당 이메일로 가입된 계정이 없습니다.');
+                alert(err.message || '해당 이메일로 가입된 계정이 없습니다.');
             }
         });
     });

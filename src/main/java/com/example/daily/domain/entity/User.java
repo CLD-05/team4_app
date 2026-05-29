@@ -30,14 +30,14 @@ public class User {
     @Column(nullable = false, length = 100)
     private String nickname;
 
-    @Column(name = "profile_img", length = 512)
-    private String profileImg;
-
     @Column(name = "refresh_token", columnDefinition = "TEXT")
     private String refreshToken;
 
     @Column(name = "login_id", unique = true, length = 50)
     private String loginId;
+
+    @Column(name = "profile_img", columnDefinition = "LONGTEXT")
+    private String profileImg;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)

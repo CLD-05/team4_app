@@ -286,12 +286,11 @@
                         <img id="preview-img" alt="미리보기" class="w-full h-full object-cover"
                              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAL-kC0KuzqQYam8yrvJPzenw4gRau-kRc9dYOOAKoUmWWh61dqr7qGrZwPrfA5mes3IaoqDnXs9LqOVtjtt3U0TohctHyiAatGKZAlPlf_T0aYTNfpHbpSn5eXvR6ja2TRvYuI8r4usylxel_mpUqnuQfpEBEueZYM0hzllsJ7n-SZ6OLqZRoxz0LudKlM4Ton8_CNmHbsfrh7mRGUqMq3afZkmrdYEJW-kwi0yRPOl3_2HAyZINFE3uJYCIa1Uey6Hui-k62Yn-J3"/>
                     </div>
-                    <div class="w-full flex flex-col gap-1">
-                        <label class="font-label-sm text-label-sm text-on-surface-variant">이미지 URL</label>
-                        <input id="img-url" type="url" placeholder="https://example.com/image.jpg"
-                               oninput="previewImage(this.value)"
-                               class="w-full rounded-lg border border-outline-variant bg-surface-container-low px-4 py-3 text-body-md text-on-background outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-colors placeholder:text-outline-variant"/>
-                    </div>
+                    <label for="profile-img-file" class="cursor-pointer bg-surface-container-low hover:bg-surface-container border border-outline-variant/50 rounded-lg px-5 py-2 text-sm text-on-surface-variant flex items-center gap-2 transition-colors">
+                        <span class="material-symbols-outlined text-sm">add_a_photo</span>
+                        사진 선택
+                    </label>
+                    <input id="profile-img-file" type="file" accept="image/*" class="hidden" onchange="previewImageFile(this)"/>
                     <p id="img-error" class="text-error text-sm hidden self-start"></p>
                 </div>
                 <button onclick="submitProfileImg()"
@@ -358,22 +357,28 @@
     }
 
     /* ── 폼 초기화 ── */
+    let selectedImageBase64 = null;
+
     function clearProfileForm() {
         ['current-pw', 'new-pw', 'confirm-pw'].forEach(id => document.getElementById(id).value = '');
         document.getElementById('pw-error').classList.add('hidden');
-        document.getElementById('img-url').value = '';
+        selectedImageBase64 = null;
+        document.getElementById('profile-img-file').value = '';
         document.getElementById('img-error').classList.add('hidden');
         const currentSrc = document.getElementById('user-profile-img').src;
         document.getElementById('preview-img').src = currentSrc;
     }
 
-    /* ── 이미지 미리보기 ── */
-    function previewImage(url) {
-        const preview = document.getElementById('preview-img');
-        if (url) {
-            preview.src = url;
-            preview.onerror = () => { preview.src = document.getElementById('user-profile-img').src; };
-        }
+    /* ── 이미지 파일 미리보기 ── */
+    function previewImageFile(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            selectedImageBase64 = e.target.result;
+            document.getElementById('preview-img').src = selectedImageBase64;
+        };
+        reader.readAsDataURL(file);
     }
 
     /* ── 비밀번호 변경 제출 ── */
@@ -407,16 +412,23 @@
 
     /* ── 프로필 이미지 변경 제출 ── */
     async function submitProfileImg() {
-        const url   = document.getElementById('img-url').value.trim();
         const errEl = document.getElementById('img-error');
         errEl.classList.add('hidden');
-
-        if (!url) {
-            errEl.textContent = 'URL을 입력해주세요.'; errEl.classList.remove('hidden'); return;
+        const fileInput = document.getElementById('profile-img-file');
+        if (!fileInput.files[0]) {
+            errEl.textContent = '사진을 선택해주세요.'; errEl.classList.remove('hidden'); return;
         }
-
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
         try {
-            await api.patch('/users/profile-img', { profileImg: url });
+            const token = localStorage.getItem('accessToken');
+            const res = await fetch('/api/users/profile-img/upload', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` },
+                body: formData
+            });
+            if (!res.ok) throw new Error(await res.text());
+            const url = await res.text();
             document.getElementById('user-profile-img').src = url;
             closeProfileModal();
             showToast('프로필 사진이 변경되었습니다.');

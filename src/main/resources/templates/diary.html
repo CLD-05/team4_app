@@ -109,6 +109,7 @@
         }
     </style>
     <script src="/js/api.js"></script>
+    <script>if (!auth.isLoggedIn()) { window.location.href = "/login"; }</script>
 </head>
 <body class="bg-background text-on-surface font-body-md text-body-md min-h-screen flex flex-col">
 <header class="w-full top-0 sticky z-40 bg-background/80 backdrop-blur-md">
@@ -146,7 +147,6 @@
                     <div class="text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
                         <span id="current-date-display"></span>
                     </div>
-
                     <input id="diary-title" class="w-full bg-white border-none p-0 focus:ring-0 font-headline-md text-headline-md text-on-surface placeholder-outline-variant" placeholder="오늘의 제목을 입력하세요..." type="text"/>
                 </div>
 
@@ -185,11 +185,14 @@
                     <div class="editor-content flex-grow font-body-lg text-body-lg text-on-surface focus:outline-none whitespace-pre-wrap bg-white" contenteditable="true" data-placeholder="마음을 담아 기록해 보세요. 이곳은 당신의 공간입니다."></div>
                 </div>
 
-                <div class="bg-white rounded-xl p-6 md:p-8 border-dashed border-2 border-surface-variant hover:bg-surface-container transition-colors cursor-pointer flex flex-col items-center justify-center gap-2 min-h-[120px] shadow-sm">
-                    <span class="material-symbols-outlined text-outline-variant text-3xl">add_photo_alternate</span>
-                    <span class="font-label-sm text-label-sm text-on-surface-variant">추억 추가하기</span>
+                <div class="bg-white rounded-xl shadow-sm border border-surface-variant overflow-hidden">
+                    <label for="diary-img-file" class="cursor-pointer flex flex-col items-center justify-center gap-2 min-h-[120px] hover:bg-surface-container transition-colors">
+                        <span class="material-symbols-outlined text-outline-variant text-3xl">add_photo_alternate</span>
+                        <span class="font-label-sm text-label-sm text-on-surface-variant">추억 추가하기</span>
+                    </label>
+                    <input id="diary-img-file" type="file" accept="image/*" class="hidden" onchange="previewDiaryImage(this)"/>
+                    <img id="diary-img-preview" class="hidden w-full object-cover max-h-64"/>
                 </div>
-                <!-- 변경 후 -->
                 <div class="bg-white rounded-xl p-6 shadow-sm border border-surface-variant">
                     <div class="flex items-center gap-2">
                         <span class="material-symbols-outlined text-outline-variant">sell</span>
@@ -366,6 +369,7 @@
 
     document.addEventListener('DOMContentLoaded', async () => {
         let tags = [];
+
         if (!auth.isLoggedIn()) {
             window.location.href = '/login';
             return;
@@ -391,11 +395,9 @@
             a.href = `/todolist?date=${targetDate}`;
         });
 
-        // 변경 후
         document.querySelectorAll('a[href^="/report"]').forEach(a => {
             a.href = `/report?date=${targetDate}&year=${dateObj.getFullYear()}&month=${dateObj.getMonth() + 1}`;
         });
-
 
         const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
         document.getElementById('current-date-display').textContent =
@@ -421,15 +423,18 @@
                         }
                     });
                 }
-                // ← emotion if문 닫힘
-                if (diary.tags && diary.tags.length > 0) {   // ← 여기가 추가된 부분
+
+                if (diary.imageUrl) {
+                    const preview = document.getElementById('diary-img-preview');
+                    preview.src = diary.imageUrl;
+                    preview.classList.remove('hidden');
+                }
+
+                if (diary.tags && diary.tags.length > 0) {
                     tags = [...diary.tags];
                     renderTagChips();
                 }
-
-
             }
-
         } catch (err) {
             console.error('일기 불러오기 실패:', err);
         }
@@ -582,7 +587,7 @@
             }
         });
 
-        // ── 태그 관리 ──                               // ← 여기서부터 추가된 부분
+        // ── 태그 관리 ──
         function renderTagChips() {
             const list = document.getElementById('tag-list');
             list.innerHTML = tags.map((tag, i) => `
@@ -596,7 +601,6 @@
             tags.splice(index, 1);
             renderTagChips();
         }
-        window.removeTag = removeTag;
 
         document.getElementById('tag-input').addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
@@ -611,6 +615,22 @@
         });
 
 
+        // ── 일기 이미지 ──
+        let diaryImageFile = null;
+        window.previewDiaryImage = function(input) {
+            const file = input.files[0];
+            if (!file) return;
+            diaryImageFile = file;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const preview = document.getElementById('diary-img-preview');
+                preview.src = e.target.result;
+                preview.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        };
+
+
         document.getElementById('save-diary-btn').addEventListener('click', async () => {
             const title = document.getElementById('diary-title').value;
             const content = document.querySelector('.editor-content').innerText;
@@ -619,12 +639,27 @@
                 return;
             }
             try {
+                let imageUrl = null;
+                if (diaryImageFile) {
+                    const formData = new FormData();
+                    formData.append('file', diaryImageFile);
+                    const token = localStorage.getItem('accessToken');
+                    const res = await fetch('/api/diaries/upload-image', {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${token}` },
+                        body: formData
+                    });
+                    if (res.ok) imageUrl = await res.text();
+                }
+
                 await api.post('/diaries', {
                     targetDate: targetDate,
                     emotion: selectedEmotion,
                     content: '[' + title + ']\n' + content,
-                    tags: tags
+                    tags: tags,
+                    imageUrl: imageUrl
                 });
+
                 alert('일기가 저장되었습니다.');
                 window.location.href = '/main?date=' + targetDate;
             } catch (err) {

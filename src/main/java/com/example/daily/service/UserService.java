@@ -40,6 +40,7 @@ public class UserService {
 
     @Transactional
     public UserDto.TokenResponse login(UserDto.LoginRequest request) {
+        // loginId로 찾고, JWT엔 email 저장 (기존 코드 호환)
         User user = userRepository.findByLoginId(request.getLoginId())
                 .orElseGet(() -> userRepository.findByEmail(request.getLoginId())
                         .orElseThrow(() -> new RuntimeException("아이디 또는 비밀번호가 올바르지 않습니다.")));
@@ -94,6 +95,21 @@ public class UserService {
         if (profileImg != null) user.setProfileImg(profileImg);
     }
 
+    public String uploadProfileImg(String email, org.springframework.web.multipart.MultipartFile file) throws java.io.IOException {
+        String ext = "";
+        String original = file.getOriginalFilename();
+        if (original != null && original.contains(".")) {
+            ext = original.substring(original.lastIndexOf("."));
+        }
+        String filename = java.util.UUID.randomUUID().toString() + ext;
+        java.nio.file.Path uploadDir = java.nio.file.Paths.get(System.getProperty("user.dir") + "/uploads");
+        java.nio.file.Files.createDirectories(uploadDir);
+        java.nio.file.Files.copy(file.getInputStream(), uploadDir.resolve(filename), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+        String url = "/uploads/" + filename;
+        updateProfileImg(email, url);
+        return url;
+    }
+
     @Transactional
     public void updateProfileImg(String email, String profileImg) {
         User user = userRepository.findByEmail(email)
@@ -111,18 +127,6 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(newPassword));
     }
 
-    @Transactional
-    public void deleteAccount(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        todoRepository.deleteByUser(user);
-        sleepRepository.deleteByUser(user);
-        exerciseRepository.deleteByUser(user);
-        diaryRepository.deleteAllTagsByUserId(user.getId());
-        diaryRepository.deleteAllByUserId(user.getId());
-        userRepository.delete(user);
-    }
-
     public String findIdByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("해당 이메일로 가입된 계정이 없습니다."));
@@ -137,5 +141,17 @@ public class UserService {
             throw new RuntimeException("아이디와 이메일이 일치하지 않습니다.");
         }
         user.setPassword(passwordEncoder.encode(newPassword));
+    }
+
+    @Transactional
+    public void deleteAccount(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        todoRepository.deleteByUser(user);
+        sleepRepository.deleteByUser(user);
+        exerciseRepository.deleteByUser(user);
+        diaryRepository.deleteAllTagsByUserId(user.getId());
+        diaryRepository.deleteAllByUserId(user.getId());
+        userRepository.delete(user);
     }
 }

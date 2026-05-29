@@ -51,7 +51,7 @@ jobs:
         run: |
           git clone https://x-access-token:${{ secrets.CONFIG_PAT }}@github.com/CLD-05/team4_config.git
           cd team4_config
-          sed -i "s|image:.team4-backend-api.|image: 194722398200.dkr.ecr.ap-northeast-2.amazonaws.com/team4-backend-api:$IMAGE_TAG|" apps/diary-app/overlays/prod/patch-deployment.yaml
+          sed -i "s|image:.*team4-backend-api:.*|image: 194722398200.dkr.ecr.ap-northeast-2.amazonaws.com/team4-backend-api:$IMAGE_TAG|" apps/diary-app/overlays/prod/patch-deployment.yaml
           git config user.email "github-actions@github.com"
           git config user.name "github-actions"
           git add .

@@ -137,20 +137,19 @@
         </form>
     </div>
 </main>
+<script src="/js/api.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const input = document.getElementById('recovery-input');
-        const label = input.previousElementSibling;
-
-        input.addEventListener('focus', () => {
-            input.parentElement.classList.add('scale-[1.01]');
-        });
-
-        input.addEventListener('blur', () => {
-            input.parentElement.classList.remove('scale-[1.01]');
+        document.querySelector('button[type="button"]').addEventListener('click', async () => {
+            const email = document.getElementById('recovery-input').value.trim();
+            if (!email) return alert('이메일을 입력해주세요.');
+            try {
+                const result = await api.get(`/users/find-id?email=${encodeURIComponent(email)}`);
+                alert(`가입된 이메일: ${result}`);
+            } catch (err) {
+                alert(err.message || '해당 이메일로 가입된 계정이 없습니다.');
+            }
         });
     });
 </script>
-
-
 </body></html>

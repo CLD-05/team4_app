@@ -44,3 +44,19 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY/team4-backend-api:$IMAGE_TAG .
           docker push $ECR_REGISTRY/team4-backend-api:$IMAGE_TAG
+
+      - name: Config 레포 이미지 태그 갱신
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          git clone https://x-access-token:${{ secrets.CONFIG_PAT }}@github.com/CLD-05/team4_config.git
+          cd team4_config
+          sed -i "s|image:.*team4-backend-api:.*|image: 194722398200.dkr.ecr.ap-northeast-2.amazonaws.com/team4-backend-api:$IMAGE_TAG|" apps/diary-app/overlays/prod/patch-deployment.yaml
+          sed -i "s|image:.*team4-backend-api:.*|image: $ECR_REGISTRY/team4-backend-api:$IMAGE_TAG|g" \
+            apps/diary-app/overlays/dev/patch-deployment.yaml
+          git config user.email "github-actions@github.com"
+          git config user.name "github-actions"
+          git add .
+          git commit -m "chore(image): bump app to $IMAGE_TAG"
+          git push

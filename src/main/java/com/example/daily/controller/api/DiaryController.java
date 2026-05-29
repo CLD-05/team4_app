@@ -6,13 +6,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 import com.example.daily.domain.entity.Emotion;
 
 @RestController
@@ -29,6 +34,20 @@ public class DiaryController {
         return ResponseEntity.ok("Diary created successfully");
     }
 
+    @PostMapping(value = "/upload-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadImage(@AuthenticationPrincipal UserDetails userDetails,
+                                              @RequestParam("file") MultipartFile file) throws IOException {
+        String ext = "";
+        String original = file.getOriginalFilename();
+        if (original != null && original.contains("."))
+            ext = original.substring(original.lastIndexOf("."));
+        String filename = UUID.randomUUID().toString() + ext;
+        Path uploadDir = Paths.get(System.getProperty("user.dir") + "/uploads");
+        Files.createDirectories(uploadDir);
+        Files.copy(file.getInputStream(), uploadDir.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+        return ResponseEntity.ok("/uploads/" + filename);
+    }
+
     @GetMapping("/emotions")
     public ResponseEntity<List<DiaryDto>> getEmotions(@AuthenticationPrincipal UserDetails userDetails,
                                                       @RequestParam int year,
@@ -38,7 +57,7 @@ public class DiaryController {
 
     @GetMapping("/timeline")
     public ResponseEntity<Page<DiaryDto>> getTimeline(@AuthenticationPrincipal UserDetails userDetails,
-                                                       @PageableDefault(size = 10) Pageable pageable) {
+                                                      @PageableDefault(size = 10) Pageable pageable) {
         return ResponseEntity.ok(diaryService.getTimeline(userDetails.getUsername(), pageable));
     }
 
@@ -62,12 +81,12 @@ public class DiaryController {
                                                    @RequestParam LocalDate date) {
         return ResponseEntity.ok(diaryService.getDiaryByDate(userDetails.getUsername(), date));
     }
+
     @GetMapping("/trash")
     public ResponseEntity<List<DiaryDto>> getTrash(@AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(diaryService.getDeletedDiaries(userDetails.getUsername()));
     }
 
-    // 완전 삭제
     @DeleteMapping("/{diaryId}/hard")
     public ResponseEntity<String> hardDelete(@AuthenticationPrincipal UserDetails userDetails,
                                              @PathVariable Long diaryId) {
@@ -81,6 +100,4 @@ public class DiaryController {
         diaryService.restoreDiary(diaryId, userDetails.getUsername());
         return ResponseEntity.ok("Diary restored successfully");
     }
-
-
 }

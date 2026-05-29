@@ -24,6 +24,7 @@ public class UserDto {
     @Builder
     public static class SignUpRequest {
         private String email;
+        private String loginId;
         private String password;
         private String nickname;
     }
@@ -33,7 +34,7 @@ public class UserDto {
     @AllArgsConstructor
     @Builder
     public static class LoginRequest {
-        private String email;
+        private String loginId;   // ← email → loginId
         private String password;
     }
 

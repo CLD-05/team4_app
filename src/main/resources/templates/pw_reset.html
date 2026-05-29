@@ -162,6 +162,21 @@
         </div>
     </div>
 </main>
-
-
+<script src="/js/api.js"></script>
+<script>
+    document.querySelector('form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const loginId = document.getElementById('userId').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const newPassword = prompt('새 비밀번호를 입력하세요 (8자 이상):');
+        if (!newPassword || newPassword.length < 8) return alert('비밀번호는 8자 이상이어야 합니다.');
+        try {
+            await api.post('/users/reset-password', { loginId, email, newPassword });
+            alert('비밀번호가 재설정되었습니다. 로그인 페이지로 이동합니다.');
+            window.location.href = '/login';
+        } catch (err) {
+            alert(err.message || '아이디 또는 이메일이 올바르지 않습니다.');
+        }
+    });
+</script>
 </body></html>

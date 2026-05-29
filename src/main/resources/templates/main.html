@@ -338,6 +338,10 @@
         a.href = `/diary?date=${formattedDate}`;
     });
 
+    document.querySelectorAll('a[href="/report"]').forEach(a => {
+        a.href = `/report?date=${formattedDate}&year=${currentDate.getFullYear()}&month=${currentDate.getMonth() + 1}`;
+    });
+
     document.querySelectorAll('a[href="/todolist"]').forEach(a => {
         a.href = `/todolist?date=${formattedDate}`;
     });
@@ -615,7 +619,7 @@
             item.innerHTML = `
                     <div class="flex items-center gap-3">
                         <input type="checkbox" ${todo.isCompleted ? 'checked' : ''} onchange="toggleTodo(${todo.id})" class="h-5 w-5 text-secondary rounded border-outline-variant/50 focus:ring-secondary">
-                        <span class="${todo.isCompleted ? 'line-through text-on-surface-variant' : 'text-on-surface'}">${todo.content}</span>
+                        <span class="${todo.isCompleted ? 'text-secondary font-semibold' : 'text-on-surface'}">${todo.content}</span>
                     </div>
                 `;
             todoList.appendChild(item);

@@ -1,3 +1,4 @@
+
 package com.example.daily.controller.api;
 
 import com.example.daily.dto.UserDto;
@@ -5,10 +6,14 @@ import com.example.daily.service.UserService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/users")
@@ -30,11 +35,11 @@ public class UserController {
         return ResponseEntity.ok("Profile updated successful");
     }
 
-    @PatchMapping("/profile-img")
-    public ResponseEntity<String> updateProfileImg(@AuthenticationPrincipal UserDetails userDetails,
-                                                   @RequestBody ProfileImgRequest request) {
-        userService.updateProfileImg(userDetails.getUsername(), request.getProfileImg());
-        return ResponseEntity.ok("Profile image updated");
+    @PostMapping(value = "/profile-img/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadProfileImg(@AuthenticationPrincipal UserDetails userDetails,
+                                                   @RequestParam("file") MultipartFile file) throws IOException {
+        String savedUrl = userService.uploadProfileImg(userDetails.getUsername(), file);
+        return ResponseEntity.ok(savedUrl);
     }
 
     @PatchMapping("/password")
@@ -50,6 +55,17 @@ public class UserController {
         return ResponseEntity.ok("Account deleted successfully");
     }
 
+    @GetMapping("/find-id")
+    public ResponseEntity<String> findId(@RequestParam String email) {
+        return ResponseEntity.ok(userService.findIdByEmail(email));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest request) {
+        userService.resetPassword(request.getLoginId(), request.getEmail(), request.getNewPassword());
+        return ResponseEntity.ok("비밀번호가 재설정되었습니다.");
+    }
+
     @Getter
     @NoArgsConstructor
     static class PasswordChangeRequest {
@@ -59,7 +75,9 @@ public class UserController {
 
     @Getter
     @NoArgsConstructor
-    static class ProfileImgRequest {
-        private String profileImg;
+    static class ResetPasswordRequest {
+        private String loginId;
+        private String email;
+        private String newPassword;
     }
 }

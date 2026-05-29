@@ -258,11 +258,21 @@
         VERY_BAD:  { label: '매우 나쁨', color: '#ffdad6' }
     };
 
-    let currentYear = new Date().getFullYear();
-    let currentMonth = new Date().getMonth() + 1;
+    const urlParams = new URLSearchParams(window.location.search);
+    const dateParam = urlParams.get('date');
+    const today = new Date();
+    let currentDate  = dateParam ? new Date(dateParam) : today;
+    let currentYear  = parseInt(urlParams.get('year'))  || currentDate.getFullYear();
+    let currentMonth = parseInt(urlParams.get('month')) || currentDate.getMonth() + 1;
 
     function updateMonthTitle() {
         document.getElementById('month-title').textContent = `${currentYear}년 ${currentMonth}월`;
+        // 이전/다음 달 이동 시 currentDate도 해당 월로 업데이트
+        currentDate = new Date(currentYear, currentMonth - 1, currentDate.getDate());
+        const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth()+1).padStart(2,'0')}-${String(currentDate.getDate()).padStart(2,'0')}`;
+        document.querySelectorAll('a[href^="/main"]').forEach(a => { a.href = `/main?date=${dateStr}`; });
+        document.querySelectorAll('a[href^="/diary"]').forEach(a => { a.href = `/diary?date=${dateStr}`; });
+        document.querySelectorAll('a[href^="/todolist"]').forEach(a => { a.href = `/todolist?date=${dateStr}`; });
     }
 
     function renderDonut(emotionCounts, total) {

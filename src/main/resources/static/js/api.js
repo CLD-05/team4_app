@@ -104,16 +104,16 @@ const todoApi = {
 };
 
 const auth = {
-    async login(email, password) {
-        const data = await api.post('/auth/login', { email, password });
+    async login(loginId, password) {
+        const data = await api.post('/auth/login', { loginId, password });
         localStorage.setItem('accessToken', data.accessToken);
         localStorage.setItem('refreshToken', data.refreshToken);
         return data;
     },
 
 
-    async signUp(email, password, nickname) {
-        return await api.post('/auth/sign-up', { email, password, nickname });
+    async signUp(email, loginId, password, nickname) {
+        return await api.post('/auth/sign-up', { email, loginId, password, nickname });
     },
 
 

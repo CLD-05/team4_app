@@ -40,7 +40,7 @@ public class Diary {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "image_url", length = 512)
+    @Column(name = "image_url", columnDefinition = "TEXT")
     private String imageUrl;
 
 

@@ -143,7 +143,7 @@
                 </label>
                 <div class="relative">
                     <span class="material-symbols-outlined absolute inset-y-0 left-0 pl-3 flex items-center text-outline pointer-events-none" data-icon="mail">mail</span>
-                    <input class="block w-full pl-10 pr-3 py-3 border-0 border-b-2 border-surface-variant bg-transparent text-on-surface focus:ring-0 focus:border-secondary transition-colors font-headline-md text-body-md placeholder:text-outline-variant placeholder:font-body-md" id="email" name="email" placeholder="이메일" required="" type="email"/>
+                    <input class="block w-full pl-10 pr-3 py-3 border-0 border-b-2 border-surface-variant bg-transparent text-on-surface focus:ring-0 focus:border-secondary transition-colors font-headline-md text-body-md placeholder:text-outline-variant placeholder:font-body-md outline-none" id="loginId" name="loginId" placeholder="아이디" required="" type="text"/>
                 </div>
             </div>
             <!-- Password Input -->
@@ -156,13 +156,7 @@
                     <input class="block w-full pl-10 pr-3 py-3 border-0 border-b-2 border-surface-variant bg-transparent text-on-surface focus:ring-0 focus:border-secondary transition-colors font-headline-md text-body-md placeholder:text-outline-variant placeholder:font-body-md" id="password" name="password" placeholder="••••••••" required="" type="password"/>
                 </div>
             </div>
-            <div class="flex items-center justify-between mt-4">
-                <div class="flex items-center">
-                    <input class="h-4 w-4 text-secondary focus:ring-secondary border-outline-variant rounded bg-surface-container-lowest" id="remember-me" name="remember-me" type="checkbox"/>
-                    <label class="ml-2 block font-body-md text-sm text-on-surface-variant" for="remember-me">
-                        로그인 상태 유지
-                    </label>
-                </div>
+            <div class="flex items-center justify-end mt-4">
                 <div class="text-sm space-y-2 text-right">
                     <a class="block font-label-sm text-label-sm text-secondary hover:text-on-secondary-container transition-colors" href="/id-return">
                         아이디를 잊으셨나요?
@@ -192,18 +186,17 @@
     <div class="absolute -z-10 top-10 -left-10 w-32 h-32 bg-secondary-container/20 rounded-full blur-3xl"></div>
     <div class="absolute -z-10 bottom-10 -right-10 w-40 h-40 bg-surface-dim/40 rounded-full blur-3xl"></div>
 </main>
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            try {
-                await auth.login(email, password);
-                window.location.href = '/';
-            } catch (err) {
-                alert('로그인 실패: ' + err.message);
-            }
-        });
-    </script>
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const loginId = document.getElementById('loginId').value;
+        const password = document.getElementById('password').value;
+        try {
+            await auth.login(loginId, password);
+            window.location.href = '/';
+        } catch (err) {
+            alert('로그인 실패: ' + err.message);
+        }
+    });
+</script>
 </body></html>

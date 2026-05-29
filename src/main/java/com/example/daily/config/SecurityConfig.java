@@ -30,7 +30,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**", "/", "/main", "/login", "/sign-up", "/sign_up.html", "/diary", "/todolist", "/report", "/service", "/settings", "/id-return", "/id_return.html", "/pw-reset", "/pw_reset.html").permitAll()
-                .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico","/actuator/health").permitAll()
+                .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico","/actuator/health", "/api/users/find-id", "/api/users/reset-password").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

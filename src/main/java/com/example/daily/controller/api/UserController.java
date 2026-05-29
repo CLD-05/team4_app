@@ -62,4 +62,23 @@ public class UserController {
     static class ProfileImgRequest {
         private String profileImg;
     }
+
+    @GetMapping("/find-id")
+    public ResponseEntity<String> findId(@RequestParam String email) {
+        return ResponseEntity.ok(userService.findIdByEmail(email));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest request) {
+        userService.resetPassword(request.getLoginId(), request.getEmail(), request.getNewPassword());
+        return ResponseEntity.ok("비밀번호가 재설정되었습니다.");
+    }
+
+    @Getter
+    @NoArgsConstructor
+    static class ResetPasswordRequest {
+        private String loginId;
+        private String email;
+        private String newPassword;
+    }
 }

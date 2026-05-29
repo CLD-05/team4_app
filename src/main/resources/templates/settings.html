@@ -114,6 +114,7 @@
         }
     </style>
     <script src="/js/api.js"></script>
+    <script>if (!auth.isLoggedIn()) { window.location.href = "/login"; }</script>
 </head>
 <body class="bg-background text-on-background min-h-screen flex flex-col font-body-md ...">
 <!-- TopAppBar -->
@@ -122,18 +123,11 @@
          We will use the TopAppBar as defined in the JSON. -->
 <header class="bg-surface dark:bg-inverse-surface docked full-width top-0 bg-surface dark:bg-inverse-surface flex justify-between items-center w-full px-container-padding-mobile md:px-container-padding-desktop py-4 sticky z-40 transition-all duration-300">
     <div class="flex items-center">
-        <div class="font-serif text-3xl md:text-4xl text-primary italic font-bold">
+        <a href="/main" class="font-serif text-3xl md:text-4xl text-primary italic font-bold hover:opacity-80 transition-opacity">
             Dear Diary
-        </div>
+        </a>
     </div>
-    <div class="flex items-center gap-4 text-primary dark:text-inverse-primary">
-        <button class="hover:bg-surface-container-low transition-colors p-2 rounded-full active:scale-95 duration-200">
-            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_circle</span>
-        </button>
-        <button class="hover:bg-surface-container-low transition-colors p-2 rounded-full active:scale-95 duration-200">
-            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
-        </button>
-    </div>
+
 </header>
 <!-- Main Content -->
 <main class="flex-grow flex flex-col items-center px-container-padding-mobile md:px-container-padding-desktop py-section-gap">
@@ -149,7 +143,7 @@
             </div>
             <!-- Info -->
             <div class="flex flex-col items-center md:items-start text-center md:text-left gap-2 w-full">
-                <h3 id="user-nickname" class="font-headline-md text-headline-md text-primary">  </h3>
+                <h3 id="user-nickname" class="font-headline-md text-headline-md text-primary">Jiwoo Park</h3>
                 <!-- 수정 -->
                 <p class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
                     <span class="material-symbols-outlined text-[16px]">calendar_today</span>

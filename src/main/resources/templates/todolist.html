@@ -57,9 +57,9 @@
             Dear Diary
         </div>
         <div class="flex items-center gap-4">
-            <button class="text-on-surface-variant hover:text-secondary transition-colors">
+            <a href="/settings" class="text-on-surface-variant hover:text-secondary transition-colors">
                 <span class="material-symbols-outlined">account_circle</span>
-            </button>
+            </a>
         </div>
     </div>
 </header>
@@ -184,9 +184,9 @@
                     : 'bg-surface-container-lowest text-on-surface-variant hover:bg-white'
             }`;
             btn.innerHTML = `
-            <span class="text-xs uppercase opacity-${isSelected ? '90' : '60'} font-body">${DAYS_EN[d.getDay()]}</span>
-            <span class="text-xl ${isSelected ? '' : 'font-bold'} mt-1">${d.getDate()}</span>
-        `;
+                <span class="text-xs uppercase opacity-${isSelected ? '90' : '60'} font-body">${DAYS_EN[d.getDay()]}</span>
+                <span class="text-xl ${isSelected ? '' : 'font-bold'} mt-1">${d.getDate()}</span>
+            `;
             btn.addEventListener('click', () => {
                 selectedDate = d;
                 renderDateSelector();
@@ -195,11 +195,14 @@
             });
             selector.appendChild(btn);
         }
-        const dateStr = formatDate(selectedDate);
-        document.querySelectorAll('a[href^="/diary"]').forEach(a => { a.href = `/diary?date=${dateStr}`; });
-        document.querySelectorAll('a[href^="/main"]').forEach(a => { a.href = `/main?date=${dateStr}`; });
+        document.querySelectorAll('a[href^="/diary"]').forEach(a => {
+            a.href = `/diary?date=${formatDate(selectedDate)}`;
+        });
+        document.querySelectorAll('a[href^="/main"]').forEach(a => {
+            a.href = `/main?date=${formatDate(selectedDate)}`;
+        });
         document.querySelectorAll('a[href^="/report"]').forEach(a => {
-            a.href = `/report?date=${dateStr}&year=${selectedDate.getFullYear()}&month=${selectedDate.getMonth() + 1}`;
+            a.href = `/report?date=${formatDate(selectedDate)}&year=${selectedDate.getFullYear()}&month=${selectedDate.getMonth() + 1}`;
         });
     }
 
@@ -248,8 +251,7 @@
                             <span class="material-symbols-outlined text-on-secondary text-[16px] ${todo.isCompleted ? 'opacity-100' : 'opacity-0'} transition-opacity" style="font-variation-settings: 'FILL' 1;">check</span>
                         </div>
                     </label>
-
-                <span class="${todo.isCompleted ? 'text-secondary font-semibold' : 'text-on-surface'}">${todo.content}</span>
+                    <span class="todo-text text-lg transition-all ${todo.isCompleted ? 'text-secondary font-semibold' : 'text-on-background'}">${todo.content}</span>
                 </div>
                 <button class="delete-btn text-outline-variant hover:text-error transition-colors opacity-0 group-hover:opacity-100 p-2" data-id="${todo.id}">
                     <span class="material-symbols-outlined">delete</span>

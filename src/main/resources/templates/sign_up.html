@@ -144,16 +144,16 @@
         }
     </script>
     <style>
-        body {
-            /* Subtle noise texture for paper feel */
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
-            background-color: #fff8f4;
-        }
         input:-webkit-autofill,
         input:-webkit-autofill:hover,
         input:-webkit-autofill:focus {
             -webkit-box-shadow: 0 0 0px 1000px transparent inset;
             transition: background-color 5000s ease-in-out 0s;
+        }
+        body {
+            /* Subtle noise texture for paper feel */
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            background-color: #fff8f4;
         }
     </style>
     <script src="/js/api.js"></script>
@@ -214,7 +214,7 @@
             <!-- Submit Button -->
             <div class="pt-6">
                 <button class="w-full bg-secondary text-on-secondary font-label-sm text-label-sm py-4 rounded-full shadow-sm hover:shadow-md hover:bg-on-secondary-fixed-variant transition-all duration-300 transform active:scale-[0.98] flex items-center justify-center gap-2" type="submit">
-                  회원가입 하기
+                    회원가입 하기
                     <span class="material-symbols-outlined text-sm">arrow_forward</span>
                 </button>
             </div>
@@ -230,26 +230,26 @@
 <!-- Suppress Navigation Shells for Transactional Journey (Sign-up) -->
 
 
-    <script>
-        document.getElementById('signUpForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const nickname = document.getElementById('nickname').value;
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm_password').value;
+<script>
+    document.getElementById('signUpForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const nickname = document.getElementById('nickname').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirm_password').value;
 
-            if (password !== confirmPassword) {
-                alert('비밀번호가 일치하지 않습니다.');
-                return;
-            }
+        if (password !== confirmPassword) {
+            alert('비밀번호가 일치하지 않습니다.');
+            return;
+        }
 
-            try {
-                await auth.signUp(email, password, nickname);
-                alert('회원가입이 완료되었습니다. 로그인해주세요.');
-                window.location.href = '/login';
-            } catch (err) {
-                alert('회원가입 실패: ' + err.message);
-            }
-        });
-    </script>
+        try {
+            await auth.signUp(email, password, nickname, document.getElementById('login_id').value);
+            alert('회원가입이 완료되었습니다. 로그인해주세요.');
+            window.location.href = '/login';
+        } catch (err) {
+            alert('회원가입 실패: ' + err.message);
+        }
+    });
+</script>
 </body></html>

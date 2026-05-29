@@ -1,24 +1,14 @@
 package com.example.daily.service;
 
 import com.example.daily.domain.entity.User;
-import com.example.daily.domain.entity.Diary;
-import com.example.daily.domain.repository.UserRepository;
-import com.example.daily.domain.repository.DiaryRepository;
-import com.example.daily.domain.repository.DiaryTagRepository;
-import com.example.daily.domain.repository.SleepRepository;
-import com.example.daily.domain.repository.ExerciseRepository;
-import com.example.daily.domain.repository.TodoRepository;
-import java.util.List;
+import com.example.daily.domain.repository.*;
 import com.example.daily.dto.UserDto;
 import com.example.daily.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDateTime; // 추가
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -26,9 +16,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    private final AuthenticationManager authenticationManager;
     private final DiaryRepository diaryRepository;
-    private final DiaryTagRepository diaryTagRepository;
     private final SleepRepository sleepRepository;
     private final ExerciseRepository exerciseRepository;
     private final TodoRepository todoRepository;
@@ -36,17 +24,53 @@ public class UserService {
     @Transactional
     public void signUp(UserDto.SignUpRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new RuntimeException("이미 사용 중인 이메일입니다.");
         }
-
+        if (request.getLoginId() != null && userRepository.existsByLoginId(request.getLoginId())) {
+            throw new RuntimeException("이미 사용 중인 아이디입니다.");
+        }
         User user = User.builder()
                 .email(request.getEmail())
+                .loginId(request.getLoginId())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .nickname(request.getNickname())
-
                 .build();
-
         userRepository.save(user);
+    }
+
+    @Transactional
+    public UserDto.TokenResponse login(UserDto.LoginRequest request) {
+        User user = userRepository.findByLoginId(request.getLoginId())
+                .orElseGet(() -> userRepository.findByEmail(request.getLoginId())
+                        .orElseThrow(() -> new RuntimeException("아이디 또는 비밀번호가 올바르지 않습니다.")));
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("아이디 또는 비밀번호가 올바르지 않습니다.");
+        }
+        String accessToken  = jwtTokenProvider.createAccessToken(user.getEmail());
+        String refreshToken = jwtTokenProvider.createRefreshToken(user.getEmail());
+        user.setRefreshToken(refreshToken);
+        return UserDto.TokenResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    @Transactional
+    public UserDto.TokenResponse refresh(String refreshToken) {
+        if (!jwtTokenProvider.validateToken(refreshToken)) {
+            throw new RuntimeException("Invalid refresh token");
+        }
+        String email = jwtTokenProvider.getEmail(refreshToken);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (!refreshToken.equals(user.getRefreshToken())) {
+            throw new RuntimeException("Token mismatch");
+        }
+        String accessToken = jwtTokenProvider.createAccessToken(email);
+        return UserDto.TokenResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
     @Transactional(readOnly = true)
@@ -58,26 +82,7 @@ public class UserService {
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .profileImg(user.getProfileImg())
-                .createdAt(user.getCreatedAt()) // ← 추가
-                .build();
-    }
-
-    @Transactional
-    public UserDto.TokenResponse login(UserDto.LoginRequest request) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
-
-        String accessToken = jwtTokenProvider.createAccessToken(request.getEmail());
-        String refreshToken = jwtTokenProvider.createRefreshToken(request.getEmail());
-
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        user.setRefreshToken(refreshToken);
-
-        return UserDto.TokenResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
+                .createdAt(user.getCreatedAt())
                 .build();
     }
 
@@ -86,9 +91,14 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         user.setNickname(nickname);
-        if (profileImg != null) {
-            user.setProfileImg(profileImg);
-        }
+        if (profileImg != null) user.setProfileImg(profileImg);
+    }
+
+    @Transactional
+    public void updateProfileImg(String email, String profileImg) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setProfileImg(profileImg);
     }
 
     @Transactional
@@ -102,42 +112,30 @@ public class UserService {
     }
 
     @Transactional
-    public void updateProfileImg(String email, String profileImg) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        user.setProfileImg(profileImg);
-    }
-
-    @Transactional
     public void deleteAccount(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
         todoRepository.deleteByUser(user);
         sleepRepository.deleteByUser(user);
         exerciseRepository.deleteByUser(user);
-        diaryRepository.deleteAllTagsByUserId(user.getId());  // tags 먼저
-        diaryRepository.deleteAllByUserId(user.getId());       // diaries
+        diaryRepository.deleteAllTagsByUserId(user.getId());
+        diaryRepository.deleteAllByUserId(user.getId());
         userRepository.delete(user);
     }
-    @Transactional
-    public UserDto.TokenResponse refresh(String refreshToken) {
-        if (!jwtTokenProvider.validateToken(refreshToken)) {
-            throw new RuntimeException("Invalid refresh token");
-        }
 
-        String email = jwtTokenProvider.getEmail(refreshToken);
+    public String findIdByEmail(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("해당 이메일로 가입된 계정이 없습니다."));
+        return user.getLoginId() != null ? user.getLoginId() : user.getEmail();
+    }
 
-        if (!refreshToken.equals(user.getRefreshToken())) {
-            throw new RuntimeException("Token mismatch");
+    @Transactional
+    public void resetPassword(String loginId, String email, String newPassword) {
+        User user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new RuntimeException("해당 아이디로 가입된 계정이 없습니다."));
+        if (!user.getEmail().equals(email)) {
+            throw new RuntimeException("아이디와 이메일이 일치하지 않습니다.");
         }
-
-        String accessToken = jwtTokenProvider.createAccessToken(email);
-        return UserDto.TokenResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
+        user.setPassword(passwordEncoder.encode(newPassword));
     }
 }

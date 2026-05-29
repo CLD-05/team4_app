@@ -94,6 +94,8 @@
         }
     </script>
     <style class="">
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #446278; cursor: pointer; }
+        input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: #446278; border: none; cursor: pointer; }
         .soft-shadow {
             box-shadow: 0 4px 20px rgba(92, 86, 81, 0.05);
         }
@@ -587,12 +589,15 @@
         todos.forEach(todo => {
             if (todo.isCompleted) completed++;
             const item = document.createElement('div');
-            item.className = 'flex items-center justify-between bg-surface p-3 rounded-lg border border-outline-variant/20';
+            item.className = 'group flex items-center justify-between bg-surface p-3 rounded-lg border border-outline-variant/20';
             item.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <input type="checkbox" ${todo.isCompleted ? 'checked' : ''} onchange="toggleTodo(${todo.id})" class="h-5 w-5 accent-secondary rounded border-outline-variant/50">
+                    <div class="flex items-center gap-3 flex-1">
+                        <input type="checkbox" ${todo.isCompleted ? 'checked' : ''} onchange="toggleTodo(${todo.id})" class="h-5 w-5 rounded border-outline-variant/50" style="accent-color: #446278;">
                         <span class="${todo.isCompleted ? 'text-secondary font-semibold' : 'text-on-surface'}">${todo.content}</span>
                     </div>
+                    <button onclick="deleteTodo(${todo.id})" class="opacity-0 group-hover:opacity-100 transition-opacity p-1 text-outline-variant hover:text-error">
+                        <span class="material-symbols-outlined text-sm">delete</span>
+                    </button>
                 `;
             todoList.appendChild(item);
         });
@@ -611,6 +616,15 @@
             await loadTodos(formattedDate);
         } catch (err) {
             alert('변경 실패: ' + err.message);
+        }
+    }
+
+    async function deleteTodo(id) {
+        try {
+            await api.delete(`/todos/${id}`);
+            await loadTodos(formattedDate);
+        } catch (err) {
+            alert('삭제 실패: ' + err.message);
         }
     }
 

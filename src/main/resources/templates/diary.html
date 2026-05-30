@@ -623,7 +623,14 @@
             if (e.key === 'Enter') {
                 e.preventDefault();
                 const val = e.target.value.trim().replace(/^#/, '');
-                if (val && !tags.includes(val)) {
+                if (!val) return;
+                if (tags.length >= 10) {
+                    alert('태그는 최대 10개까지 추가할 수 있습니다.'); return;
+                }
+                if (val.length > 20) {
+                    alert('태그는 20자 이하여야 합니다.'); return;
+                }
+                if (!tags.includes(val)) {
                     tags.push(val);
                     renderTagChips();
                 }

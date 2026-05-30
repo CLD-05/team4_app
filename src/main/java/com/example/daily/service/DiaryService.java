@@ -1,11 +1,11 @@
 package com.example.daily.service;
 
 import com.example.daily.domain.entity.Diary;
+import com.example.daily.domain.repository.DiaryTagRepository;
 import com.example.daily.domain.entity.DiaryTag;
 import com.example.daily.domain.entity.User;
 import com.example.daily.domain.repository.DiaryRepository;
 import com.example.daily.domain.repository.UserRepository;
-import com.example.daily.domain.repository.DiaryTagRepository;
 import com.example.daily.dto.DiaryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,12 +26,16 @@ public class DiaryService {
 
     private final DiaryRepository diaryRepository;
     private final UserRepository userRepository;
-    private final DiaryTagRepository diaryTagRepository;  // ← 이 줄 추가
+    private final DiaryTagRepository diaryTagRepository;
 
     @Transactional
     public void createDiary(String email, DiaryDto.CreateRequest request) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (request.getTargetDate() != null && request.getTargetDate().isAfter(LocalDate.now())) {
+            throw new RuntimeException("미래 날짜에는 일기를 작성할 수 없습니다.");
+        }
 
         LocalDateTime diaryDateTime = (request.getTargetDate() != null)
                 ? request.getTargetDate().atStartOfDay()
@@ -50,12 +54,19 @@ public class DiaryService {
         diary.setEmotion(request.getEmotion());
         diary.setContent(request.getContent());
         diary.setImageUrl(request.getImageUrl());
-        diaryRepository.saveAndFlush(diary);  // tags 컬렉션 절대 건드리지 않음
+        diaryRepository.saveAndFlush(diary);
 
-        // 태그: DiaryTagRepository로만 직접 관리
+        // 태그: DiaryTagRepository로만 직접 관리 (컬렉션 건드리지 않음)
         diaryTagRepository.deleteByDiaryId(diary.getId());
         if (request.getTags() != null) {
+            if (request.getTags().size() > 10) {
+                throw new RuntimeException("태그는 최대 10개까지 추가할 수 있습니다.");
+            }
             for (String tagName : request.getTags()) {
+                if (tagName.isBlank()) continue;
+                if (tagName.length() > 20) {
+                    throw new RuntimeException("태그는 20자 이하여야 합니다.");
+                }
                 diaryTagRepository.save(DiaryTag.builder()
                         .diary(diary)
                         .tagName(tagName)
@@ -161,13 +172,21 @@ public class DiaryService {
     // 완전 삭제
     @Transactional
     public void hardDeleteDiary(Long diaryId, String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        Diary diary = diaryRepository.findDeletedById(diaryId)
+                .orElseThrow(() -> new RuntimeException("일기를 찾을 수 없습니다."));
+        if (!diary.getUser().getEmail().equals(email)) {
+            throw new RuntimeException("삭제 권한이 없습니다.");
+        }
         diaryRepository.hardDeleteById(diaryId);
     }
 
     @Transactional
     public void restoreDiary(Long diaryId, String email) {
+        Diary diary = diaryRepository.findDeletedById(diaryId)
+                .orElseThrow(() -> new RuntimeException("일기를 찾을 수 없습니다."));
+        if (!diary.getUser().getEmail().equals(email)) {
+            throw new RuntimeException("복구 권한이 없습니다.");
+        }
         diaryRepository.restoreById(diaryId);
     }
 

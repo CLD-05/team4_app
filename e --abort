@@ -1,0 +1,30 @@
+[33mff188f3[m[33m ([m[1;36mHEAD[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{0}: pull origin main --rebase (start): checkout ff188f32a59a449b4669bda55ed8c581fac56519
+[33m4b8b392[m[33m ([m[1;32mmain[m[33m)[m HEAD@{1}: commit: asdf
+[33m9d00846[m HEAD@{2}: commit: cal
+[33mf4d9ecd[m HEAD@{3}: commit: color
+[33m66dfeb3[m HEAD@{4}: commit: 052914
+[33mb191dd6[m HEAD@{5}: commit: html
+[33mad679db[m HEAD@{6}: commit: photo
+[33med30774[m HEAD@{7}: pull origin main --rebase (finish): returning to refs/heads/main
+[33med30774[m HEAD@{8}: pull origin main --rebase (pick): 0529
+[33m04291fb[m HEAD@{9}: pull origin main --rebase (start): checkout 04291fb61246459cafc2b6b69523bc1e0c4dbf8b
+[33m22cf9cd[m HEAD@{10}: commit: 0529
+[33mfa48753[m HEAD@{11}: commit: last*5
+[33mf26a8d9[m HEAD@{12}: commit: lastlastlastlast
+[33md9a9a83[m HEAD@{13}: commit: lastlastlast
+[33m3834376[m HEAD@{14}: commit: tag
+[33m5381c5f[m HEAD@{15}: commit: last2
+[33mf10c682[m HEAD@{16}: commit: final1
+[33m7f87fe9[m HEAD@{17}: pull origin main --rebase (finish): returning to refs/heads/main
+[33m7f87fe9[m HEAD@{18}: pull origin main --rebase (pick): feat: diary 휴지통 기능X, 날짜 연동, API 연동 수정
+[33mdca511d[m HEAD@{19}: pull origin main --rebase (start): checkout dca511d854e492f1c0e643b747ed936f72ca8d4b
+[33me4b27a1[m HEAD@{20}: commit: feat: diary 휴지통 기능X, 날짜 연동, API 연동 수정
+[33me8185a4[m HEAD@{21}: reset: moving to HEAD~1
+[33m8927e6f[m HEAD@{22}: commit: feat: team4_app 프로젝트 자바 소스코드 최초 업로드
+[33me8185a4[m HEAD@{23}: checkout: moving from appbeta to main
+[33m693cc99[m[33m ([m[1;31morigin/appbeta[m[33m, [m[1;32mappbeta[m[33m)[m HEAD@{24}: reset: moving to HEAD
+[33m693cc99[m[33m ([m[1;31morigin/appbeta[m[33m, [m[1;32mappbeta[m[33m)[m HEAD@{25}: commit: feat: 대포 배포용 appbeta 브랜치 생성 및 소스코드 업로드
+[33me8185a4[m HEAD@{26}: checkout: moving from main to appbeta
+[33me8185a4[m HEAD@{27}: checkout: moving from main to main
+[33me8185a4[m HEAD@{28}: Branch: renamed refs/heads/main to refs/heads/main
+[33me8185a4[m HEAD@{30}: commit (initial): first commit

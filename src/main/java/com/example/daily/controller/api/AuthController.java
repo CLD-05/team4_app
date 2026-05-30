@@ -2,6 +2,8 @@ package com.example.daily.controller.api;
 
 import com.example.daily.dto.UserDto;
 import com.example.daily.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +18,6 @@ public class AuthController {
 
     private final UserService userService;
 
-    // 👈 consumes 규칙을 multipart로 설정하고, 파일과 가입정보를 분리하여 수용
     @PostMapping(value = "/sign-up", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> signUp(
             @RequestPart("request") UserDto.SignUpRequest request,
@@ -26,8 +27,17 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserDto.TokenResponse> login(@RequestBody UserDto.LoginRequest request) {
-        return ResponseEntity.ok(userService.login(request));
+    public ResponseEntity<UserDto.TokenResponse> login(@RequestBody UserDto.LoginRequest request,
+                                                       HttpServletResponse response) {
+        UserDto.TokenResponse tokens = userService.login(request);
+
+        Cookie cookie = new Cookie("accessToken", tokens.getAccessToken());
+        cookie.setHttpOnly(false);
+        cookie.setPath("/");
+        cookie.setMaxAge(60 * 60 * 24);
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(tokens);
     }
 
     @PostMapping("/refresh")

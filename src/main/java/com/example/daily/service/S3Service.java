@@ -16,25 +16,29 @@ public class S3Service {
     private final S3Client s3Client;
     private final String bucket;
     private final String region;
+    private final String cloudfrontDomain;
 
-    public S3Service(S3Client s3Client, 
+    public S3Service(S3Client s3Client,
                      @Value("${cloud.aws.s3.bucket}") String bucket,
-                     @Value("${cloud.aws.region.static}") String region) {
+                     @Value("${cloud.aws.region.static}") String region,
+                     @Value("${cloud.aws.cloudfront.domain}") String cloudfrontDomain) {
         this.s3Client = s3Client;
         this.bucket = bucket;
         this.region = region;
+        this.cloudfrontDomain = cloudfrontDomain;
     }
 
     public String upload(MultipartFile file) throws IOException {
         if (file == null || file.isEmpty()) {
             return null;
         }
-        
+
         String originalFilename = file.getOriginalFilename();
         String ext = "";
         if (originalFilename != null && originalFilename.contains(".")) {
             ext = originalFilename.substring(originalFilename.lastIndexOf("."));
         }
+
         String filename = UUID.randomUUID().toString() + ext;
 
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
@@ -43,9 +47,10 @@ public class S3Service {
                 .contentType(file.getContentType())
                 .build();
 
-        s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+        s3Client.putObject(putObjectRequest,
+                RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
 
-        // 생성된 S3의 객체 URL 주소 반환
-        return String.format("https://%s.s3.%s.amazonaws.com/%s", bucket, region, filename);
+        // CloudFront URL로 반환
+        return String.format("https://%s/%s", cloudfrontDomain, filename);
     }
 }

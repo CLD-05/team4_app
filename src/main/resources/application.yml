@@ -1,4 +1,3 @@
-
 server:
   port: 8080
 
@@ -21,3 +20,12 @@ management:
   endpoint:
     health:
       show-details: always
+
+cloud:
+  aws:
+    s3:
+      bucket: team4-diary-images
+    region:
+      static: ap-northeast-2
+    cloudfront:
+      domain: d7sqkcqvvfizr.cloudfront.net

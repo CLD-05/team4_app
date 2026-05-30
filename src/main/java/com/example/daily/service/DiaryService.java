@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import com.example.daily.domain.entity.Emotion;
 
@@ -27,7 +26,9 @@ public class DiaryService {
     private final DiaryRepository diaryRepository;
     private final UserRepository userRepository;
     private final DiaryTagRepository diaryTagRepository;
+    private final S3Service s3Service; // ✅ 추가
 
+    // ✅ 일기 저장 시 이미지 변경되면 기존 이미지 S3 삭제
     @Transactional
     public void createDiary(String email, DiaryDto.CreateRequest request) {
         User user = userRepository.findByEmail(email)
@@ -51,12 +52,16 @@ public class DiaryService {
                         .createdAt(diaryDateTime)
                         .build());
 
+        // ✅ 기존 이미지가 있고 새 이미지로 변경되는 경우 S3에서 삭제
+        if (diary.getImageUrl() != null && !diary.getImageUrl().equals(request.getImageUrl())) {
+            s3Service.delete(diary.getImageUrl());
+        }
+
         diary.setEmotion(request.getEmotion());
         diary.setContent(request.getContent());
         diary.setImageUrl(request.getImageUrl());
         diaryRepository.saveAndFlush(diary);
 
-        // 태그: DiaryTagRepository로만 직접 관리 (컬렉션 건드리지 않음)
         diaryTagRepository.deleteByDiaryId(diary.getId());
         if (request.getTags() != null) {
             if (request.getTags().size() > 10) {
@@ -128,10 +133,7 @@ public class DiaryService {
 
         diary.setEmotion(emotion);
         diaryRepository.save(diary);
-
-
     }
-
 
     @Transactional(readOnly = true)
     public DiaryDto getDiaryByDate(String email, LocalDate date) {
@@ -158,7 +160,7 @@ public class DiaryService {
                 .tags(diary.getTags().stream().map(DiaryTag::getTagName).collect(Collectors.toList()))
                 .build();
     }
-    // 휴지통 조회
+
     @Transactional(readOnly = true)
     public List<DiaryDto> getDeletedDiaries(String email) {
         User user = userRepository.findByEmail(email)
@@ -169,13 +171,16 @@ public class DiaryService {
                 .collect(Collectors.toList());
     }
 
-    // 완전 삭제
+    // ✅ 완전 삭제 시 S3 이미지 삭제
     @Transactional
     public void hardDeleteDiary(Long diaryId, String email) {
         Diary diary = diaryRepository.findDeletedById(diaryId)
                 .orElseThrow(() -> new RuntimeException("일기를 찾을 수 없습니다."));
         if (!diary.getUser().getEmail().equals(email)) {
             throw new RuntimeException("삭제 권한이 없습니다.");
+        }
+        if (diary.getImageUrl() != null) {
+            s3Service.delete(diary.getImageUrl());
         }
         diaryRepository.hardDeleteById(diaryId);
     }
@@ -189,6 +194,4 @@ public class DiaryService {
         }
         diaryRepository.restoreById(diaryId);
     }
-
-
 }

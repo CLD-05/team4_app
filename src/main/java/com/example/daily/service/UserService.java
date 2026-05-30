@@ -129,10 +129,18 @@ public class UserService {
         if (profileImg != null) user.setProfileImg(profileImg);
     }
 
-    @Transactional  // ✅ 추가
+    // ✅ 프로필 사진 변경 시 기존 이미지 S3에서 삭제
+    @Transactional
     public String uploadProfileImg(String email, MultipartFile file) throws IOException {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (user.getProfileImg() != null) {
+            s3Service.delete(user.getProfileImg());
+        }
+
         String url = s3Service.upload(file);
-        updateProfileImg(email, url);
+        user.setProfileImg(url);
         return url;
     }
 
@@ -172,6 +180,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(newPassword));
     }
 
+    // ✅ 계정 삭제 시 프로필 이미지 + 모든 일기 이미지 S3에서 삭제
     @Transactional
     public void deleteAccount(String email, String password) {
         User user = userRepository.findByEmail(email)
@@ -179,6 +188,19 @@ public class UserService {
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new RuntimeException("비밀번호가 올바르지 않습니다.");
         }
+
+        // 프로필 이미지 삭제
+        if (user.getProfileImg() != null) {
+            s3Service.delete(user.getProfileImg());
+        }
+
+        // 모든 일기 이미지 삭제
+        diaryRepository.findAllByUser(user).forEach(diary -> {
+            if (diary.getImageUrl() != null) {
+                s3Service.delete(diary.getImageUrl());
+            }
+        });
+
         todoRepository.deleteByUser(user);
         sleepRepository.deleteByUser(user);
         exerciseRepository.deleteByUser(user);

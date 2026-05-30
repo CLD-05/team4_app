@@ -333,6 +333,12 @@
 </script>
 <script th:inline="none">
     let selectedEmotion = 'NORMAL';
+    let tags = [];
+
+    window.removeTag = function(index) {
+        tags.splice(index, 1);
+        renderTagChips();
+    };
 
     async function loadTrash() {
         try {
@@ -380,7 +386,6 @@
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
-        let tags = [];
 
         if (!auth.isLoggedIn()) {
             window.location.href = '/login';
@@ -755,6 +760,10 @@
         document.getElementById('save-diary-btn').addEventListener('click', async () => {
             const title = document.getElementById('diary-title').value;
             const content = document.querySelector('.editor-content').innerText;
+
+            // 전송 전 로그 확인 (개발자 도구 F12에서 확인 가능)
+            console.log("보낼 태그 데이터:", tags);
+
             if (!title || !content) {
                 alert('제목과 내용을 입력해주세요.');
                 return;

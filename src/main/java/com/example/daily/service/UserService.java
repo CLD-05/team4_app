@@ -132,11 +132,7 @@ public class UserService {
     }
 
     public String uploadProfileImg(String email, org.springframework.web.multipart.MultipartFile file) throws java.io.IOException {
-        String filename = java.util.UUID.randomUUID() + "_" + file.getOriginalFilename();
-        java.nio.file.Path uploadDir = java.nio.file.Paths.get("target/classes/static/uploads");
-        java.nio.file.Files.createDirectories(uploadDir);
-        java.nio.file.Files.copy(file.getInputStream(), uploadDir.resolve(filename), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-        String url = "/uploads/" + filename;
+        String url = s3Service.upload(file);
         updateProfileImg(email, url);
         return url;
     }

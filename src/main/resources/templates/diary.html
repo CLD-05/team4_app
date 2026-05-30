@@ -142,10 +142,14 @@
         </a>
     </nav>
     <main class="flex-1 w-full md:ml-64 px-6 md:px-10 pb-32 pt-8">
+        <!-- 날짜 선택 -->
         <section class="mb-6 flex flex-col gap-3">
-            <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x" id="diary-date-selector"></div>
+            <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x" id="diary-date-selector">
+                <!-- JS로 동적 생성 -->
+            </div>
         </section>
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-section-gap">
+
             <div class="lg:col-span-8 flex flex-col gap-gutter">
                 <div class="bg-white rounded-xl p-6 md:p-8 flex flex-col gap-4 shadow-sm border border-surface-variant">
                     <div class="text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
@@ -153,6 +157,7 @@
                     </div>
                     <input id="diary-title" class="w-full bg-white border-none p-0 focus:ring-0 font-headline-md text-headline-md text-on-surface placeholder-outline-variant" placeholder="오늘의 제목을 입력하세요..." type="text"/>
                 </div>
+
                 <div class="bg-white rounded-xl p-6 md:p-8 shadow-sm border border-surface-variant">
                     <h3 class="font-label-sm text-label-sm text-on-surface-variant mb-4">오늘 기분은 어떠신가요?</h3>
                     <div class="flex justify-between md:justify-start md:gap-8 items-center" id="emotion-selector">
@@ -183,9 +188,11 @@
                         </button>
                     </div>
                 </div>
+
                 <div class="bg-white rounded-xl p-6 md:p-8 shadow-sm border border-surface-variant">
                     <div class="editor-content h-[400px] overflow-y-auto font-body-lg text-body-lg text-on-surface focus:outline-none whitespace-pre-wrap bg-white" contenteditable="true" data-placeholder="마음을 담아 기록해 보세요. 이곳은 당신의 공간입니다."></div>
                 </div>
+
                 <div class="bg-white rounded-xl shadow-sm border border-surface-variant overflow-hidden">
                     <label for="diary-img-file" class="cursor-pointer flex flex-col items-center justify-center gap-2 min-h-[120px] hover:bg-surface-container transition-colors">
                         <span class="material-symbols-outlined text-outline-variant text-3xl">add_photo_alternate</span>
@@ -193,11 +200,11 @@
                     </label>
                     <input id="diary-img-file" type="file" accept="image/*" class="hidden" onchange="previewDiaryImage(this)"/>
                     <div class="relative">
-                        <img id="diary-img-preview" class="hidden w-full object-cover max-h-64"/>
-                        <button id="delete-img-btn" class="hidden absolute top-2 right-2 bg-error text-white rounded-full p-1 hover:bg-error/80 transition-colors shadow-md">
-                            <span class="material-symbols-outlined text-sm">close</span>
-                        </button>
-                    </div>
+                    <img id="diary-img-preview" class="hidden w-full object-cover max-h-64"/>
+                    <button id="delete-img-btn" class="hidden absolute top-2 right-2 bg-error text-white rounded-full p-1 hover:bg-error/80 transition-colors shadow-md">
+                        <span class="material-symbols-outlined text-sm">close</span>
+                    </button>
+                </div>
                 </div>
                 <div class="bg-white rounded-xl p-6 shadow-sm border border-surface-variant">
                     <div class="flex items-center gap-2">
@@ -206,12 +213,15 @@
                     </div>
                     <div id="tag-list" class="flex flex-wrap gap-2 mt-3"></div>
                 </div>
+
                 <div class="flex justify-end gap-4 mt-4">
                     <button id="temp-save-btn" class="px-6 py-2 rounded-lg font-label-sm text-label-sm text-on-surface-variant border border-outline-variant hover:bg-surface-container transition-colors">임시 저장</button>
                     <button id="save-diary-btn" class="px-6 py-2 rounded-lg font-label-sm text-label-sm bg-secondary text-on-secondary hover:bg-on-secondary-container transition-colors shadow-sm">작성 완료</button>
                 </div>
             </div>
+
             <div class="lg:col-span-4 flex flex-col gap-gutter">
+
                 <div class="bg-surface-container-lowest rounded-xl soft-shadow p-5 flex flex-col gap-5">
                     <div class="flex items-center gap-2 text-primary">
                         <span class="material-symbols-outlined text-secondary">alarm</span>
@@ -235,6 +245,7 @@
                     </div>
                     <button id="save-sleep-btn" class="bg-secondary text-on-secondary py-2 rounded-lg text-sm">기록 저장</button>
                 </div>
+
                 <div class="bg-surface-container-lowest rounded-xl soft-shadow p-5 flex flex-col gap-5">
                     <div class="flex items-center gap-2 text-primary">
                         <span class="material-symbols-outlined text-secondary">directions_run</span>
@@ -263,16 +274,19 @@
                         <button id="save-exercise-btn" class="bg-secondary text-on-secondary py-2 rounded-lg text-sm">기록 저장</button>
                     </div>
                 </div>
+
                 <div class="glass-card rounded-xl p-6 bg-secondary-container/20 border-none mt-4">
                     <p class="font-body-md text-body-md text-on-secondary-container italic mb-2">"오늘 하루 중 가장 평온했던 순간은 언제였나요?"</p>
                     <p class="font-label-sm text-label-sm text-outline-variant">— 오늘의 질문</p>
                 </div>
+
                 <div class="mt-4">
                     <button id="delete-diary-btn" class="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-error/30 text-error hover:bg-error/5 transition-colors font-label-sm text-label-sm">
                         <span class="material-symbols-outlined text-sm">delete</span>
                         일기 삭제 (휴지통으로)
                     </button>
                 </div>
+
                 <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-outline-variant/20 mt-4">
                     <div class="flex items-center gap-2 mb-4 text-on-surface-variant">
                         <span class="material-symbols-outlined">delete</span>
@@ -282,64 +296,93 @@
                         <p class="text-on-surface-variant text-sm text-center py-4">삭제된 일기가 없습니다.</p>
                     </div>
                 </div>
+
             </div>
         </div>
     </main>
 </div>
 <nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-surface-container-low/95 backdrop-blur-lg rounded-t-2xl shadow-lg border-t border-outline-variant/20">
-    <a class="flex flex-col items-center text-on-surface-variant px-5 py-2" href="/main"><span class="material-symbols-outlined">home</span><span class="text-[10px] mt-1 font-bold">홈</span></a>
-    <a class="flex flex-col items-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-2 shadow-sm" href="/diary"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_stories</span><span class="text-[10px] font-bold mt-1">일기</span></a>
-    <a class="flex flex-col items-center text-on-surface-variant px-5 py-2" href="/todolist"><span class="material-symbols-outlined">task_alt</span><span class="text-[10px] mt-1 font-bold">할 일</span></a>
-    <a class="flex flex-col items-center text-on-surface-variant px-5 py-2" href="/report"><span class="material-symbols-outlined">equalizer</span><span class="text-[10px] mt-1 font-bold">통계</span></a>
+    <a class="flex flex-col items-center text-on-surface-variant px-5 py-2" href="/main">
+        <span class="material-symbols-outlined">home</span>
+        <span class="text-[10px] mt-1 font-bold">홈</span>
+    </a>
+    <a class="flex flex-col items-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-2 shadow-sm" href="/diary">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_stories</span>
+        <span class="text-[10px] font-bold mt-1">일기</span>
+    </a>
+    <a class="flex flex-col items-center text-on-surface-variant px-5 py-2" href="/todolist">
+        <span class="material-symbols-outlined">task_alt</span>
+        <span class="text-[10px] mt-1 font-bold">할 일</span>
+    </a>
+    <a class="flex flex-col items-center text-on-surface-variant px-5 py-2" href="/report">
+        <span class="material-symbols-outlined">equalizer</span>
+        <span class="text-[10px] mt-1 font-bold">통계</span>
+    </a>
 </nav>
-
 <script th:inline="none">
-    // 전역 상태 변수들 (함수 밖으로 통합)
+    const editor = document.querySelector('.editor-content');
+    editor.addEventListener('focus', function() {
+        this.parentElement.classList.add('ring-1', 'ring-secondary');
+    });
+    editor.addEventListener('blur', function() {
+        this.parentElement.classList.remove('ring-1', 'ring-secondary');
+    });
+</script>
+<script th:inline="none">
     let selectedEmotion = 'NORMAL';
-    let tags = [];
-    let diaryImageFile = null;
-    let existingImageUrl = null;
 
-    // 공통 함수들
-    function renderTagChips() {
-        const list = document.getElementById('tag-list');
-        if (!list) return;
-        list.innerHTML = tags.map((tag, i) => `
-            <span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1">
-                # ${tag}
-                <button onclick="window.removeTag(${i})"><span class="material-symbols-outlined text-[14px] hover:text-error transition-colors">close</span></button>
-            </span>`).join('');
+    async function loadTrash() {
+        try {
+            const trashList = await api.get('/diaries/trash');
+            const trashEl = document.getElementById('trash-list');
+            if (!trashList || trashList.length === 0) {
+                trashEl.innerHTML = '<p class="text-on-surface-variant text-sm text-center py-4">삭제된 일기가 없습니다.</p>';
+                return;
+            }
+            trashEl.innerHTML = '';
+            trashList.forEach(diary => {
+                const date = new Date(diary.createdAt);
+                const dateStr = date.getFullYear() + '년 ' + (date.getMonth()+1) + '월 ' + date.getDate() + '일';
+                const lines = diary.content ? diary.content.split('\n') : [''];
+                const titleMatch = lines[0].match(/^\[(.+)\]$/);
+                const title = titleMatch ? titleMatch[1] : lines[0];
+                const item = document.createElement('div');
+                item.className = 'flex items-center justify-between p-3 bg-surface-container rounded-lg';
+                item.innerHTML = '<div class="flex flex-col gap-1"><span class="font-label-sm text-label-sm text-on-surface">' + (title || '제목 없음') + '</span><span class="text-xs text-on-surface-variant">' + dateStr + '</span></div><div class="flex gap-1"><button onclick="restoreDiary(' + diary.id + ')" class="flex items-center gap-1 text-secondary text-xs hover:bg-secondary/10 px-2 py-1 rounded-lg transition-colors"><span class="material-symbols-outlined text-sm">restore</span>되돌리기</button><button onclick="hardDelete(' + diary.id + ')" class="flex items-center gap-1 text-error text-xs hover:bg-error/10 px-2 py-1 rounded-lg transition-colors"><span class="material-symbols-outlined text-sm">delete_forever</span>완전삭제</button></div>';
+                trashEl.appendChild(item);
+            });
+        } catch (err) {
+            console.error('휴지통 로드 실패:', err);
+        }
     }
 
-    window.removeTag = function(index) {
-        tags.splice(index, 1);
-        renderTagChips();
-    };
+    async function hardDelete(id) {
+        if (!confirm('완전히 삭제하면 복구할 수 없습니다. 삭제하시겠습니까?')) return;
+        try {
+            await api.delete('/diaries/' + id + '/hard');
+            await loadTrash();
+        } catch (err) {
+            alert('삭제 실패: ' + err.message);
+        }
+    }
 
-    window.previewDiaryImage = function(input) {
-        const file = input.files[0];
-        if (!file) return;
-        diaryImageFile = file;
-        existingImageUrl = null;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const preview = document.getElementById('diary-img-preview');
-            preview.src = e.target.result;
-            preview.classList.remove('hidden');
-            document.getElementById('delete-img-btn').classList.remove('hidden');
-        };
-        reader.readAsDataURL(file);
-    };
-
-    function dataURLtoFile(dataurl, filename) {
-        let arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-        while(n--){ u8arr[n] = bstr.charCodeAt(n); }
-        return new File([u8arr], filename, {type:mime});
+    async function restoreDiary(id) {
+        try {
+            await api.patch('/diaries/' + id + '/restore');
+            alert('일기가 복구됐습니다.');
+            await loadTrash();
+        } catch (err) {
+            alert('복구 실패: ' + err.message);
+        }
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
-        if (!auth.isLoggedIn()) { window.location.href = '/login'; return; }
+        let tags = [];
+
+        if (!auth.isLoggedIn()) {
+            window.location.href = '/login';
+            return;
+        }
 
         const urlParams = new URLSearchParams(window.location.search);
         const targetDate = urlParams.get('date') || (() => {
@@ -349,25 +392,78 @@
 
         const parts = targetDate.split('-');
         const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
-        const DRAFT_KEY = 'diary-draft-' + targetDate;
+        const prevDate = new Date(dateObj);
+        prevDate.setDate(prevDate.getDate() - 1);
+        const prevFormatted = prevDate.getFullYear() + '-' + String(prevDate.getMonth()+1).padStart(2,'0') + '-' + String(prevDate.getDate()).padStart(2,'0');
 
-        // UI 기본 설정
+        document.querySelectorAll('a[href="/main"]').forEach(a => {
+            a.href = `/main?date=${targetDate}`;
+        });
+
+        document.querySelectorAll('a[href="/todolist"]').forEach(a => {
+            a.href = `/todolist?date=${targetDate}`;
+        });
+
+        document.querySelectorAll('a[href^="/report"]').forEach(a => {
+            a.href = `/report?date=${targetDate}&year=${dateObj.getFullYear()}&month=${dateObj.getMonth() + 1}`;
+        });
+
+        const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+        const DAYS_EN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+        // 날짜 선택 UI 렌더링
+        (function renderDiaryDateSelector() {
+            const selector = document.getElementById('diary-date-selector');
+            if (!selector) return;
+            selector.innerHTML = '';
+            for (let i = -3; i <= 3; i++) {
+                const d = new Date(dateObj);
+                d.setDate(d.getDate() + i);
+                const isSelected = i === 0;
+                const btn = document.createElement('button');
+                btn.className = `snap-start flex flex-col items-center justify-center min-w-[64px] py-3 rounded-xl shadow-sm transition-all ${
+                    isSelected
+                        ? 'bg-secondary-container text-on-secondary-container shadow-md ring-1 ring-secondary/20 font-bold'
+                        : 'bg-surface-container-lowest text-on-surface-variant hover:bg-white'
+                }`;
+                btn.innerHTML = `
+                    <span class="text-xs uppercase opacity-${isSelected ? '90' : '60'}">${DAYS_EN[d.getDay()]}</span>
+                    <span class="text-xl ${isSelected ? '' : 'font-bold'} mt-1">${d.getDate()}</span>
+                `;
+                btn.addEventListener('click', () => {
+                    const y = d.getFullYear();
+                    const m = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+                    window.location.href = `/diary?date=${y}-${m}-${day}`;
+                });
+                selector.appendChild(btn);
+            }
+        })();
+
         document.getElementById('current-date-display').textContent =
-            `${dateObj.getFullYear()}년 ${dateObj.getMonth() + 1}월 ${dateObj.getDate()}일`;
+            dateObj.getFullYear() + '년 ' + (dateObj.getMonth() + 1) + '월 ' + dateObj.getDate() + '일 • ' + days[dateObj.getDay()];
 
-        // 서버 데이터 불러오기
         try {
             const diary = await diaryApi.getDiaryByDate(targetDate);
             if (diary) {
                 const lines = diary.content.split('\n');
                 const titleMatch = lines[0].match(/^\[(.+)\]$/);
-                document.getElementById('diary-title').value = titleMatch ? titleMatch[1] : lines[0];
-                document.querySelector('.editor-content').innerText = titleMatch ? lines.slice(1).join('\n') : diary.content;
-                
+                if (titleMatch) {
+                    document.getElementById('diary-title').value = titleMatch[1];
+                    document.querySelector('.editor-content').innerText = lines.slice(1).join('\n');
+                } else {
+                    document.querySelector('.editor-content').innerText = diary.content;
+                }
                 if (diary.emotion) {
                     selectedEmotion = diary.emotion;
-                    updateEmotionUI();
+                    document.querySelectorAll('#emotion-selector button').forEach(btn => {
+                        if (btn.dataset.emotion === diary.emotion) {
+                            btn.querySelector('div').className = 'w-12 h-12 rounded-full flex items-center justify-center transition-transform duration-300 border-2 border-secondary bg-secondary-container/30';
+                            btn.querySelector('span').className = 'material-symbols-outlined text-secondary text-2xl';
+                        }
+                    });
                 }
+
                 if (diary.imageUrl) {
                     existingImageUrl = diary.imageUrl;
                     const preview = document.getElementById('diary-img-preview');
@@ -375,29 +471,243 @@
                     preview.classList.remove('hidden');
                     document.getElementById('delete-img-btn').classList.remove('hidden');
                 }
-                if (diary.tags) {
+
+                if (diary.tags && diary.tags.length > 0) {
                     tags = [...diary.tags];
                     renderTagChips();
                 }
             }
-        } catch (err) { console.error('서버 데이터 로드 실패:', err); }
+        } catch (err) {
+            console.error('일기 불러오기 실패:', err);
+        }
 
-        // 임시저장 데이터 복원 (서버 데이터보다 우선순위 높음)
+
+
+        try {
+            const exercises = await exerciseApi.getExercises(targetDate);
+            if (exercises && exercises.length > 0) {
+                const last = exercises[exercises.length - 1];
+                document.getElementById('exercise-type').value = last.category;
+                document.getElementById('exercise-duration-range').value = last.durationMinutes;
+                document.getElementById('exercise-duration-display').textContent = `${last.durationMinutes}분`;
+            }
+        } catch (err) {
+            console.error('운동 불러오기 실패:', err);
+        }
+
+        const emotionButtons = document.querySelectorAll('#emotion-selector button');
+        emotionButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                emotionButtons.forEach(b => {
+                    b.querySelector('div').className = "w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:scale-110 transition-transform duration-300";
+                    b.querySelector('span').className = "material-symbols-outlined text-outline-variant text-2xl group-hover:text-primary transition-colors";
+                });
+                btn.querySelector('div').className = "w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:scale-110 transition-transform duration-300 border-2 border-secondary bg-secondary-container/30";
+                btn.querySelector('span').className = "material-symbols-outlined text-secondary text-2xl";
+                selectedEmotion = btn.getAttribute('data-emotion');
+            });
+        });
+
+        // 1. DOM 요소 선택
+        const bedRange = document.getElementById('bed-time-range');
+        const wakeRange = document.getElementById('wake-time-range');
+        const durationDisplay = document.getElementById('sleep-duration');
+
+// 2. 수면 시간 디스플레이 업데이트
+        const updateSleepDisplay = () => {
+            const bedVal = bedRange.value;
+            const wakeVal = wakeRange.value;
+            if (!bedVal || !wakeVal) return;
+            const [bh, bm] = bedVal.split(':').map(Number);
+            const [wh, wm] = wakeVal.split(':').map(Number);
+            let duration = (wh * 60 + wm) - (bh * 60 + bm);
+            if (duration < 0) duration += 1440;
+            const dh = Math.floor(duration / 60);
+            const dm = duration % 60;
+            durationDisplay.textContent = `${dh}h ${dm}m`;
+        };
+
+// 3. 이벤트 리스너
+        bedRange.addEventListener('change', updateSleepDisplay);
+        wakeRange.addEventListener('change', updateSleepDisplay);
+
+// 4. 수면 기록 불러오기
+        const loadSleepData = async () => {
+            try {
+                const sleep = await sleepApi.getSleep(targetDate);
+                if (sleep) {
+                    const bed = new Date(sleep.bedTime);
+                    const wake = new Date(sleep.wakeTime);
+                    bedRange.value = bed.toTimeString().slice(0, 5);
+                    wakeRange.value = wake.toTimeString().slice(0, 5);
+                    updateSleepDisplay();
+                }
+            } catch (err) {
+                console.error('수면 불러오기 실패:', err);
+            }
+        };
+
+        loadSleepData();
+
+
+// ==========================================
+// 5. 수면 기록 저장 로직
+// ==========================================
+        document.getElementById('save-sleep-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('save-sleep-btn');
+            btn.disabled = true;
+            btn.textContent = '저장 중...';
+            const bedVal = bedRange.value;
+            const wakeVal = wakeRange.value;
+            const [bh, bm] = bedVal.split(':').map(Number);
+            const [wh, wm] = wakeVal.split(':').map(Number);
+            const bedMin = bh * 60 + bm;
+            const wakeMin = wh * 60 + wm;
+
+            let bedDate = targetDate;
+            let wakeDate = targetDate;
+
+            if (bedMin > wakeMin) {
+                const prev = new Date(dateObj);
+                prev.setDate(prev.getDate() - 1);
+                const py = prev.getFullYear();
+                const pm = String(prev.getMonth() + 1).padStart(2, '0');
+                const pd = String(prev.getDate()).padStart(2, '0');
+                bedDate = `${py}-${pm}-${pd}`;
+            }
+
+            const bedTime = `${bedDate}T${bedVal}:00`;
+            const wakeTime = `${wakeDate}T${wakeVal}:00`;
+
+            try {
+                await sleepApi.recordSleep(wakeDate, bedTime, wakeTime);
+                alert('수면 기록 저장됨');
+            } catch (err) {
+                alert('저장 실패: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '기록 저장';
+            }
+        });
+
+
+
+        // 운동 슬라이더 이벤트 (main.html과 동일)
+        const exRange = document.getElementById('exercise-duration-range');
+        const exDisplay = document.getElementById('exercise-duration-display');
+        exRange.addEventListener('input', () => {
+            exDisplay.textContent = `${exRange.value}분`;
+        });
+
+        document.getElementById('save-exercise-btn').addEventListener('click', async () => {
+            const category = document.getElementById('exercise-type').value;
+            const minutes = exRange.value;
+            if (!category) return alert('운동 종류를 입력하세요');
+            try {
+                await exerciseApi.recordExercise(targetDate, category, minutes);
+                alert('운동 기록 저장됨');
+            } catch (err) {
+                alert('저장 실패: ' + err.message);
+            }
+        });
+
+        // ── 태그 관리 ──
+        function renderTagChips() {
+            const list = document.getElementById('tag-list');
+            list.innerHTML = tags.map((tag, i) => `
+                <span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1">
+                    # ${tag}
+                    <button onclick="removeTag(${i})"><span class="material-symbols-outlined text-[14px] hover:text-error transition-colors">close</span></button>
+                </span>`).join('');
+        }
+
+        function removeTag(index) {
+            tags.splice(index, 1);
+            renderTagChips();
+        }
+
+        document.getElementById('tag-input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const val = e.target.value.trim().replace(/^#/, '');
+                if (!val) return;
+                if (tags.length >= 10) {
+                    alert('태그는 최대 10개까지 추가할 수 있습니다.'); return;
+                }
+                if (val.length > 20) {
+                    alert('태그는 20자 이하여야 합니다.'); return;
+                }
+                if (!tags.includes(val)) {
+                    tags.push(val);
+                    renderTagChips();
+                }
+                e.target.value = '';
+            }
+        });
+
+        // ── 일기 이미지 ──
+        let diaryImageFile = null;
+        let existingImageUrl = null;
+
+        window.previewDiaryImage = function(input) {
+            const file = input.files[0];
+            if (!file) return;
+            diaryImageFile = file;
+            existingImageUrl = null;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const preview = document.getElementById('diary-img-preview');
+                preview.src = e.target.result;
+                preview.classList.remove('hidden');
+                document.getElementById('delete-img-btn').classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        };
+
+        // ✅ 이미지 삭제 버튼
+        document.getElementById('delete-img-btn').addEventListener('click', () => {
+            diaryImageFile = null;
+            existingImageUrl = null;
+            const preview = document.getElementById('diary-img-preview');
+            preview.src = '';
+            preview.classList.add('hidden');
+            document.getElementById('delete-img-btn').classList.add('hidden');
+            document.getElementById('diary-img-file').value = '';
+        });
+
+        // ✅ 임시저장 기능
+        const DRAFT_KEY = 'diary-draft-' + targetDate;
+
         const draft = localStorage.getItem(DRAFT_KEY);
-        if (draft) {
+        if (draft && !document.getElementById('diary-title').value) {
             try {
                 const { title, content, emotion, tags: draftTags, image } = JSON.parse(draft);
                 if (title) document.getElementById('diary-title').value = title;
                 if (content) document.querySelector('.editor-content').innerText = content;
-                if (emotion) { selectedEmotion = emotion; updateEmotionUI(); }
-                if (draftTags) { tags = [...draftTags]; renderTagChips(); }
+                if (emotion) {
+                    selectedEmotion = emotion;
+                    document.querySelectorAll('#emotion-selector button').forEach(btn => {
+                        if (btn.dataset.emotion === emotion) {
+                            btn.querySelector('div').className = 'w-12 h-12 rounded-full flex items-center justify-center transition-transform duration-300 border-2 border-secondary bg-secondary-container/30';
+                            btn.querySelector('span').className = 'material-symbols-outlined text-secondary text-2xl';
+                        }
+                    });
+                }
+                if (draftTags && draftTags.length > 0 && tags.length === 0) { tags = draftTags; renderTagChips(); }  // ✅ 서버 태그 없을 때만 복원
                 if (image) {
                     const preview = document.getElementById('diary-img-preview');
                     preview.src = image;
                     preview.classList.remove('hidden');
                     document.getElementById('delete-img-btn').classList.remove('hidden');
                     if (image.startsWith('data:')) {
-                        diaryImageFile = dataURLtoFile(image, 'draft_image.png');
+                        // base64 → File 객체로 변환
+                        const arr = image.split(',');
+                        const mime = arr[0].match(/:(.*?);/)[1];
+                        const bstr = atob(arr[1]);
+                        let n = bstr.length;
+                        const u8arr = new Uint8Array(n);
+                        while (n--) u8arr[n] = bstr.charCodeAt(n);
+                        diaryImageFile = new File([u8arr], 'draft_image.png', { type: mime });
                         existingImageUrl = null;
                     } else {
                         existingImageUrl = image;
@@ -406,63 +716,6 @@
             } catch (e) { console.error('임시저장 복원 실패:', e); }
         }
 
-        function updateEmotionUI() {
-            document.querySelectorAll('#emotion-selector button').forEach(btn => {
-                const div = btn.querySelector('div');
-                const span = btn.querySelector('span');
-                if (btn.dataset.emotion === selectedEmotion) {
-                    div.className = "w-12 h-12 rounded-full flex items-center justify-center transition-transform duration-300 border-2 border-secondary bg-secondary-container/30";
-                    span.className = "material-symbols-outlined text-secondary text-2xl";
-                } else {
-                    div.className = "w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:scale-110 transition-transform duration-300";
-                    span.className = "material-symbols-outlined text-outline-variant text-2xl group-hover:text-primary transition-colors";
-                }
-            });
-        }
-
-        // 감정 선택 이벤트
-        document.querySelectorAll('#emotion-selector button').forEach(btn => {
-            btn.addEventListener('click', () => {
-                selectedEmotion = btn.dataset.emotion;
-                updateEmotionUI();
-            });
-        });
-
-        // 저장 버튼
-        document.getElementById('save-diary-btn').addEventListener('click', async () => {
-            const title = document.getElementById('diary-title').value;
-            const content = document.querySelector('.editor-content').innerText;
-            if (!title || !content) { alert('제목과 내용을 입력해주세요.'); return; }
-
-            try {
-                let imageUrl = existingImageUrl;
-                if (diaryImageFile) {
-                    const formData = new FormData();
-                    formData.append('file', diaryImageFile);
-                    const token = localStorage.getItem('accessToken');
-                    const res = await fetch('/api/diaries/upload-image', {
-                        method: 'POST',
-                        headers: { 'Authorization': `Bearer ${token}` },
-                        body: formData
-                    });
-                    if (res.ok) imageUrl = await res.text();
-                }
-
-                await api.post('/diaries', {
-                    targetDate: targetDate,
-                    emotion: selectedEmotion,
-                    content: `[${title}]\n${content}`,
-                    tags: tags,
-                    imageUrl: imageUrl
-                });
-
-                localStorage.removeItem(DRAFT_KEY);
-                alert('일기가 저장되었습니다.');
-                window.location.href = '/main?date=' + targetDate;
-            } catch (err) { alert('저장 실패: ' + err.message); }
-        });
-
-        // 임시저장 버튼
         document.getElementById('temp-save-btn').addEventListener('click', async () => {
             const title = document.getElementById('diary-title').value;
             const content = document.querySelector('.editor-content').innerText;
@@ -480,17 +733,60 @@
             alert('임시저장 되었습니다.');
         });
 
-        // 이미지 삭제
-        document.getElementById('delete-img-btn').addEventListener('click', () => {
-            diaryImageFile = null;
-            existingImageUrl = null;
-            const preview = document.getElementById('diary-img-preview');
-            preview.src = '';
-            preview.classList.add('hidden');
-            document.getElementById('delete-img-btn').classList.add('hidden');
+        // ── 일기 저장 ──
+        document.getElementById('save-diary-btn').addEventListener('click', async () => {
+            const title = document.getElementById('diary-title').value;
+            const content = document.querySelector('.editor-content').innerText;
+            if (!title || !content) {
+                alert('제목과 내용을 입력해주세요.');
+                return;
+            }
+            try {
+                let imageUrl = existingImageUrl;
+                if (diaryImageFile) {
+                    const formData = new FormData();
+                    formData.append('file', diaryImageFile);
+                    const token = localStorage.getItem('accessToken');
+                    const res = await fetch('/api/diaries/upload-image', {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${token}` },
+                        body: formData
+                    });
+                    if (res.ok) imageUrl = await res.text();
+                }
+
+                await api.post('/diaries', {
+                    targetDate: targetDate,
+                    emotion: selectedEmotion,
+                    content: '[' + title + ']\n' + content,
+                    tags: tags,
+                    imageUrl: imageUrl
+                });
+
+                localStorage.removeItem(DRAFT_KEY);
+                alert('일기가 저장되었습니다.');
+                window.location.href = '/main?date=' + targetDate;
+            } catch (err) {
+                alert('저장 실패: ' + err.message);
+            }
         });
 
-        // 수면/운동 로직 및 기타 이벤트 리스너들은 기존과 동일하게 유지...
+        document.getElementById('delete-diary-btn').addEventListener('click', async () => {
+            if (!confirm('일기를 삭제하시겠습니까? 휴지통에서 복구할 수 있습니다.')) return;
+            try {
+                const diary = await diaryApi.getDiaryByDate(targetDate);
+                if (!diary) return alert('삭제할 일기가 없습니다.');
+                await api.delete('/diaries/' + diary.id);
+                alert('일기가 휴지통으로 이동됐습니다.');
+                document.getElementById('diary-title').value = '';
+                document.querySelector('.editor-content').innerText = '';
+                await loadTrash();
+            } catch (err) {
+                alert('삭제 실패: ' + err.message);
+            }
+        });
+
+        await loadTrash();
     });
 </script>
 </body></html>

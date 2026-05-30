@@ -189,17 +189,14 @@ public class UserService {
             throw new RuntimeException("비밀번호가 올바르지 않습니다.");
         }
 
-        // 프로필 이미지 삭제
+        // 프로필 이미지 S3 삭제
         if (user.getProfileImg() != null) {
             s3Service.delete(user.getProfileImg());
         }
 
-        // 모든 일기 이미지 삭제
-        diaryRepository.findAllByUser(user).forEach(diary -> {
-            if (diary.getImageUrl() != null) {
-                s3Service.delete(diary.getImageUrl());
-            }
-        });
+        // ✅ 네이티브 쿼리로 이미지 URL만 조회해서 S3 삭제 (Soft Delete 포함)
+        diaryRepository.findAllImageUrlsByUserId(user.getId())
+                .forEach(s3Service::delete);
 
         todoRepository.deleteByUser(user);
         sleepRepository.deleteByUser(user);

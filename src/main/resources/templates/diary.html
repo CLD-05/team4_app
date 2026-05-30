@@ -377,6 +377,9 @@
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
+        // ✅ 변수 선언을 최상단으로 이동
+        let diaryImageFile = null;
+        let existingImageUrl = null;
         let tags = [];
 
         if (!auth.isLoggedIn()) {
@@ -646,8 +649,6 @@
         });
 
         // ── 일기 이미지 ──
-        let diaryImageFile = null;
-        let existingImageUrl = null;
 
         window.previewDiaryImage = function(input) {
             const file = input.files[0];

@@ -1,4 +1,5 @@
 package com.example.daily.service;
+
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import com.example.daily.domain.entity.User;
@@ -9,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +23,6 @@ public class UserService {
     private final ExerciseRepository exerciseRepository;
     private final TodoRepository todoRepository;
     private final S3Service s3Service;
-
 
     @Transactional
     public void signUp(UserDto.SignUpRequest request) {
@@ -76,7 +75,6 @@ public class UserService {
 
     @Transactional
     public UserDto.TokenResponse login(UserDto.LoginRequest request) {
-        // loginId로 찾고, JWT엔 email 저장 (기존 코드 호환)
         User user = userRepository.findByLoginId(request.getLoginId())
                 .orElseGet(() -> userRepository.findByEmail(request.getLoginId())
                         .orElseThrow(() -> new RuntimeException("아이디 또는 비밀번호가 올바르지 않습니다.")));
@@ -131,7 +129,8 @@ public class UserService {
         if (profileImg != null) user.setProfileImg(profileImg);
     }
 
-    public String uploadProfileImg(String email, org.springframework.web.multipart.MultipartFile file) throws java.io.IOException {
+    @Transactional  // ✅ 추가
+    public String uploadProfileImg(String email, MultipartFile file) throws IOException {
         String url = s3Service.upload(file);
         updateProfileImg(email, url);
         return url;

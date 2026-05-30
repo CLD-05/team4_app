@@ -193,14 +193,21 @@
                     <div class="editor-content h-[400px] overflow-y-auto font-body-lg text-body-lg text-on-surface focus:outline-none whitespace-pre-wrap bg-white" contenteditable="true" data-placeholder="마음을 담아 기록해 보세요. 이곳은 당신의 공간입니다."></div>
                 </div>
 
+                <!-- ✅ 이미지 영역 - 삭제 버튼 추가 -->
                 <div class="bg-white rounded-xl shadow-sm border border-surface-variant overflow-hidden">
                     <label for="diary-img-file" class="cursor-pointer flex flex-col items-center justify-center gap-2 min-h-[120px] hover:bg-surface-container transition-colors">
                         <span class="material-symbols-outlined text-outline-variant text-3xl">add_photo_alternate</span>
                         <span class="font-label-sm text-label-sm text-on-surface-variant">추억 추가하기</span>
                     </label>
                     <input id="diary-img-file" type="file" accept="image/*" class="hidden" onchange="previewDiaryImage(this)"/>
-                    <img id="diary-img-preview" class="hidden w-full object-cover max-h-64"/>
+                    <div class="relative">
+                        <img id="diary-img-preview" class="hidden w-full object-cover max-h-64"/>
+                        <button id="delete-img-btn" class="hidden absolute top-2 right-2 bg-error text-white rounded-full p-1 hover:bg-error/80 transition-colors shadow-md">
+                            <span class="material-symbols-outlined text-sm">close</span>
+                        </button>
+                    </div>
                 </div>
+
                 <div class="bg-white rounded-xl p-6 shadow-sm border border-surface-variant">
                     <div class="flex items-center gap-2">
                         <span class="material-symbols-outlined text-outline-variant">sell</span>
@@ -210,7 +217,8 @@
                 </div>
 
                 <div class="flex justify-end gap-4 mt-4">
-                    <button class="px-6 py-2 rounded-lg font-label-sm text-label-sm text-on-surface-variant border border-outline-variant hover:bg-surface-container transition-colors">임시 저장</button>
+                    <!-- ✅ 임시저장 버튼 id 추가 -->
+                    <button id="temp-save-btn" class="px-6 py-2 rounded-lg font-label-sm text-label-sm text-on-surface-variant border border-outline-variant hover:bg-surface-container transition-colors">임시 저장</button>
                     <button id="save-diary-btn" class="px-6 py-2 rounded-lg font-label-sm text-label-sm bg-secondary text-on-secondary hover:bg-on-secondary-container transition-colors shadow-sm">작성 완료</button>
                 </div>
             </div>
@@ -387,9 +395,6 @@
 
         const parts = targetDate.split('-');
         const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
-        const prevDate = new Date(dateObj);
-        prevDate.setDate(prevDate.getDate() - 1);
-        const prevFormatted = prevDate.getFullYear() + '-' + String(prevDate.getMonth()+1).padStart(2,'0') + '-' + String(prevDate.getDate()).padStart(2,'0');
 
         document.querySelectorAll('a[href="/main"]').forEach(a => {
             a.href = `/main?date=${targetDate}`;
@@ -463,6 +468,8 @@
                     const preview = document.getElementById('diary-img-preview');
                     preview.src = diary.imageUrl;
                     preview.classList.remove('hidden');
+                    document.getElementById('delete-img-btn').classList.remove('hidden');
+                    existingImageUrl = diary.imageUrl;
                 }
 
                 if (diary.tags && diary.tags.length > 0) {
@@ -473,8 +480,6 @@
         } catch (err) {
             console.error('일기 불러오기 실패:', err);
         }
-
-
 
         try {
             const exercises = await exerciseApi.getExercises(targetDate);
@@ -501,12 +506,10 @@
             });
         });
 
-        // 1. DOM 요소 선택
         const bedRange = document.getElementById('bed-time-range');
         const wakeRange = document.getElementById('wake-time-range');
         const durationDisplay = document.getElementById('sleep-duration');
 
-// 2. 수면 시간 디스플레이 업데이트
         const updateSleepDisplay = () => {
             const bedVal = bedRange.value;
             const wakeVal = wakeRange.value;
@@ -520,11 +523,9 @@
             durationDisplay.textContent = `${dh}h ${dm}m`;
         };
 
-// 3. 이벤트 리스너
         bedRange.addEventListener('change', updateSleepDisplay);
         wakeRange.addEventListener('change', updateSleepDisplay);
 
-// 4. 수면 기록 불러오기
         const loadSleepData = async () => {
             try {
                 const sleep = await sleepApi.getSleep(targetDate);
@@ -542,10 +543,6 @@
 
         loadSleepData();
 
-
-// ==========================================
-// 5. 수면 기록 저장 로직
-// ==========================================
         document.getElementById('save-sleep-btn').addEventListener('click', async () => {
             const btn = document.getElementById('save-sleep-btn');
             btn.disabled = true;
@@ -583,9 +580,6 @@
             }
         });
 
-
-
-        // 운동 슬라이더 이벤트 (main.html과 동일)
         const exRange = document.getElementById('exercise-duration-range');
         const exDisplay = document.getElementById('exercise-duration-display');
         exRange.addEventListener('input', () => {
@@ -610,14 +604,14 @@
             list.innerHTML = tags.map((tag, i) => `
                 <span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1">
                     # ${tag}
-                    <button onclick="removeTag(${i})"><span class="material-symbols-outlined text-[14px] hover:text-error transition-colors">close</span></button>
+                    <button onclick="window.removeTag(${i})"><span class="material-symbols-outlined text-[14px] hover:text-error transition-colors">close</span></button>
                 </span>`).join('');
         }
 
-        function removeTag(index) {
+        window.removeTag = function(index) {
             tags.splice(index, 1);
             renderTagChips();
-        }
+        };
 
         document.getElementById('tag-input').addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
@@ -639,37 +633,76 @@
         });
 
         // ── 일기 이미지 ──
-        let diaryImageBase64 = null;
-
-        window.previewDiaryImage = function(input) {
-            const file = input.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                diaryImageBase64 = e.target.result;
-                const preview = document.getElementById('diary-img-preview');
-                preview.src = diaryImageBase64;
-                preview.classList.remove('hidden');
-            };
-            reader.readAsDataURL(file);
-        };
-
-        // ── 일기 이미지 ──
         let diaryImageFile = null;
+        let existingImageUrl = null;
+
         window.previewDiaryImage = function(input) {
             const file = input.files[0];
             if (!file) return;
             diaryImageFile = file;
+            existingImageUrl = null;
             const reader = new FileReader();
             reader.onload = (e) => {
                 const preview = document.getElementById('diary-img-preview');
                 preview.src = e.target.result;
                 preview.classList.remove('hidden');
+                document.getElementById('delete-img-btn').classList.remove('hidden');
             };
             reader.readAsDataURL(file);
         };
 
+        // ✅ 이미지 삭제 버튼
+        document.getElementById('delete-img-btn').addEventListener('click', () => {
+            diaryImageFile = null;
+            existingImageUrl = null;
+            const preview = document.getElementById('diary-img-preview');
+            preview.src = '';
+            preview.classList.add('hidden');
+            document.getElementById('delete-img-btn').classList.add('hidden');
+            document.getElementById('diary-img-file').value = '';
+        });
 
+        // ✅ 임시저장 기능
+        const DRAFT_KEY = 'diary-draft-' + targetDate;
+
+        // 기존 일기가 없을 때만 임시저장 불러오기
+        const draft = localStorage.getItem(DRAFT_KEY);
+        if (draft && !document.getElementById('diary-title').value) {
+            try {
+                const { title, content, emotion, tags: draftTags } = JSON.parse(draft);
+                if (title) document.getElementById('diary-title').value = title;
+                if (content) document.querySelector('.editor-content').innerText = content;
+                if (emotion) {
+                    selectedEmotion = emotion;
+                    document.querySelectorAll('#emotion-selector button').forEach(btn => {
+                        if (btn.dataset.emotion === emotion) {
+                            btn.querySelector('div').className = 'w-12 h-12 rounded-full flex items-center justify-center transition-transform duration-300 border-2 border-secondary bg-secondary-container/30';
+                            btn.querySelector('span').className = 'material-symbols-outlined text-secondary text-2xl';
+                        }
+                    });
+                }
+                if (draftTags && draftTags.length > 0) {
+                    tags = draftTags;
+                    renderTagChips();
+                }
+            } catch(e) {
+                console.error('임시저장 불러오기 실패:', e);
+            }
+        }
+
+        document.getElementById('temp-save-btn').addEventListener('click', () => {
+            const title = document.getElementById('diary-title').value;
+            const content = document.querySelector('.editor-content').innerText;
+            localStorage.setItem(DRAFT_KEY, JSON.stringify({
+                title,
+                content,
+                emotion: selectedEmotion,
+                tags
+            }));
+            alert('임시저장 되었습니다.');
+        });
+
+        // ── 일기 저장 ──
         document.getElementById('save-diary-btn').addEventListener('click', async () => {
             const title = document.getElementById('diary-title').value;
             const content = document.querySelector('.editor-content').innerText;
@@ -678,7 +711,7 @@
                 return;
             }
             try {
-                let imageUrl = null;
+                let imageUrl = existingImageUrl;
                 if (diaryImageFile) {
                     const formData = new FormData();
                     formData.append('file', diaryImageFile);
@@ -699,6 +732,8 @@
                     imageUrl: imageUrl
                 });
 
+                // ✅ 작성 완료 시 임시저장 삭제
+                localStorage.removeItem(DRAFT_KEY);
                 alert('일기가 저장되었습니다.');
                 window.location.href = '/main?date=' + targetDate;
             } catch (err) {

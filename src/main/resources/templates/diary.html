@@ -665,11 +665,19 @@
         // ✅ 임시저장 기능
         const DRAFT_KEY = 'diary-draft-' + targetDate;
 
+        // Base64를 File 객체로 변환하는 함수
+        function dataURLtoFile(dataurl, filename) {
+            let arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+            while(n--){ u8arr[n] = bstr.charCodeAt(n); }
+            return new File([u8arr], filename, {type:mime});
+        }
+
         // 기존 일기가 없을 때만 임시저장 불러오기
         const draft = localStorage.getItem(DRAFT_KEY);
         if (draft && !document.getElementById('diary-title').value) {
             try {
-                const { title, content, emotion, tags: draftTags } = JSON.parse(draft);
+                const { title, content, emotion, tags: draftTags, image } = JSON.parse(draft);
                 if (title) document.getElementById('diary-title').value = title;
                 if (content) document.querySelector('.editor-content').innerText = content;
                 if (emotion) {
@@ -685,21 +693,62 @@
                     tags = draftTags;
                     renderTagChips();
                 }
+                if (image) {
+                    const preview = document.getElementById('diary-img-preview');
+                    preview.src = image;
+                    preview.classList.remove('hidden');
+                    document.getElementById('delete-img-btn').classList.remove('hidden');
+                    if (image.startsWith('data:')) {
+                        diaryImageFile = dataURLtoFile(image, 'draft_image.png');
+                    } else {
+                        existingImageUrl = image;
+                    }
+                }
             } catch(e) {
                 console.error('임시저장 불러오기 실패:', e);
             }
         }
 
-        document.getElementById('temp-save-btn').addEventListener('click', () => {
+        document.getElementById('temp-save-btn').addEventListener('click', async () => {
             const title = document.getElementById('diary-title').value;
             const content = document.querySelector('.editor-content').innerText;
-            localStorage.setItem(DRAFT_KEY, JSON.stringify({
-                title,
-                content,
-                emotion: selectedEmotion,
-                tags
-            }));
-            alert('임시저장 되었습니다.');
+            
+            let imageData = existingImageUrl;
+            if (diaryImageFile) {
+                try {
+                    imageData = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => resolve(e.target.result);
+                        reader.onerror = (e) => reject(e);
+                        reader.readAsDataURL(diaryImageFile);
+                    });
+                } catch (e) {
+                    console.error('이미지 변환 실패:', e);
+                }
+            }
+
+            try {
+                localStorage.setItem(DRAFT_KEY, JSON.stringify({
+                    title,
+                    content,
+                    emotion: selectedEmotion,
+                    tags,
+                    image: imageData
+                }));
+                alert('임시저장 되었습니다.');
+            } catch (e) {
+                if (e.name === 'QuotaExceededError') {
+                    alert('이미지 크기가 너무 커서 임시저장에 실패했습니다. (텍스트만 저장될 수 있습니다)');
+                    localStorage.setItem(DRAFT_KEY, JSON.stringify({
+                        title,
+                        content,
+                        emotion: selectedEmotion,
+                        tags
+                    }));
+                } else {
+                    alert('임시저장 중 오류가 발생했습니다.');
+                }
+            }
         });
 
         // ── 일기 저장 ──

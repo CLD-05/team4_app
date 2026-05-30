@@ -52,9 +52,12 @@ public class DiaryService {
                         .createdAt(diaryDateTime)
                         .build());
 
-        // ✅ 기존 이미지가 있고 새 이미지로 변경되는 경우 S3에서 삭제
+        // ✅ 기존 이미지가 있고 새 이미지로 변경되거나 삭제되는 경우 S3에서 삭제
         if (diary.getImageUrl() != null && !diary.getImageUrl().equals(request.getImageUrl())) {
-            s3Service.delete(diary.getImageUrl());
+            // 새로 보내준 값이 실제 S3 URL이거나 null인 경우만 기존 파일을 지움
+            if (request.getImageUrl() == null || request.getImageUrl().startsWith("https://")) {
+                s3Service.delete(diary.getImageUrl());
+            }
         }
 
         diary.setEmotion(request.getEmotion());

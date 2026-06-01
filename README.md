@@ -2,6 +2,18 @@
 
 Spring Boot 4.0과 AWS 인프라(S3)를 활용한 사용자 맞춤형 일기(다이어리) 웹 애플리케이션입니다. 안전한 JWT 기반 인증 체계와 파일 스토리지 관리를 지원합니다.
 
+
+---
+
+🔗 관련 레포지토리
+
+
+| 레포지토리 | 설명 |
+|:---|:---|
+| team4_app | Spring Boot 애플리케이션 소스 코드 |
+| team4_terraform | AWS 인프라 프로비저닝 (EKS, RDS, VPC 등) |
+| team4_config | Kubernetes 매니페스트 및 ArgoCD 설정 (현재 레포) |
+
 ---
 
 ## 🚀 1. 프로젝트 개요 (Overview)

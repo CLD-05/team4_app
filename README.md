@@ -56,11 +56,13 @@ Security (JWT)                          S3 (AWS SDK)
 ## ⚙️ 5. 환경 설정 및 요구사항 (Configuration)
 
 ### 필수 요구사항
-- Java 17 빌드 환경
-- MySQL 8.0 이상 호환 데이터베이스
-- AWS S3 버킷 및 액세스 키 계정 정보
 
-### `application.yml` 설정 파일 가이드
+* Java 17 빌드 환경
+* MySQL 8.0 이상 호환 데이터베이스
+* AWS S3 버킷 및 액세스 키 계정 정보
+
+### application.yml 설정 파일 가이드
+
 `src/main/resources/application.yml` 파일에 로컬 및 클라우드 환경 변수를 세팅해야 합니다.
 
 ```yaml
@@ -78,51 +80,165 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
 
-# AWS S3 설정은 인프라 보안을 위해 환경 변수 사용을 권장합니다.
 aws:
   s3:
     bucket-name: YOUR_S3_BUCKET_NAME
     region: YOUR_AWS_REGION
-💻 6. 실행 및 빌드 방법 (How to Run)
-1) 로컬 개발 환경에서 빌드 및 패키징
-프로젝트 루트 디렉토리(C:\CE\team4_diary\team4_app)에서 아래 명령어를 실행합니다.
+```
 
-Bash
+---
+
+## 💻 6. 실행 및 빌드 방법 (How to Run)
+
+### 1) 로컬 개발 환경에서 빌드 및 패키징
+
+프로젝트 루트 디렉토리 (`C:\CE\team4_diary\team4_app`)에서 아래 명령어를 실행합니다.
+
+```bash
 # Maven을 사용한 빌드 및 JAR 파일 생성
 ./mvnw clean package
 
 # 생성된 JAR 애플리케이션 실행
 java -jar target/daily-0.0.1-SNAPSHOT.jar
-2) 도커(Docker) 컨테이너 배포
+```
+
+### 2) Docker 컨테이너 배포
+
 레포지토리에 포함된 Dockerfile을 이용해 이미지 빌드 및 컨테이너 실행이 가능합니다.
 
-Bash
+```bash
 docker build -t team4-diary-app .
+
 docker run -p 8080:8080 team4-diary-app
-🔒 7. 보안 및 인증 모델 (Security)
-Stateless 구조: JWT를 사용하므로 세션을 생성하거나 유지하지 않습니다 (SessionCreationPolicy.STATELESS).
+```
 
-허용된 public 엔드포인트: 로그인 및 회원가입(/api/auth/), 정적 에셋(CSS/JS), Actuator 상태 점검(/actuator/health) 페이지는 인증 없이 접근 가능합니다.
+---
 
-인증 필요 엔드포인트: 일기 CRUD 및 마이페이지 기능은 헤더에 Authorization: Bearer <JWT_TOKEN>을 첨부해야 접근할 수 있습니다.
+## 🔒 7. 보안 및 인증 모델 (Security)
 
-🛠️ 8. 트러블슈팅 (Troubleshooting)
-1. 로컬 환경과 도커 컨테이너 간 인프라 매핑 이슈
-문제: 로컬 테스트 완료 후 Docker 컨테이너 환경으로 이관 시 DB 자원 접근 제한 문제 발생.
+### Stateless 구조
 
-원인: 호스트 네임스페이스와 독립된 컨테이너의 격리성 및 비밀번호 동기화 미비 오류.
+JWT 기반 인증 방식을 사용하므로 서버 세션을 생성하거나 유지하지 않습니다.
 
-해결: 환경 변수를 활용한 application.yml 유연화 세팅 적용 및 도커 실행 파라미터 보완을 통해 환경 일치화 완료.
+```java
+SessionCreationPolicy.STATELESS
+```
 
-📈 9. 향후 확장 계획 (Extensibility Points)
-API 버전 관리: 서비스 확장을 고려한 /api/v1/ 접두사 도입
+### 인증 없이 접근 가능한 엔드포인트
 
-리프레시 토큰(Refresh Token) 도입: 보안 강화를 위해 짧은 수명의 Access Token과 별도의 Refresh Flow 추가
+* `/api/auth/**`
+* `/css/**`
+* `/js/**`
+* `/images/**`
+* `/actuator/health`
 
-파일 유효성 및 보안 검증: S3 업로드 시 확장자 체크 및 악성코드 바이러스 스캔 로직 연동
+### 인증이 필요한 기능
 
-글로벌 다국어 지원(i18n): 다양한 사용자를 고려한 UI 스트링 다국어 다원화 처리
+* 일기 CRUD
+* 마이페이지
+* 사용자 개인 데이터 조회
 
-테스트 커버리지 확대: src/test 하위 단위 테스트 및 통합 테스트 보강
+요청 시 아래 헤더를 포함해야 합니다.
 
-테스트 커버리지 확대: src/test 하위 단위 테스트 및 통합 테스트 보강
+```http
+Authorization: Bearer <JWT_TOKEN>
+```
+
+---
+
+## 🛠️ 8. 트러블슈팅 (Troubleshooting)
+
+### 1. 로컬 환경과 Docker 환경 간 DB 연결 실패
+
+#### 문제
+
+로컬 환경에서는 정상 동작하지만 Docker 컨테이너 실행 시 데이터베이스 연결 오류 발생
+
+#### 원인
+
+Docker 컨테이너는 독립된 네트워크 환경에서 동작하므로 localhost 설정만으로는 외부 DB에 접근할 수 없었음.
+
+#### 해결
+
+* 환경 변수를 이용해 DB 접속 정보 분리
+* Docker 실행 시 환경 변수 주입
+* application.yml 설정 외부화
+
+#### 결과
+
+로컬 환경과 컨테이너 환경에서 동일한 설정 구조로 운영 가능하도록 개선
+
+---
+
+### 2. 일기 태그(Tag) 저장 누락 문제
+
+#### 문제
+
+* 태그 입력 후 임시저장
+* 임시저장 복원 성공
+* 작성 완료 후 태그가 저장되지 않음
+
+#### 원인
+
+JavaScript에서 동일한 이름의 tags 변수가 전역과 지역에 중복 선언됨.
+
+```javascript
+let tags = [];
+
+document.addEventListener('DOMContentLoaded', async () => {
+    let tags = [];
+});
+```
+
+#### 해결
+
+DOMContentLoaded 내부의 중복 선언 제거
+
+```javascript
+let tags = [];
+
+document.addEventListener('DOMContentLoaded', async () => {
+    // 전역 tags 사용
+});
+```
+
+#### 결과
+
+태그 상태 관리가 일원화되었으며 저장 시 정상적으로 DB에 반영됨.
+
+---
+
+## 📈 9. 향후 확장 계획 (Extensibility Points)
+
+### API 버전 관리
+
+서비스 확장을 고려하여 `/api/v1` 기반 버전 전략 도입
+
+### Refresh Token 도입
+
+* Access Token 단기 운영
+* Refresh Token 기반 재발급 구조 적용
+
+### 파일 보안 강화
+
+* 업로드 파일 확장자 검증
+* MIME Type 검증
+* 악성코드 검사 연동
+
+### 글로벌 다국어 지원 (i18n)
+
+* 한국어
+* 영어
+* 일본어
+
+등 다국어 UI 지원 예정
+
+### 테스트 커버리지 확대
+
+* Unit Test 강화
+* Integration Test 추가
+* Controller 테스트 자동화
+* Service 계층 테스트 보강
+
+```
+```

@@ -193,7 +193,7 @@
         const password = document.getElementById('password').value;
         try {
             await auth.login(loginId, password);
-            window.location.href = '/';
+            window.location.href = '/main';
         } catch (err) {
             alert('로그인 실패: ' + err.message);
         }

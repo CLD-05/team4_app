@@ -33,7 +33,7 @@ public class PreviewController {
 
     @GetMapping("/main")
     public String main() {
-        return "service";
+        return "main";
     }
 
     @GetMapping({"/pw-reset", "/pw_reset.html"})

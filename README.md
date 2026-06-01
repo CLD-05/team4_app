@@ -10,9 +10,9 @@ Spring Boot 4.0과 AWS 인프라(S3)를 활용한 사용자 맞춤형 일기(다
 
 | 레포지토리 | 설명 |
 |:---|:---|
-| team4_app | Spring Boot 애플리케이션 소스 코드 (현재 레포) |
-| team4_terraform | AWS 인프라 프로비저닝 (EKS, RDS, VPC 등) |
-| team4_config | Kubernetes 매니페스트 및 ArgoCD 설정 |
+| [team4_app](https://github.com/CLD-05/team4_app) | Spring Boot 애플리케이션 소스 코드 (현재 레포)|
+| [team4_terraform](https://github.com/CLD-05/team4_terraform) | AWS 인프라 프로비저닝 (EKS, RDS, VPC 등) |
+| [team4_config](https://github.com/CLD-05/team4_config) | Kubernetes 매니페스트 및 ArgoCD 설정 |
 
 ---
 

@@ -225,14 +225,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 * MIME Type 검증
 * 악성코드 검사 연동
 
-### 글로벌 다국어 지원 (i18n)
-
-* 한국어
-* 영어
-* 일본어
-
-등 다국어 UI 지원 예정
-
 ### 테스트 커버리지 확대
 
 * Unit Test 강화
@@ -240,5 +232,3 @@ document.addEventListener('DOMContentLoaded', async () => {
 * Controller 테스트 자동화
 * Service 계층 테스트 보강
 
-```
-```

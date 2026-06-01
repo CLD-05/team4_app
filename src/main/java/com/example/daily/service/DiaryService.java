@@ -198,4 +198,4 @@ public class DiaryService {
         }
         diaryRepository.restoreById(diaryId);
     }
-}t a
+}

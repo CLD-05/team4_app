@@ -10,6 +10,8 @@ Spring Boot 4.0과 AWS 인프라(S3)를 활용한 사용자 맞춤형 일기(다
 - **빌드 및 패키징 툴**: Maven (`pom.xml`)
 - **애플리케이션 진입점**: `DailyApplication.java`
 
+*(여기에 실제 서비스 구동 스크린샷이나 시연 영상 링크를 넣으면 매우 좋습니다!)*
+
 ---
 
 ## 🏗️ 2. 시스템 아키텍처 (Architecture)
@@ -104,7 +106,15 @@ Stateless 구조: JWT를 사용하므로 세션을 생성하거나 유지하지 
 
 인증 필요 엔드포인트: 일기 CRUD 및 마이페이지 기능은 헤더에 Authorization: Bearer <JWT_TOKEN>을 첨부해야 접근할 수 있습니다.
 
-📈 8. 향후 확장 계획 (Extensibility Points)
+🛠️ 8. 트러블슈팅 (Troubleshooting)
+1. 로컬 환경과 도커 컨테이너 간 인프라 매핑 이슈
+문제: 로컬 테스트 완료 후 Docker 컨테이너 환경으로 이관 시 DB 자원 접근 제한 문제 발생.
+
+원인: 호스트 네임스페이스와 독립된 컨테이너의 격리성 및 비밀번호 동기화 미비 오류.
+
+해결: 환경 변수를 활용한 application.yml 유연화 세팅 적용 및 도커 실행 파라미터 보완을 통해 환경 일치화 완료.
+
+📈 9. 향후 확장 계획 (Extensibility Points)
 API 버전 관리: 서비스 확장을 고려한 /api/v1/ 접두사 도입
 
 리프레시 토큰(Refresh Token) 도입: 보안 강화를 위해 짧은 수명의 Access Token과 별도의 Refresh Flow 추가

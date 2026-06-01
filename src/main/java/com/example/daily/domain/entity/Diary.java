@@ -13,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "diaries", indexes = {
-    @Index(name = "idx_diaries_user_created", columnList = "user_id, created_at")
+        @Index(name = "idx_diaries_user_created", columnList = "user_id, created_at")
 })
 @Getter
 @Setter
@@ -54,7 +54,7 @@ public class Diary {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "diary", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
     @Builder.Default
     private List<DiaryTag> tags = new ArrayList<>();
 }

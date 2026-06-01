@@ -43,7 +43,10 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     @Query(value = "UPDATE diaries SET deleted_at = NULL WHERE id = :id", nativeQuery = true)
     void restoreById(@Param("id") Long id);
 
-    // ✅ 계정 삭제 시 모든 일기 이미지 URL 조회 (Soft Delete 포함)
+    @Modifying
+    @Query(value = "UPDATE diaries SET deleted_at = NOW() WHERE id = :id", nativeQuery = true)
+    void softDeleteById(@Param("id") Long id);
+
     @Query(value = "SELECT image_url FROM diaries WHERE user_id = :userId AND image_url IS NOT NULL", nativeQuery = true)
     List<String> findAllImageUrlsByUserId(@Param("userId") Long userId);
 }

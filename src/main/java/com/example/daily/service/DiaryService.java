@@ -114,7 +114,7 @@ public class DiaryService {
             throw new RuntimeException("Unauthorized");
         }
 
-        diaryRepository.delete(diary);
+        diaryRepository.softDeleteById(diaryId);
     }
 
     @Transactional

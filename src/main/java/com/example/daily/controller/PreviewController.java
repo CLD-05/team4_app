@@ -13,7 +13,7 @@ public class PreviewController {
 
     @GetMapping("/")
     public String index() {
-        return "main";
+        return "service";
     }
 
     @GetMapping("/diary")
@@ -33,7 +33,7 @@ public class PreviewController {
 
     @GetMapping("/main")
     public String main() {
-        return "main";
+        return "service";
     }
 
     @GetMapping({"/pw-reset", "/pw_reset.html"})

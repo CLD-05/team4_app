@@ -114,7 +114,7 @@ public class DiaryService {
             throw new RuntimeException("Unauthorized");
         }
 
-        diaryRepository.softDeleteById(diaryId);
+        diaryRepository.delete(diary);
     }
 
     @Transactional
@@ -185,6 +185,7 @@ public class DiaryService {
         if (diary.getImageUrl() != null) {
             s3Service.delete(diary.getImageUrl());
         }
+        diaryTagRepository.deleteByDiaryId(diaryId);
         diaryRepository.hardDeleteById(diaryId);
     }
 
@@ -197,4 +198,4 @@ public class DiaryService {
         }
         diaryRepository.restoreById(diaryId);
     }
-}
+}t a
